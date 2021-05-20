@@ -8,6 +8,7 @@ const adminRequests = require('./adminRequests')
 const { parsePhoneNumber } = require('libphonenumber-js')
 const { firestore } = require('firebase-admin')
 const { userRecordConstructor } = require('firebase-functions/lib/providers/auth')
+const { KeyPage } = require('twilio/lib/rest/api/v2010/account/key')
 
 const twilioAccountSid = functions.config().twilio.account_sid
 const twilioAuthToken = functions.config().twilio.auth_token
@@ -50,6 +51,7 @@ function sendUnauthorized(res) {
 }
 
 function twilioSend(res, data) {
+    res.type('text/xml')
     res.send(data)
 }
 
@@ -83,11 +85,16 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
     //Get the phone number being sent to
     const to = req.body.To
 
+    let keepGoing = true
+
     //Use that phone number as a key to retrieve a tutor or parent record
     const personDoc = await getRecordFromPhone(from).catch(error => {
+        console.log(error)
         twilioSend(res, constructTwilioMessagingResponse(`StepUp Tutoring here! It looks like your number was formatted incorrectly when you signed up.`))
-        return
+        keepGoing = false
     })
+
+    if (!keepGoing) return
 
     if (!notNull(personDoc)) {
         twilioSend(res, constructTwilioMessagingResponse(`Could not find your record`))
@@ -171,12 +178,13 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
     const airtableAPIKey = functions.config().airtable.key
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
-    base('Tutors').update({
+
+    base('Tutors').update([{
 
         id: personDoc.id,
         fields: data
         
-    })
+    }]).catch(err => console.log(err))
 
     //Placeholder for the message
     let message = req.body.Body
@@ -186,15 +194,19 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
     //If their preferred language exists...
     if (notNull(preferredLanguage)) {
+        try {
+            //Get the language code for it (defaults to English)
+            const toLanguageCode = (preferredLanguage == 'Español') ? 'es' : 'en'
 
-        //Get the language code for it (defaults to English)
-        const toLanguageCode = (preferredLanguage == 'Spanish') ? 'es' : 'en'
+            //Now, translate the message 
+            const translation = await googleTranslate.translate(message, toLanguageCode)
 
-        //Now, translate the message 
-        const translation = await googleTranslate.translate(message, toLanguageCode)
+            //Set the message to the translated version
+            message = translation
 
-        //Set the message to the translated version
-        message = translation
+        } catch(err) {
+            console.log(err)
+        }
 
     }
 
@@ -302,12 +314,13 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
 
     const airtableAPIKey = functions.config().airtable.key
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
-    base('Tutors').update({
+    
+    base('Tutors').update([{
 
         id: personDoc.id,
         fields: data
         
-    })
+    }]).catch(err => console.log(err))
 
     //Otherwise, dial them in to the other person
     const response = new twilio.twiml.VoiceResponse()
@@ -348,12 +361,17 @@ exports.respondToPhonePickup = functions.https.onRequest(async (req, res) => {
 
     const airtableAPIKey = functions.config().airtable.key
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
-    base('Tutors').update({
+    console.log(docId)
+    base('Tutors').update([{
 
         id: docId,
         fields: data
         
-    })
+    }]).catch(err => console.log(err))
+
+    const response = new twilio.twiml.VoiceResponse()
+    response.hangup()
+    res.send( response.toString() )
 
 })
 
