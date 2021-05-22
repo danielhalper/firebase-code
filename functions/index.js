@@ -1,60 +1,69 @@
-const functions = require('firebase-functions')
-const admin = require('firebase-admin')
-const airtable = require('airtable')
-const twilio = require('twilio')
-const uuid = require('uuid')
-const { Translate } = require('@google-cloud/translate').v2
-const adminRequests = require('./adminRequests')
-const { parsePhoneNumber } = require('libphonenumber-js')
-const { firestore } = require('firebase-admin')
-const { userRecordConstructor } = require('firebase-functions/lib/providers/auth')
-const { KeyPage } = require('twilio/lib/rest/api/v2010/account/key')
+const functions = require('firebase-functions') //Cloud Functions
+const admin = require('firebase-admin') //Firebase Admin SDK
+const airtable = require('airtable') //Airtable API Client
+const twilio = require('twilio') //Twilio SDK
+const { Translate } = require('@google-cloud/translate').v2 //Google Translate
+const adminRequests = require('./adminRequests') //Request callbacks for admin-related tasks
+const { parsePhoneNumber } = require('libphonenumber-js') //For formatting phone numbers correctly
 
+//Get Twilio credentials
 const twilioAccountSid = functions.config().twilio.account_sid
 const twilioAuthToken = functions.config().twilio.auth_token
+
+//Get the "password" string used to verify Zapier requests
 const zapierAuthToken = functions.config().zapier.auth_token
  
+//Create a twilio client
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 
-const twilioTutorNumbers = {
-    '+12133751458': 0   
-}
-
+//List of our tutor messaging numbers
 const twilioTutorNumbersList = ['+12133751458', '+12133750936', '+12132676947', '+12133750502', '+12133762955']
 
-
+//Start firebase admin
 admin.initializeApp()
 
+//For getting the tutor data from an email
 async function getTutorDataRaw(email) {
 
+    //Get the aritable API key
     const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
 
+    //Get the relevant record from the Tutors table
     const result = await base('Tutors').select({
         maxRecords: 1,
-        filterByFormula: `{Email} = '${email}'`
+        filterByFormula: `{Email} = '${email}'`,
+        fields: ['Waiver?', 'Section 2', 'Email', 'First Name', 'Last Name']
     }).firstPage()
 
+    //Throw if the tutor wasn't found
     if (result.length == 0) throw new Error('no-record-found')
 
+    //Format it to send back
     const user = {
         "user": result[0]['_rawJson']['fields'] || {}
     }
 
+    //Return
     return user
 
 }
 
+//For sending an unauthorized status
 function sendUnauthorized(res) {
     res.status(401)
     res.send()
 }
 
+//For sending TwiML responses
 function twilioSend(res, data) {
     res.type('text/xml')
     res.send(data)
 }
 
+//To send a voice response saying a message through TwiML
 function twilioSayMessage(res, message) {
     const response = new twilio.twiml.VoiceResponse()
     response.say(message)
@@ -62,6 +71,7 @@ function twilioSayMessage(res, message) {
     res.send(response.toString())
 }
 
+//For getting tutor data
 exports.getTutorData = functions.https.onCall((data, context) => {
 
     return getTutorDataRaw(context.auth.token.email).then(tutor => {
@@ -85,6 +95,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
     //Get the phone number being sent to
     const to = req.body.To
 
+    //This is a hack to work around the fact that I can't end this function from inside another function
     let keepGoing = true
 
     //Use that phone number as a key to retrieve a tutor or parent record
@@ -96,6 +107,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
     if (!keepGoing) return
 
+    //Make sure the person's record exists
     if (!notNull(personDoc)) {
         twilioSend(res, constructTwilioMessagingResponse(`Could not find your record`))
         return
@@ -119,21 +131,31 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
         return
     }
 
+    //Keep track of the second person's record
     let secondPersonDoc;
 
+    //If the person sending is a tutor...
     if (role == 'tutor') {
 
+        //Go through their students
         for (let personId in correspondents) {
+
+            //If the number assigned to that student is the one they texted...
             if (correspondents[personId] == to) {
                 
+                //Get the record of that student
                 secondPersonDoc = await admin.firestore().collection('people').doc(personId).get()
                 break
 
             }
         }
 
-    } else {
+    } 
+    
+    //If it's a student...
+    else {
 
+        //Find the tutor that is connected to this student through the phone number they sent the message to
         const querySnapshot = await admin.firestore().collection('people').where(`students.${personDoc.id}`, '==', to).get()
 
         //If there's a tutor in this query...
@@ -147,10 +169,10 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
     }
 
-
+    //Make sure the other person exists
     if (!notNull(secondPersonDoc)) {
 
-        //If they don't have a student corresponding with this phone number, tell them
+        //If they don't have a student/tutor corresponding with this phone number, tell them
         twilioSend(res, constructTwilioMessagingResponse(`StepUp Tutoring here! It looks like this is the wrong number for your ${role == 'tutor' ? 'student': 'tutor'}!`))
         return
 
@@ -176,6 +198,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
     if (role == 'tutor') data['Tutor communicating?'] = 'yes'
     if (role == 'student') data['Family communicating?'] = 'yes'
 
+    //Update AirTable to reflect their communication status
     const airtableAPIKey = functions.config().airtable.key
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
 
@@ -185,6 +208,8 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
         fields: data
         
     }]).catch(err => console.log(err))
+
+
 
     //Placeholder for the message
     let message = req.body.Body
@@ -205,7 +230,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
             message = translation
 
         } catch(err) {
-            console.log(err)
+            console.log(err) //Errors relating to translation aren't necessarily critical errors
         }
 
     }
@@ -213,7 +238,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
     //Next, forward the text message
     await forwardMessageTwilio(message, getMediaUrlList(req.body), toPhone, to)
 
-
+    //Reply with an empty response
     twilioSend(res, new twilio.twiml.MessagingResponse().toString())
 
 })
@@ -232,6 +257,7 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
         return
     })
 
+    //Make sure the person's record exists
     if (!notNull(personDoc)) {
         twilioSayMessage(res, `Could not find your record`)
         return
@@ -255,21 +281,31 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
         return
     }
 
+    //Keep track of the second person's record
     let secondPersonDoc;
 
+    //If the person sending is a tutor...
     if (role == 'tutor') {
 
+        //Go through their students
         for (let personId in correspondents) {
+
+            //If the number assigned to that student is the one they texted...
             if (correspondents[personId] == to) {
                 
+                //Get the record of that student
                 secondPersonDoc = await admin.firestore().collection('people').doc(personId).get()
                 break
 
             }
         }
 
-    } else {
+    } 
+    
+    //If it's a student...
+    else {
 
+        //Find the tutor that is connected to this student through the phone number they sent the message to
         const querySnapshot = await admin.firestore().collection('people').where(`students.${personDoc.id}`, '==', to).get()
 
         //If there's a tutor in this query...
@@ -312,6 +348,7 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
     if (role == 'tutor') data['Tutor communicating?'] = 'yes'
     if (role == 'student') data['Family communicating?'] = 'yes'
 
+    //Update AirTable to reflect their communication status
     const airtableAPIKey = functions.config().airtable.key
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
     
@@ -331,6 +368,7 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
     //If the student is calling the tutor and the tutor hasn't initiated contact, set the action
     action = `https://us-central1-stepup-dashboard.cloudfunctions.net/respondToPhonePickup?docId=${role == 'tutor' ? personDoc.id : secondPersonDoc.id}&role=${role}`
 
+    //Dial the other person using the proxy number as a caller ID
     const dial = response.dial({
         callerId: to,
         action: action
@@ -338,6 +376,7 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
 
     dial.number(toPhone)
 
+    //Send the response
     res.type('text/xml')
     res.send(response.toString())
 
@@ -359,6 +398,7 @@ exports.respondToPhonePickup = functions.https.onRequest(async (req, res) => {
     if (role == 'tutor') data['Tutor communicating?'] = 'yes'
     if (role == 'student') data['Family communicating?'] = 'yes'
 
+    //Update AirTable to reflect those changes
     const airtableAPIKey = functions.config().airtable.key
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
     console.log(docId)
@@ -369,82 +409,41 @@ exports.respondToPhonePickup = functions.https.onRequest(async (req, res) => {
         
     }]).catch(err => console.log(err))
 
+    //Send a hangup response
     const response = new twilio.twiml.VoiceResponse()
     response.hangup()
     res.send( response.toString() )
 
 })
 
-exports.joinConferenceCall = functions.https.onRequest(async (req, res) => {
-
-    //Get the conference ID
-    const conferenceId = req.query.conferenceId
-
-    //Create a conference response
-    const response = new twilio.twiml.VoiceResponse()
-    const dial = response.dial()
-    dial.conference(conferenceId)
-
-    res.type('text/xml')
-    res.send(response.toString())
-
-})
-
 
 function getMediaUrlList(requestBody) {
 
+    //Keep track of the media URLs
     let list = []
+
+    //Incrementer
     let i = 0
 
+    //As long as the MediaUrl at that index exists...
     while (notNull(requestBody[`MediaUrl${i}`])) {
 
+        //Add it to the list
         list.push(requestBody[`MediaUrl${i}`])
+
+        //Go to the next one
         i++
 
     }
 
+    //Return the list
     return list
 
 }
 
+//Util function 
 function notNull(value) {
     return value != null && value != undefined
-}
-
-
-async function forwardDMMessageFirebase(message, userId, fromPhone, fromUserId) {
-
-    //Create the message data
-    let messageData = {
-        toUserId: userId,
-        message: message,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        unread: true
-    }
-
-    if (notNull(fromPhone)) messageData.fromPhone = fromPhone
-    if (notNull(fromUserId)) messageData.fromUserId = fromUserId
-
-    //Create a document in Cloud Firestore that contains the message, sender, timestamp, and an unread status
-    const docRef = await admin.firestore().collection('dm_messages').add(messageData)
-    
-    //Create the notification data object
-    let notificationData = {
-        messageId: docRef
-    }
-
-    if (notNull(fromPhone)) notificationData.fromPhone = fromPhone
-    if (notNull(fromUserId)) notificationData.fromUserId = fromUserId
-
-    //Send a notification via FCM, including a badge to mark total unreads
-    await admin.messaging().send({
-        notification: {
-            title: 'New Message',
-            body: message
-        },
-        data: notificationData
-    })
-
 }
 
 async function forwardMessageTwilio(message, mediaUrlList, phone, fromPhone) {
@@ -459,13 +458,14 @@ async function forwardMessageTwilio(message, mediaUrlList, phone, fromPhone) {
 
 }
 
+//For creating a messaging response
 function constructTwilioMessagingResponse(message) {
     const response = new twilio.twiml.MessagingResponse()
     response.message(message)
     return response.toString()
 }
 
-
+//Probably to be deprecated; replaced by updates via Zapier integrations with AirTable
 exports.syncPeopleData = functions.pubsub.schedule('every 24 hours').onRun((context) => {
 
     console.log('Running')
@@ -473,12 +473,14 @@ exports.syncPeopleData = functions.pubsub.schedule('every 24 hours').onRun((cont
 
 })
 
+//Absolutely insecure; present for testing purposes only
 exports.syncPeopleDataTest = functions.https.onRequest((req, res) => {
 
     console.log('Running')
     updatePeopleData().then(result => console.log('Finished Syncing People'))
 
 })
+
 
 const findInactiveTutorsFunc = async context => {
 
@@ -512,7 +514,7 @@ const findInactiveTutorsFunc = async context => {
 
         })
         
-
+        //Go to the next page
         fetchNextPage()
 
     }).catch(error => {
@@ -560,6 +562,7 @@ const findInactiveTutorsFunc = async context => {
 
     }
 
+    //Chunk the array 10 at a time for AirTable to process
     let arrayChunks = []
 
     var i,j,temparray,chunk = 10;
@@ -570,24 +573,22 @@ const findInactiveTutorsFunc = async context => {
 
     //Update all the records
     for (let i = 0; i < arrayChunks.length; i++) {
+
+        //Do the update
         await base('Tutors').update(arrayChunks[i]).catch(error => console.log(error))
+
+        //Timeout to avoid hitting AirTable's rate limit
         await new Promise(r => setTimeout(r, 200))
     }
 
-    return 
-
-    //Now we have a list of all the tutors to notify Julia and Laura about...
-    
-
 }
 
+//Again, just here for testing; should be removed eventually
 exports.findInactiveTutorsTest = functions.https.onRequest((req, res) => {
     findInactiveTutorsFunc({})
 })
 
 exports.findInactiveTutors = functions.pubsub.schedule('every 24 hours').onRun(findInactiveTutorsFunc)
-    
-
 
 exports.onNewStudentRow = functions.https.onRequest(async (req, res) => {
 
@@ -615,6 +616,7 @@ exports.onNewStudentRow = functions.https.onRequest(async (req, res) => {
 
 })
 
+//Could probably be consolidated with `onNewStudentRow`
 exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
 
     //First check for authentication
@@ -641,10 +643,13 @@ exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
 
 })
 
+//Hopefully will be deprecated in favor of incremental updates as they come, but comes in handy when we need to make sure everything is synced up
 async function updatePeopleData() {
 
+    //Keep track of the number of writes (for debugging and cost estimating)
     let writes = 0
 
+    //AirTable setup
     const airtableAPIKey = functions.config().airtable.key
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
 
@@ -703,7 +708,6 @@ async function updatePeopleData() {
         
 
     }).catch(err => {
-        console.log('WHOA, HUGE ERROR:')
         console.log(err)
     })
 
@@ -763,7 +767,6 @@ async function updatePeopleData() {
         
 
     }).catch(err => {
-        console.log('WHOA, HUGE ERROR:')
         console.log(err)
     }).then(result => {
         console.log(`Total Writes: ${writes}`)
@@ -881,7 +884,7 @@ function recordsAreEqual(airtableRecord, firestoreDoc, role='tutor') {
 
 function getUpdatedRecordData(record, firestoreDoc, role) {
 
-    //Get correct phone number
+    //Get corrected phone number
     let phoneNumber = ''
     if (record.fields[role == 'tutor' ? 'Phone' : "Guardian's Phone"] != undefined) {
         try {
@@ -891,6 +894,7 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
         }
     }
 
+    //Start the new data
     let newData = {
         'firstname': (record.fields['First Name'] || '').trim(),
         'lastname': (record.fields['Last Name'] || '').trim(),
@@ -901,6 +905,7 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
         'didInitiateFirstContact': false
     }
 
+    //** Currently not being used
     let matched = []
 
     if (!notNull(record.fields['Match date'])) matched = []
@@ -910,7 +915,9 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
     if (role == 'tutor') {
         newData['matched'] = matched
     }
+    //**
 
+    //Keep track of the person's tutors/students and the phone numbers that are available to assign
     let correspondents = {}
     let restrictedTutorNumbers = []
 
@@ -968,10 +975,13 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
     //Go through the missing items
     for (let i = 0; i < missingItems.length; i++) {
 
+        //For students, it just shows up as null
         let newItem = 'null'
 
+        //For tutors, assign a proxy number to each student
         if (role == 'tutor') {
 
+            //This should probably be randomized for load balancing
             const proxyNumber = getFirstAvailableTutorNumber(restrictedTutorNumbers)
 
             if (notNull(proxyNumber)) {
@@ -1045,6 +1055,7 @@ exports.getUserRoles = functions.https.onCall(async (data, context) => {
 
 })
 
+//Admin functions
 exports.listPrivilegedUsers = functions.https.onCall(adminRequests.listPrivilegedUsers)
 exports.getUserByEmail = functions.https.onCall(adminRequests.getUserByEmail)
 exports.grantAdminAccess = functions.https.onCall(adminRequests.grantAdminAccess)
