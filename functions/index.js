@@ -195,6 +195,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
     //Make sure it says they are communicating
     let data = {}
+    let docId = role == 'tutor' ? personDoc.id : secondPersonDoc.id
     if (role == 'tutor') data['Tutor communicating?'] = 'yes'
     if (role == 'student') data['Family communicating?'] = 'yes'
 
@@ -204,7 +205,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
     base('Tutors').update([{
 
-        id: personDoc.id,
+        id: docId,
         fields: data
         
     }]).catch(err => console.log(err))
@@ -345,6 +346,7 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
 
     //Make sure it says they are communicating
     let data = {}
+    let docId = role == 'tutor' ? personDoc.id : secondPersonDoc.id
     if (role == 'tutor') data['Tutor communicating?'] = 'yes'
     if (role == 'student') data['Family communicating?'] = 'yes'
 
@@ -354,7 +356,7 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
     
     base('Tutors').update([{
 
-        id: personDoc.id,
+        id: docId,
         fields: data
         
     }]).catch(err => console.log(err))
@@ -401,7 +403,7 @@ exports.respondToPhonePickup = functions.https.onRequest(async (req, res) => {
     //Update AirTable to reflect those changes
     const airtableAPIKey = functions.config().airtable.key
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
-    console.log(docId)
+
     base('Tutors').update([{
 
         id: docId,
