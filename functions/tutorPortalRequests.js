@@ -9,13 +9,54 @@ const twilioAuthToken = functions.config().twilio.auth_token
 
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 
-
-const twilioAnnouncementNumber = 'MGa19edba57db255edc0cbcbe15f392a44'
-
 //Util function 
 function notNull(value) {
     return value != null && value != undefined
 }
+
+//For getting the tutor data from an email
+async function getTutorDataRaw(email) {
+
+    //Get the aritable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Tutors').select({
+        maxRecords: 1,
+        filterByFormula: `{Email} = '${email}'`,
+        fields: ['Waiver?', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date']
+    }).firstPage()
+
+    //Throw if the tutor wasn't found
+    if (result.length == 0) throw new Error('no-record-found')
+
+    //Format it to send back
+    const user = {
+        "user": result[0]['_rawJson']['fields'] || {}
+    }
+
+    //Return
+    return user
+
+}
+
+
+
+//For getting tutor data
+exports.getTutorData = functions.https.onCall((data, context) => {
+
+    return getTutorDataRaw(context.auth.token.email).then(tutor => {
+
+        return tutor
+
+    }).catch(error => {
+        throw new functions.https.HttpsError('not-found', 'The tutor data for your account was not found.')
+    })
+
+})
 
 exports.getTutor = async (data, context) => {
 
