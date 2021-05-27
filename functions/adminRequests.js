@@ -344,8 +344,8 @@ exports.listMessages = async function(data, context) {
 
     //Get tutor's messages
     const tutorMessages = await twilioClient.messages.list({
-        from: tutorPhoneNumber,
-        to: proxyNumber,
+        from: proxyNumber,
+        to: studentNumber,
         limit: 100
     })
 

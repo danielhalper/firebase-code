@@ -93,8 +93,8 @@ exports.getMessagesForStudent = async (data, context) => {
 
     //Get tutor's messages
     const tutorMessages = await twilioClient.messages.list({
-        from: tutorNumber,
-        to: proxyNumber,
+        from: proxyNumber,
+        to: studentNumber,
         limit: 100
     })
 
@@ -108,11 +108,9 @@ exports.getMessagesForStudent = async (data, context) => {
     //Combine the lists
     let allMessages = tutorMessages.concat(studentMessages)
 
-    
-
     //Sort it by date sent
     allMessages.sort((first, second) => {
-        return second.dateSent - first.dateSent
+        return first.dateSent - second.dateSent
     })
 
     //Format it
@@ -120,8 +118,8 @@ exports.getMessagesForStudent = async (data, context) => {
         body: item.body,
         from: item.from,
         to: item.to,
-        dateUpdated: item.dateUpdated,
-        dateSent: item.dateSent,
+        dateUpdated: item.dateUpdated.toISOString(),
+        dateSent: item.dateSent.toISOString(),
         uri: item.uri
     } })
 
@@ -268,14 +266,16 @@ exports.sendSMSMessage = async (data, context) => {
     }
 
     //Next, forward the text message
-    await twilioClient.messages.create({
+    const newMessage = await twilioClient.messages.create({
         to: toPhone,
         from: to,
         body: message
     })
 
     return {
-        status: 'success'
+        body: message,
+        type: 'to',
+        dateSent: newMessage.dateCreated.toISOString()
     }
 
 }
