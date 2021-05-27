@@ -4,6 +4,7 @@ const airtable = require('airtable') //Airtable API Client
 const twilio = require('twilio') //Twilio SDK
 const { Translate } = require('@google-cloud/translate').v2 //Google Translate
 const adminRequests = require('./adminRequests') //Request callbacks for admin-related tasks
+const tutorPortalRequests = require('./tutorPortalRequests') //Request callbacks for tutor portal tasks
 const { parsePhoneNumber } = require('libphonenumber-js') //For formatting phone numbers correctly
 
 //Get Twilio credentials
@@ -1068,4 +1069,7 @@ exports.getTutorByEmail = functions.https.onCall(adminRequests.getTutorByEmail)
 exports.sendAnnouncement = functions.https.onCall(adminRequests.sendAnnouncement)
 exports.listMessages = functions.https.onCall(adminRequests.listMessages)
 
-
+//Tutor portal functions
+exports.getTutor = functions.https.onCall(tutorPortalRequests.getTutor)
+exports.getMessagesForStudent = functions.https.onCall(tutorPortalRequests.getMessagesForStudent)
+exports.sendSMSMessage = functions.https.onCall(tutorPortalRequests.sendSMSMessage)
