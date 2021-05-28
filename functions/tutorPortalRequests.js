@@ -27,7 +27,7 @@ async function getTutorDataRaw(email) {
     const result = await base('Tutors').select({
         maxRecords: 1,
         filterByFormula: `{Email} = '${email}'`,
-        fields: ['Waiver?', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date']
+        fields: ['Waiver?', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date', 'Live Scan?', 'Live Training?']
     }).firstPage()
 
     //Throw if the tutor wasn't found
