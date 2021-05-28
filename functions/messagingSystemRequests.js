@@ -813,6 +813,17 @@ function recordsAreEqual(airtableRecord, firestoreDoc, role='tutor') {
 
         }
 
+        //For emails...
+        else if (item == 'email') {
+
+            //Get the value
+            const fieldValue = airtableRecord.fields[ nameMappings[ item ] ] || ''
+
+            //If the field value doesn't match the lowercased record value, return false
+            if (fieldValue != fields[item].toLowerCase().trim()) return false
+
+        }
+
         //For all other fields...
         else {
 
@@ -847,7 +858,7 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
     let newData = {
         'firstname': (record.fields['First Name'] || '').trim(),
         'lastname': (record.fields['Last Name'] || '').trim(),
-        'email': (record.fields[role == 'tutor' ? 'Email' : "Guardian's Email"] || '').trim(),
+        'email': (record.fields[role == 'tutor' ? 'Email' : "Guardian's Email"] || '').toLowerCase().trim(),
         'phone': phoneNumber,
         'role': role,
         'preferredLanguage': record.fields['Language'] || 'English',
