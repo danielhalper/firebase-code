@@ -283,6 +283,8 @@ class ListMessagesScreen extends React.Component {
                 })
             })
 
+        }).catch(error => {
+            message.error(`We couldn't find any messages for this tutor`)
         })
 
     }
