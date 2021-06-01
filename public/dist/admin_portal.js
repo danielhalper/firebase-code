@@ -303,7 +303,7 @@ var MessagesDisplay = function (_React$Component2) {
 
                     return React.createElement(
                         'div',
-                        { 'class': 'message-bubble' },
+                        { className: 'message-bubble' },
                         React.createElement(
                             'div',
                             { style: theStyle },
@@ -387,7 +387,7 @@ var ListMessagesScreen = function (_React$Component3) {
                 _this9.setState({
                     loadingMessages: false,
                     messages: result.data.messages.map(function (message) {
-                        return Object.assign({}, message, { type: message.from == _this9.state.searchResult.phone ? 'to' : 'from' });
+                        return Object.assign({}, message, { type: message.to == _this9.state.searchResult.students[index].phone ? 'to' : 'from' });
                     })
                 });
             });

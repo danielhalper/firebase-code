@@ -208,7 +208,7 @@ class MessagesDisplay extends React.Component {
 
                 const theStyle = (item.type == 'to') ? toStyle:fromStyle
 
-                return <div class='message-bubble' >
+                return <div className='message-bubble' >
                     <div style={theStyle}>{item.body}</div>
                 </div>
 
@@ -271,21 +271,20 @@ class ListMessagesScreen extends React.Component {
             loadingMessages: true
         })
 
-        firebase.functions().httpsCallable('listMessages')({
-            tutorId: this.state.searchResult.id,
-            studentId: student.id
-        }).then(result => {
+                firebase.functions().httpsCallable('listMessages')({
+                    tutorId: this.state.searchResult.id,
+                    studentId: student.id
+                }).then(result => {
 
-            this.setState({
-                loadingMessages: false,
-                messages: result.data.messages.map(message => {
-                    return {...message, type: (message.from == this.state.searchResult.phone) ? 'to' : 'from'}
+                    this.setState({
+                        loadingMessages: false,
+                        messages: result.data.messages.map(message => {
+                            return {...message, type: (message.to == this.state.searchResult.students[index].phone) ? 'to' : 'from'}
+                        })
+                    })
+
+
                 })
-            })
-
-        }).catch(error => {
-            message.error(`We couldn't find any messages for this tutor`)
-        })
 
     }
 
