@@ -109,7 +109,7 @@ var ManageUsersScreen = function (_React$Component) {
         value: function handleRoleUpdate(values, option) {
             var _this4 = this;
 
-            var roles = this.state.searchResult.roles;
+            var roles = this.state.searchResult.roles || [];
 
             var itemsToDo = [];
 

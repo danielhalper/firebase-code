@@ -66,7 +66,7 @@ class ManageUsersScreen extends React.Component {
     handleRoleUpdate(values, option) {
         
 
-        const roles = this.state.searchResult.roles
+        const roles = this.state.searchResult.roles || []
 
         let itemsToDo = []
 
