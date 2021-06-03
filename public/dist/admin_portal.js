@@ -186,7 +186,7 @@ var ManageUsersScreen = function (_React$Component) {
                             { title: this.state.searchResult.email, style: { margin: 20 } },
                             React.createElement(
                                 Select,
-                                { mode: 'multiple', placeholder: 'Add roles...', defaultValue: this.state.searchResult.roles.filter(function (item) {
+                                { mode: 'multiple', placeholder: 'Add roles...', defaultValue: (this.state.searchResult.roles || []).filter(function (item) {
                                         return ['admin', 'announcer'].includes(item);
                                     }), style: { width: 300 }, onChange: this.handleRoleUpdate },
                                 React.createElement(

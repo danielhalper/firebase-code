@@ -125,7 +125,7 @@ class ManageUsersScreen extends React.Component {
 
                 {this.state.searchResult && <div>
                     <Card title={this.state.searchResult.email} style={{margin: 20}}>
-                        <Select mode='multiple' placeholder='Add roles...' defaultValue={this.state.searchResult.roles.filter(item => ['admin', 'announcer'].includes(item))} style={{width: 300}} onChange={this.handleRoleUpdate}>
+                        <Select mode='multiple' placeholder='Add roles...' defaultValue={(this.state.searchResult.roles || []).filter(item => ['admin', 'announcer'].includes(item))} style={{width: 300}} onChange={this.handleRoleUpdate}>
 
                             <Option key='announcer' value='announcer'>Announcer</Option>
                             <Option key='admin' value='admin'>Admin</Option>
