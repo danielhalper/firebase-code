@@ -26,7 +26,7 @@ async function getTutorDataRaw(email) {
     //Get the relevant record from the Tutors table
     const result = await base('Tutors').select({
         maxRecords: 1,
-        filterByFormula: `{Email} = '${email}'`,
+        filterByFormula: `{Email} = '${email.toLowerCase().trim()}'`,
         fields: ['Waiver?', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date', 'Live Scan?', 'Live Training?']
     }).firstPage()
 
