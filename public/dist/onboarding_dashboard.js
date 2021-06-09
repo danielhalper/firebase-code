@@ -10,15 +10,24 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var mountNode = document.getElementById('content');
 
 var _antd = antd,
-    Layout = _antd.Layout;
+    Layout = _antd.Layout,
+    Avatar = _antd.Avatar,
+    Typography = _antd.Typography,
+    Tabs = _antd.Tabs;
+var Title = Typography.Title;
+var TabPane = Tabs.TabPane;
 var _icons = icons,
     HomeOutlined = _icons.HomeOutlined,
+    SolutionOutlined = _icons.SolutionOutlined,
     BookOutlined = _icons.BookOutlined,
     CalendarFilled = _icons.CalendarFilled,
     SecurityScanOutlined = _icons.SecurityScanOutlined,
-    RocketOutlined = _icons.RocketOutlined;
+    RocketOutlined = _icons.RocketOutlined,
+    CommentOutlined = _icons.CommentOutlined,
+    UserOutlined = _icons.UserOutlined;
 var Sider = Layout.Sider,
-    Content = Layout.Content;
+    Content = Layout.Content,
+    Footer = Layout.Footer;
 
 
 var EMULATOR = window.location.href.includes('localhost');
@@ -48,10 +57,10 @@ var OnboardingPortal = function (_React$Component) {
 
             return React.createElement(
                 Layout,
-                { style: { height: '100%' } },
+                { style: { height: '100%' }, className: 'desktop-dashboard' },
                 React.createElement(
                     Sider,
-                    { theme: 'light', style: { display: 'flex', height: '100%', flexDirection: 'column', position: 'fixed', top: 0, left: 0, width: 150 } },
+                    { theme: 'light', 'class': 'dashboard-sidebar', breakpoint: 'sm', collapsedWidth: '0', collapsible: true },
                     React.createElement(
                         'div',
                         { style: { display: 'flex', flexDirection: 'column', height: '100%' } },
@@ -65,33 +74,38 @@ var OnboardingPortal = function (_React$Component) {
                             { 'class': 'sidebar-options' },
                             React.createElement(
                                 'div',
-                                null,
+                                { 'class': 'active' },
                                 React.createElement(HomeOutlined, null),
                                 ' Dashboard'
                             ),
                             React.createElement(
                                 'div',
                                 null,
+                                React.createElement(CommentOutlined, null),
                                 'Chat Signup'
                             ),
                             React.createElement(
                                 'div',
                                 null,
+                                React.createElement(SolutionOutlined, null),
                                 'Waiver'
                             ),
                             React.createElement(
                                 'div',
                                 null,
-                                'Background Check'
-                            ),
-                            React.createElement(
-                                'div',
-                                null,
+                                React.createElement(BookOutlined, null),
                                 'Workbook'
                             ),
                             React.createElement(
                                 'div',
-                                null,
+                                { 'class': 'disabled' },
+                                React.createElement(SecurityScanOutlined, null),
+                                'Background Check'
+                            ),
+                            React.createElement(
+                                'div',
+                                { 'class': 'disabled' },
+                                React.createElement(RocketOutlined, null),
                                 'Live Training'
                             )
                         ),
@@ -101,7 +115,8 @@ var OnboardingPortal = function (_React$Component) {
                             { 'class': 'sidebar-footer', style: { marginBottom: 50 } },
                             React.createElement(
                                 'span',
-                                null,
+                                { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start' } },
+                                React.createElement(Avatar, { size: 'large', icon: React.createElement(UserOutlined, null) }),
                                 this.state.tutor.firstName + ' ' + this.state.tutor.lastName
                             )
                         )
@@ -109,8 +124,21 @@ var OnboardingPortal = function (_React$Component) {
                 ),
                 React.createElement(
                     Layout,
-                    { style: { backgroundColor: 'white' } },
-                    React.createElement(Content, { style: { backgroundColor: 'rgba(207, 245, 248, 0.67)', borderRadius: 15, margin: 30, marginLeft: 200 } })
+                    null,
+                    React.createElement(
+                        Layout,
+                        { style: { backgroundColor: 'white' } },
+                        React.createElement(Content, { className: 'main-content' })
+                    ),
+                    window.matchMedia('screen and (max-width: 500px)').matches && React.createElement(
+                        Footer,
+                        { style: { backgroundColor: 'white' } },
+                        React.createElement(
+                            Tabs,
+                            null,
+                            React.createElement(TabPane, { tab: 'Dashboard' })
+                        )
+                    )
                 )
             );
         }

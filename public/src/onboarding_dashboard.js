@@ -1,9 +1,11 @@
 //The node to mount on
 const mountNode = document.getElementById('content')
 
-const { Layout } = antd
-const { HomeOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined } = icons;
-const { Sider, Content } = Layout
+const { Layout, Avatar, Typography, Tabs } = antd
+const { Title } = Typography
+const { TabPane } = Tabs
+const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined } = icons;
+const { Sider, Content, Footer } = Layout
 
 const EMULATOR = window.location.href.includes('localhost')
 
@@ -24,9 +26,9 @@ class OnboardingPortal extends React.Component {
 
     render() {
 
-        return <Layout style={{ height: '100%' }}>
+        return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
 
-            <Sider theme='light' style={{ display: 'flex', height: '100%', flexDirection: 'column', position: 'fixed', top: 0, left: 0, width: 150 }}>
+            <Sider theme='light' class='dashboard-sidebar' breakpoint='sm' collapsedWidth='0' collapsible>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
                     
                     <div class='sidebar-header'>
@@ -35,12 +37,12 @@ class OnboardingPortal extends React.Component {
 
                     <div class='sidebar-options'>
                         
-                        <div><HomeOutlined /> Dashboard</div>
-                        <div>Chat Signup</div>
-                        <div>Waiver</div>
-                        <div>Background Check</div>
-                        <div>Workbook</div>
-                        <div>Live Training</div>
+                        <div class='active'><HomeOutlined /> Dashboard</div>
+                        <div><CommentOutlined />Chat Signup</div>
+                        <div><SolutionOutlined />Waiver</div>
+                        <div><BookOutlined />Workbook</div>
+                        <div class='disabled'><SecurityScanOutlined />Background Check</div>
+                        <div class='disabled'><RocketOutlined />Live Training</div>
 
                     </div>
 
@@ -48,21 +50,36 @@ class OnboardingPortal extends React.Component {
 
                     <div class='sidebar-footer' style={{ marginBottom: 50 }}>
                         
-                        <span>{this.state.tutor.firstName + ' ' + this.state.tutor.lastName}</span>
+                        <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}><Avatar size='large' icon={<UserOutlined />}/>{this.state.tutor.firstName + ' ' + this.state.tutor.lastName}</span>
 
                     </div>
 
                 </div>
 
             </Sider>
+            <Layout>
+                
+                <Layout style={{backgroundColor: 'white'}}>
+                    <Content className='main-content'>
 
-            <Layout style={{backgroundColor: 'white'}}>
-                <Content style={{ backgroundColor: 'rgba(207, 245, 248, 0.67)', borderRadius: 15, margin: 30, marginLeft: 200 }}>
 
 
+                    </Content>
+                </Layout>
 
-                </Content>
+                { window.matchMedia('screen and (max-width: 500px)').matches && <Footer style={{backgroundColor: 'white'}}>
+
+                    <Tabs>
+                        <TabPane tab='Dashboard'>
+
+                        </TabPane>
+                    </Tabs>
+
+                </Footer>}
+
             </Layout>
+
+            
 
         </Layout>
 

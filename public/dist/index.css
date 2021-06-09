@@ -1,0 +1,104 @@
+html, body {margin: 0; height: 100%; overflow: hidden}
+
+#logout-button {
+    float: right;
+}
+
+.steps {
+    margin-top: 30px;
+}
+
+.step {
+    margin-top: 20px;
+}
+
+h3.ant-typography {
+    margin-top: 50px;
+}
+
+.requirement {
+    border: solid #238d95 1px;
+    border-radius: 3px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 10px;
+    display: block;
+    max-width: 300px;
+    font-size: 20px;
+    float: left;
+}
+
+.requirement .description {
+    font-size: 15px;
+}
+
+.btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.roleSelector {
+    width: 150px;
+}
+
+.dashboard-sidebar {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    background-color: white;
+}
+
+.sidebar-header {
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.sidebar-options {
+    padding: 25px;
+}
+
+.sidebar-options div {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #327D83;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.sidebar-options div:hover {
+    cursor: pointer;
+}
+
+.sidebar-options div:not(.disabled):hover {
+    color: #1BCBD9;
+}
+
+.sidebar-options div.active {
+    color: #1BCBD9;
+}
+
+.sidebar-options div.disabled {
+    color: #C4C4C4;
+}
+
+.sidebar-options div .anticon {
+    margin-right: 5px;
+}
+
+.main-content {
+    background-color: rgba(207, 245, 248, 0.67);
+    border-radius: 15px;
+    margin: 30px;
+}
+
+.sidebar-footer {
+    padding: 25px;
+}
+
+.ant-avatar {
+    margin: 5px;
+    background-color: #1BCBD9;
+}
+
