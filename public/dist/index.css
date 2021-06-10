@@ -4,10 +4,6 @@ html, body {margin: 0; height: 100%; overflow: hidden}
     float: right;
 }
 
-.steps {
-    margin-top: 30px;
-}
-
 .step {
     margin-top: 20px;
 }
@@ -17,21 +13,27 @@ h3.ant-typography {
 }
 
 .requirement {
-    border: solid #238d95 1px;
-    border-radius: 3px;
+    /*border: solid #238d95 1px;*/
+    background-color: white;
+    border-radius: 10px;
     padding-top: 15px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
     margin: 10px;
     display: block;
     max-width: 300px;
     font-size: 20px;
-    float: left;
+    transition: 0.7s;
+}
+
+.requirement:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 5px;
 }
 
 .requirement .description {
     font-size: 15px;
+    margin-top: 5px;
 }
 
 .btn {
@@ -87,10 +89,19 @@ h3.ant-typography {
     margin-right: 5px;
 }
 
-.main-content {
+.content-container {
     background-color: rgba(207, 245, 248, 0.67);
     border-radius: 15px;
     margin: 30px;
+}
+
+.main-content {
+    height: 100%;
+    margin: 30px;
+    padding: 20px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    overflow-y: scroll;
 }
 
 .sidebar-footer {
@@ -102,3 +113,13 @@ h3.ant-typography {
     background-color: #1BCBD9;
 }
 
+.steps-container {
+
+    background-color: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+
+}

@@ -34,26 +34,112 @@ var EMULATOR = window.location.href.includes('localhost');
 
 if (EMULATOR) firebase.functions().useEmulator("localhost", 5001);
 
-var OnboardingPortal = function (_React$Component) {
-    _inherits(OnboardingPortal, _React$Component);
+var SidebarItem = function (_React$Component) {
+    _inherits(SidebarItem, _React$Component);
+
+    function SidebarItem(props) {
+        _classCallCheck(this, SidebarItem);
+
+        var _this = _possibleConstructorReturn(this, (SidebarItem.__proto__ || Object.getPrototypeOf(SidebarItem)).call(this, props));
+
+        _this.handleOnClick = _this.handleOnClick.bind(_this);
+        return _this;
+    }
+
+    _createClass(SidebarItem, [{
+        key: 'handleOnClick',
+        value: function handleOnClick() {
+
+            if (!this.props.disabled) {
+                this.props.onClick(this.props.keyId);
+            }
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                { onClick: this.handleOnClick, 'class': (this.props.active ? 'active' : '') + ' ' + (this.props.disabled ? 'disabled' : '') },
+                this.props.icon && this.props.icon,
+                ' ',
+                this.props.children
+            );
+        }
+    }]);
+
+    return SidebarItem;
+}(React.Component);
+
+var OnboardingPortal = function (_React$Component2) {
+    _inherits(OnboardingPortal, _React$Component2);
 
     function OnboardingPortal(props) {
         _classCallCheck(this, OnboardingPortal);
 
-        var _this = _possibleConstructorReturn(this, (OnboardingPortal.__proto__ || Object.getPrototypeOf(OnboardingPortal)).call(this, props));
+        var _this2 = _possibleConstructorReturn(this, (OnboardingPortal.__proto__ || Object.getPrototypeOf(OnboardingPortal)).call(this, props));
 
-        _this.state = {
+        _this2.state = {
 
-            tutor: {}
+            tutor: {},
+            pages: {
+                'home': Home
+            },
+            currentTab: 'home',
+            loadingUser: true
 
         };
 
-        return _this;
+        _this2.onSideBarItemClicked = _this2.onSideBarItemClicked.bind(_this2);
+        _this2.onUserFinishedLoading = _this2.onUserFinishedLoading.bind(_this2);
+        _this2.loadUser = _this2.loadUser.bind(_this2);
+
+        return _this2;
     }
 
     _createClass(OnboardingPortal, [{
+        key: 'onSideBarItemClicked',
+        value: function onSideBarItemClicked(key) {
+
+            this.setState({ currentTab: key });
+        }
+    }, {
+        key: 'onUserFinishedLoading',
+        value: function onUserFinishedLoading(user) {
+
+            this.setState({
+                loadingUser: false,
+                tutor: user
+            });
+        }
+    }, {
+        key: 'loadUser',
+        value: function loadUser() {
+            var _this3 = this;
+
+            firebase.functions().httpsCallable('getTutor')().then(function (result) {
+
+                _this3.onUserFinishedLoading(result.data);
+            }).catch(function (error) {
+
+                //TODO
+
+            });
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this4 = this;
+
+            FIREBASE_RUN_ON_READY.push(function (user) {
+
+                _this4.loadUser();
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
+
+            var CurrentPage = this.state.pages[this.state.currentTab];
 
             return React.createElement(
                 Layout,
@@ -73,39 +159,33 @@ var OnboardingPortal = function (_React$Component) {
                             'div',
                             { 'class': 'sidebar-options' },
                             React.createElement(
-                                'div',
-                                { 'class': 'active' },
-                                React.createElement(HomeOutlined, null),
-                                ' Dashboard'
+                                SidebarItem,
+                                { keyId: 'home', icon: React.createElement(HomeOutlined, null), active: true, onClick: this.onSideBarItemClicked },
+                                'Dashboard'
                             ),
                             React.createElement(
-                                'div',
-                                null,
-                                React.createElement(CommentOutlined, null),
+                                SidebarItem,
+                                { keyId: 'chat-signup', icon: React.createElement(CommentOutlined, null), onClick: this.onSideBarItemClicked },
                                 'Chat Signup'
                             ),
                             React.createElement(
-                                'div',
-                                null,
-                                React.createElement(SolutionOutlined, null),
+                                SidebarItem,
+                                { keyId: 'waiver', icon: React.createElement(SolutionOutlined, null), onClick: this.onSideBarItemClicked },
                                 'Waiver'
                             ),
                             React.createElement(
-                                'div',
-                                null,
-                                React.createElement(BookOutlined, null),
+                                SidebarItem,
+                                { keyId: 'workbook', icon: React.createElement(BookOutlined, null), onClick: this.onSideBarItemClicked },
                                 'Workbook'
                             ),
                             React.createElement(
-                                'div',
-                                { 'class': 'disabled' },
-                                React.createElement(SecurityScanOutlined, null),
+                                SidebarItem,
+                                { keyId: 'livescan', icon: React.createElement(SecurityScanOutlined, null), disabled: true, onClick: this.onSideBarItemClicked },
                                 'Background Check'
                             ),
                             React.createElement(
-                                'div',
-                                { 'class': 'disabled' },
-                                React.createElement(RocketOutlined, null),
+                                SidebarItem,
+                                { keyId: 'live-training', icon: React.createElement(RocketOutlined, null), disabled: true, onClick: this.onSideBarItemClicked },
                                 'Live Training'
                             )
                         ),
@@ -113,11 +193,11 @@ var OnboardingPortal = function (_React$Component) {
                         React.createElement(
                             'div',
                             { 'class': 'sidebar-footer', style: { marginBottom: 50 } },
-                            React.createElement(
+                            !this.state.loadingUser && React.createElement(
                                 'span',
                                 { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start' } },
                                 React.createElement(Avatar, { size: 'large', icon: React.createElement(UserOutlined, null) }),
-                                this.state.tutor.firstName + ' ' + this.state.tutor.lastName
+                                this.state.tutor.firstname + ' ' + this.state.tutor.lastname
                             )
                         )
                     )
@@ -128,7 +208,16 @@ var OnboardingPortal = function (_React$Component) {
                     React.createElement(
                         Layout,
                         { style: { backgroundColor: 'white' } },
-                        React.createElement(Content, { className: 'main-content' })
+                        React.createElement(
+                            Content,
+                            { className: 'content-container' },
+                            React.createElement(
+                                'div',
+                                { className: 'main-content' },
+                                this.state.loadingUser && React.createElement(Skeleton, { active: true }),
+                                !this.state.loadingUser && React.createElement(CurrentPage, { tutor: this.state.tutor })
+                            )
+                        )
                     ),
                     window.matchMedia('screen and (max-width: 500px)').matches && React.createElement(
                         Footer,

@@ -11,6 +11,27 @@ const EMULATOR = window.location.href.includes('localhost')
 
 if (EMULATOR) firebase.functions().useEmulator("localhost", 5001)
 
+
+class SidebarItem extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.handleOnClick = this.handleOnClick.bind(this)
+    }
+
+    handleOnClick() {
+
+        if (!this.props.disabled) {
+            this.props.onClick(this.props.keyId)
+        }
+
+    }
+
+    render() {
+        return <div onClick={this.handleOnClick} class={`${this.props.active ? 'active':''} ${this.props.disabled ? 'disabled':''}`}>{this.props.icon && this.props.icon} {this.props.children}</div>
+    }
+}
+
 class OnboardingPortal extends React.Component {
 
     constructor(props) {
@@ -18,13 +39,63 @@ class OnboardingPortal extends React.Component {
 
         this.state = {
 
-            tutor: {}
+            tutor: {},
+            pages: {
+                'home': Home
+            },
+            currentTab: 'home',
+            loadingUser: true
 
         }
+
+        this.onSideBarItemClicked = this.onSideBarItemClicked.bind(this)
+        this.onUserFinishedLoading = this.onUserFinishedLoading.bind(this)
+        this.loadUser = this.loadUser.bind(this)
+
+    }
+
+    onSideBarItemClicked(key) {
+
+        this.setState({ currentTab: key })
+
+    }
+
+    onUserFinishedLoading(user) {
+
+        this.setState({
+            loadingUser: false, 
+            tutor: user
+        })
+
+    }
+
+    loadUser() {
+
+        firebase.functions().httpsCallable('getTutor')().then(result => {
+
+            this.onUserFinishedLoading(result.data)
+
+        }).catch(error => {
+
+            //TODO
+
+        })
+
+    }
+
+    componentDidMount() {
+
+        FIREBASE_RUN_ON_READY.push((user) => {
+
+            this.loadUser()
+
+        })
 
     }
 
     render() {
+
+        const CurrentPage = this.state.pages[this.state.currentTab]
 
         return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
 
@@ -36,21 +107,19 @@ class OnboardingPortal extends React.Component {
                     </div>
 
                     <div class='sidebar-options'>
-                        
-                        <div class='active'><HomeOutlined /> Dashboard</div>
-                        <div><CommentOutlined />Chat Signup</div>
-                        <div><SolutionOutlined />Waiver</div>
-                        <div><BookOutlined />Workbook</div>
-                        <div class='disabled'><SecurityScanOutlined />Background Check</div>
-                        <div class='disabled'><RocketOutlined />Live Training</div>
-
+                        <SidebarItem keyId='home' icon={<HomeOutlined />} active onClick={this.onSideBarItemClicked}>Dashboard</SidebarItem>
+                        <SidebarItem keyId='chat-signup' icon={<CommentOutlined />} onClick={this.onSideBarItemClicked}>Chat Signup</SidebarItem>
+                        <SidebarItem keyId='waiver' icon={<SolutionOutlined />} onClick={this.onSideBarItemClicked}>Waiver</SidebarItem>
+                        <SidebarItem keyId='workbook' icon={<BookOutlined />} onClick={this.onSideBarItemClicked}>Workbook</SidebarItem>
+                        <SidebarItem keyId='livescan' icon={<SecurityScanOutlined />} disabled onClick={this.onSideBarItemClicked}>Background Check</SidebarItem>
+                        <SidebarItem keyId='live-training' icon={<RocketOutlined />} disabled onClick={this.onSideBarItemClicked}>Live Training</SidebarItem>
                     </div>
 
                     <div class='sidebar-spacer' style={{ flex: 1 }}></div>
 
                     <div class='sidebar-footer' style={{ marginBottom: 50 }}>
                         
-                        <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}><Avatar size='large' icon={<UserOutlined />}/>{this.state.tutor.firstName + ' ' + this.state.tutor.lastName}</span>
+                        {!this.state.loadingUser && <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}><Avatar size='large' icon={<UserOutlined />}/>{this.state.tutor.firstname + ' ' + this.state.tutor.lastname}</span>}
 
                     </div>
 
@@ -60,10 +129,11 @@ class OnboardingPortal extends React.Component {
             <Layout>
                 
                 <Layout style={{backgroundColor: 'white'}}>
-                    <Content className='main-content'>
-
-
-
+                    <Content className='content-container'>
+                        <div className='main-content'>
+                            {this.state.loadingUser && <Skeleton active/>}
+                            {!this.state.loadingUser && <CurrentPage tutor={this.state.tutor} />}
+                        </div>
                     </Content>
                 </Layout>
 
