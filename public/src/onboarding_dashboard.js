@@ -32,6 +32,16 @@ class SidebarItem extends React.Component {
     }
 }
 
+class Empty extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return <div></div>
+    }
+}
+
 class OnboardingPortal extends React.Component {
 
     constructor(props) {
@@ -95,7 +105,7 @@ class OnboardingPortal extends React.Component {
 
     render() {
 
-        const CurrentPage = this.state.pages[this.state.currentTab]
+        const CurrentPage = this.state.pages[this.state.currentTab] || Empty
 
         return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
 

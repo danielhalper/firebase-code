@@ -70,15 +70,34 @@ var SidebarItem = function (_React$Component) {
     return SidebarItem;
 }(React.Component);
 
-var OnboardingPortal = function (_React$Component2) {
-    _inherits(OnboardingPortal, _React$Component2);
+var Empty = function (_React$Component2) {
+    _inherits(Empty, _React$Component2);
+
+    function Empty(props) {
+        _classCallCheck(this, Empty);
+
+        return _possibleConstructorReturn(this, (Empty.__proto__ || Object.getPrototypeOf(Empty)).call(this, props));
+    }
+
+    _createClass(Empty, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement('div', null);
+        }
+    }]);
+
+    return Empty;
+}(React.Component);
+
+var OnboardingPortal = function (_React$Component3) {
+    _inherits(OnboardingPortal, _React$Component3);
 
     function OnboardingPortal(props) {
         _classCallCheck(this, OnboardingPortal);
 
-        var _this2 = _possibleConstructorReturn(this, (OnboardingPortal.__proto__ || Object.getPrototypeOf(OnboardingPortal)).call(this, props));
+        var _this3 = _possibleConstructorReturn(this, (OnboardingPortal.__proto__ || Object.getPrototypeOf(OnboardingPortal)).call(this, props));
 
-        _this2.state = {
+        _this3.state = {
 
             tutor: {},
             pages: {
@@ -89,11 +108,11 @@ var OnboardingPortal = function (_React$Component2) {
 
         };
 
-        _this2.onSideBarItemClicked = _this2.onSideBarItemClicked.bind(_this2);
-        _this2.onUserFinishedLoading = _this2.onUserFinishedLoading.bind(_this2);
-        _this2.loadUser = _this2.loadUser.bind(_this2);
+        _this3.onSideBarItemClicked = _this3.onSideBarItemClicked.bind(_this3);
+        _this3.onUserFinishedLoading = _this3.onUserFinishedLoading.bind(_this3);
+        _this3.loadUser = _this3.loadUser.bind(_this3);
 
-        return _this2;
+        return _this3;
     }
 
     _createClass(OnboardingPortal, [{
@@ -114,11 +133,11 @@ var OnboardingPortal = function (_React$Component2) {
     }, {
         key: 'loadUser',
         value: function loadUser() {
-            var _this3 = this;
+            var _this4 = this;
 
             firebase.functions().httpsCallable('getTutor')().then(function (result) {
 
-                _this3.onUserFinishedLoading(result.data);
+                _this4.onUserFinishedLoading(result.data);
             }).catch(function (error) {
 
                 //TODO
@@ -128,18 +147,18 @@ var OnboardingPortal = function (_React$Component2) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this4 = this;
+            var _this5 = this;
 
             FIREBASE_RUN_ON_READY.push(function (user) {
 
-                _this4.loadUser();
+                _this5.loadUser();
             });
         }
     }, {
         key: 'render',
         value: function render() {
 
-            var CurrentPage = this.state.pages[this.state.currentTab];
+            var CurrentPage = this.state.pages[this.state.currentTab] || Empty;
 
             return React.createElement(
                 Layout,
