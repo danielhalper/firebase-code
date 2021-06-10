@@ -103,6 +103,43 @@ var OnboardingPortal = function (_React$Component3) {
             pages: {
                 'home': Home
             },
+            sidebarItems: [{
+                keyId: 'home',
+                icon: React.createElement(HomeOutlined, null),
+                title: 'Dashboard',
+                active: true,
+                disabled: false
+            }, {
+                keyId: 'chat-signup',
+                icon: React.createElement(CommentOutlined, null),
+                title: 'Chat Signup',
+                active: false,
+                disabled: false
+            }, {
+                keyId: 'waiver',
+                icon: React.createElement(SolutionOutlined, null),
+                title: 'Waiver',
+                active: false,
+                disabled: false
+            }, {
+                keyId: 'workbook',
+                icon: React.createElement(BookOutlined, null),
+                title: 'Workbook',
+                active: false,
+                disabled: false
+            }, {
+                keyId: 'livescan',
+                icon: React.createElement(SecurityScanOutlined, null),
+                title: 'Background Check',
+                active: false,
+                disabled: true
+            }, {
+                keyId: 'live-training',
+                icon: React.createElement(RocketOutlined, null),
+                title: 'Live Training',
+                active: false,
+                disabled: true
+            }],
             currentTab: 'home',
             loadingUser: true
 
@@ -119,7 +156,15 @@ var OnboardingPortal = function (_React$Component3) {
         key: 'onSideBarItemClicked',
         value: function onSideBarItemClicked(key) {
 
-            this.setState({ currentTab: key });
+            var sidebarItems = this.state.sidebarItems;
+
+            for (var i = 0; i < sidebarItems.length; i++) {
+                if (sidebarItems[i]['keyId'] == key) sidebarItems[i]['active'] = true;else sidebarItems[i]['active'] = false;
+            }
+
+            console.log(sidebarItems);
+
+            this.setState({ currentTab: key, sidebarItems: sidebarItems });
         }
     }, {
         key: 'onUserFinishedLoading',
@@ -157,6 +202,7 @@ var OnboardingPortal = function (_React$Component3) {
     }, {
         key: 'render',
         value: function render() {
+            var _this6 = this;
 
             var CurrentPage = this.state.pages[this.state.currentTab] || Empty;
 
@@ -177,36 +223,13 @@ var OnboardingPortal = function (_React$Component3) {
                         React.createElement(
                             'div',
                             { 'class': 'sidebar-options' },
-                            React.createElement(
-                                SidebarItem,
-                                { keyId: 'home', icon: React.createElement(HomeOutlined, null), active: true, onClick: this.onSideBarItemClicked },
-                                'Dashboard'
-                            ),
-                            React.createElement(
-                                SidebarItem,
-                                { keyId: 'chat-signup', icon: React.createElement(CommentOutlined, null), onClick: this.onSideBarItemClicked },
-                                'Chat Signup'
-                            ),
-                            React.createElement(
-                                SidebarItem,
-                                { keyId: 'waiver', icon: React.createElement(SolutionOutlined, null), onClick: this.onSideBarItemClicked },
-                                'Waiver'
-                            ),
-                            React.createElement(
-                                SidebarItem,
-                                { keyId: 'workbook', icon: React.createElement(BookOutlined, null), onClick: this.onSideBarItemClicked },
-                                'Workbook'
-                            ),
-                            React.createElement(
-                                SidebarItem,
-                                { keyId: 'livescan', icon: React.createElement(SecurityScanOutlined, null), disabled: true, onClick: this.onSideBarItemClicked },
-                                'Background Check'
-                            ),
-                            React.createElement(
-                                SidebarItem,
-                                { keyId: 'live-training', icon: React.createElement(RocketOutlined, null), disabled: true, onClick: this.onSideBarItemClicked },
-                                'Live Training'
-                            )
+                            this.state.sidebarItems.map(function (item) {
+                                return React.createElement(
+                                    SidebarItem,
+                                    { keyId: item.keyId, icon: item.icon, active: item.active, disabled: item.disabled, onClick: _this6.onSideBarItemClicked },
+                                    item.title
+                                );
+                            })
                         ),
                         React.createElement('div', { 'class': 'sidebar-spacer', style: { flex: 1 } }),
                         React.createElement(

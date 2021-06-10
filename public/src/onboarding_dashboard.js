@@ -53,6 +53,50 @@ class OnboardingPortal extends React.Component {
             pages: {
                 'home': Home
             },
+            sidebarItems: [
+                {
+                    keyId: 'home',
+                    icon: <HomeOutlined />,
+                    title: 'Dashboard',
+                    active: true,
+                    disabled: false
+                },
+                {
+                    keyId: 'chat-signup',
+                    icon: <CommentOutlined />,
+                    title: 'Chat Signup',
+                    active: false,
+                    disabled: false
+                },
+                {
+                    keyId: 'waiver',
+                    icon: <SolutionOutlined />,
+                    title: 'Waiver',
+                    active: false,
+                    disabled: false
+                },
+                {
+                    keyId: 'workbook',
+                    icon: <BookOutlined />,
+                    title: 'Workbook',
+                    active: false,
+                    disabled: false
+                },
+                {
+                    keyId: 'livescan',
+                    icon: <SecurityScanOutlined />,
+                    title: 'Background Check',
+                    active: false,
+                    disabled: true
+                },
+                {
+                    keyId: 'live-training',
+                    icon: <RocketOutlined />,
+                    title: 'Live Training',
+                    active: false,
+                    disabled: true
+                }
+            ],
             currentTab: 'home',
             loadingUser: true
 
@@ -66,7 +110,16 @@ class OnboardingPortal extends React.Component {
 
     onSideBarItemClicked(key) {
 
-        this.setState({ currentTab: key })
+        const sidebarItems = this.state.sidebarItems
+
+        for (let i = 0; i < sidebarItems.length; i++) {
+            if (sidebarItems[i]['keyId'] == key) sidebarItems[i]['active'] = true
+            else sidebarItems[i]['active'] = false
+        }
+
+        console.log(sidebarItems)
+
+        this.setState({ currentTab: key, sidebarItems: sidebarItems })
 
     }
 
@@ -117,12 +170,11 @@ class OnboardingPortal extends React.Component {
                     </div>
 
                     <div class='sidebar-options'>
-                        <SidebarItem keyId='home' icon={<HomeOutlined />} active onClick={this.onSideBarItemClicked}>Dashboard</SidebarItem>
-                        <SidebarItem keyId='chat-signup' icon={<CommentOutlined />} onClick={this.onSideBarItemClicked}>Chat Signup</SidebarItem>
-                        <SidebarItem keyId='waiver' icon={<SolutionOutlined />} onClick={this.onSideBarItemClicked}>Waiver</SidebarItem>
-                        <SidebarItem keyId='workbook' icon={<BookOutlined />} onClick={this.onSideBarItemClicked}>Workbook</SidebarItem>
-                        <SidebarItem keyId='livescan' icon={<SecurityScanOutlined />} disabled onClick={this.onSideBarItemClicked}>Background Check</SidebarItem>
-                        <SidebarItem keyId='live-training' icon={<RocketOutlined />} disabled onClick={this.onSideBarItemClicked}>Live Training</SidebarItem>
+
+                        { this.state.sidebarItems.map(item => {
+                            return <SidebarItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
+                        }) }
+
                     </div>
 
                     <div class='sidebar-spacer' style={{ flex: 1 }}></div>
