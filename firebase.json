@@ -14,7 +14,7 @@
     },
     "pubsub": {
       "port": 8085
-    }
+    } 
   },
   "hosting": {
     "public": "public",
