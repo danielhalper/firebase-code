@@ -884,8 +884,11 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
     let restrictedTutorNumbers = []
 
     let airtableItems = record.fields[role == 'tutor' ? 'Students': 'Tutors']
-
+    
+    if (typeof airtableItems == 'string' || airtableItems instanceof String) airtableItems = airtableItems.split(',')
+    console.log(airtableItems)
     if (!Array.isArray(airtableItems)) airtableItems = [airtableItems]
+
 
     let missingItems = []
 

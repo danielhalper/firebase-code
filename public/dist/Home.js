@@ -292,7 +292,7 @@ var FinalSteps = function (_React$Component4) {
             //Otherwise show the dashboard items
             return React.createElement(
                 'div',
-                { className: 'step', style: { marginTop: 50 } },
+                { className: 'dashboard-step', style: { marginTop: 50 } },
                 React.createElement(
                     Title,
                     { level: 3 },

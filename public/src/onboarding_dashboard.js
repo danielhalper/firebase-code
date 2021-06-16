@@ -1,10 +1,11 @@
 //The node to mount on
 const mountNode = document.getElementById('content')
 
-const { Layout, Avatar, Typography, Tabs } = antd
-const { Title } = Typography
+const { Layout, Avatar, Typography, Tabs, Steps, Popover } = antd
+const { Step } = Steps
+const { Title, Link } = Typography
 const { TabPane } = Tabs
-const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined } = icons;
+const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined } = icons;
 const { Sider, Content, Footer } = Layout
 
 const EMULATOR = window.location.href.includes('localhost')
@@ -21,14 +22,14 @@ class SidebarItem extends React.Component {
 
     handleOnClick() {
 
-        if (!this.props.disabled) {
-            this.props.onClick(this.props.keyId)
+        if (!this.props.disabled && !this.props.complete) {
+            this.props.onClick(this.props.keyId) 
         }
 
     }
 
     render() {
-        return <div onClick={this.handleOnClick} class={`${this.props.active ? 'active':''} ${this.props.disabled ? 'disabled':''}`}>{this.props.icon && this.props.icon} {this.props.children}</div>
+        return <div onClick={this.handleOnClick} className={`${this.props.active ? 'active ':''}${this.props.disabled || this.props.complete ? 'disabled ':''}${this.props.isStep ? 'step ':''}${this.props.isSubItem ? 'subitem ':''}${this.props.isMainItem ? 'main-item ':''}${this.props.complete ? 'complete ':''}`}>{this.props.icon && this.props.icon} {this.props.children}</div>
     }
 }
 
@@ -40,6 +41,33 @@ class Empty extends React.Component {
     render() {
         return <div></div>
     }
+}
+
+class UserItem extends React.Component {
+
+    constructor(props) {
+        super(props)
+
+        this.onSignOut = this.onSignOut.bind(this)
+    }
+
+    onSignOut() {
+
+        SIGN_OUT_FIREBASE()
+
+    }
+
+    render() {
+
+        return <div>
+
+            <p><Link>Change Email</Link></p>
+            <p><Link onClick={this.onSignOut}>Log Out</Link></p>
+
+        </div>
+
+    }
+
 }
 
 class OnboardingPortal extends React.Component {
@@ -59,42 +87,85 @@ class OnboardingPortal extends React.Component {
                     icon: <HomeOutlined />,
                     title: 'Dashboard',
                     active: true,
-                    disabled: false
+                    disabled: false,
+                    isSteps: true,
+                    subItems: [
+                        {
+                            keyId: 'chat-signup',
+                            icon: <CommentOutlined />,
+                            title: 'Chat Signup',
+                            active: false,
+                            disabled: false,
+                            complete: true
+                        },
+                        {
+                            keyId: 'waiver',
+                            icon: <SolutionOutlined />,
+                            title: 'Waiver',
+                            active: false,
+                            disabled: false,
+                            complete: false
+                        },
+                        {
+                            keyId: 'workbook',
+                            icon: <BookOutlined />,
+                            title: 'Workbook',
+                            active: false,
+                            disabled: false,
+                            complete: false
+                        },
+                        {
+                            keyId: 'livescan',
+                            icon: <SecurityScanOutlined />,
+                            title: 'Background Check',
+                            active: false,
+                            disabled: true,
+                            complete: false
+                        },
+                        {
+                            keyId: 'live-training',
+                            icon: <RocketOutlined />,
+                            title: 'Live Training',
+                            active: false,
+                            disabled: true,
+                            complete: false
+                        }
+                    ]
                 },
                 {
-                    keyId: 'chat-signup',
-                    icon: <CommentOutlined />,
-                    title: 'Chat Signup',
+                    keyId: 'support',
+                    icon: <QuestionCircleOutlined />,
+                    title: 'Support',
                     active: false,
-                    disabled: false
-                },
-                {
-                    keyId: 'waiver',
-                    icon: <SolutionOutlined />,
-                    title: 'Waiver',
-                    active: false,
-                    disabled: false
-                },
-                {
-                    keyId: 'workbook',
-                    icon: <BookOutlined />,
-                    title: 'Workbook',
-                    active: false,
-                    disabled: false
-                },
-                {
-                    keyId: 'livescan',
-                    icon: <SecurityScanOutlined />,
-                    title: 'Background Check',
-                    active: false,
-                    disabled: true
-                },
-                {
-                    keyId: 'live-training',
-                    icon: <RocketOutlined />,
-                    title: 'Live Training',
-                    active: false,
-                    disabled: true
+                    disabled: false,
+                    subItems: [
+
+                        {
+                            keyId: 'faq',
+                            title: 'FAQ',
+                            active: false,
+                            disabled: false
+                        },
+                        {
+                            keyId: 'tutor-resources',
+                            title: 'Tutor Resources',
+                            active: false,
+                            disabled: false
+                        },
+                        {
+                            keyId: 'office-hours',
+                            title: 'Sign up for office hours',
+                            active: false,
+                            disabled: false
+                        },
+                        {
+                            keyId: 'contact',
+                            title: 'Contact Laura',
+                            active: false,
+                            disabled: false
+                        },
+
+                    ]   
                 }
             ],
             currentTab: 'home',
@@ -172,8 +243,32 @@ class OnboardingPortal extends React.Component {
                     <div class='sidebar-options'>
 
                         { this.state.sidebarItems.map(item => {
-                            return <SidebarItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
-                        }) }
+
+                            return <div>
+
+                            <SidebarItem isMainItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
+
+                            {item.isSteps && <Steps direction='vertical' size='small' className='subitem'>
+
+                                {item.subItems && item.subItems.map(subItem => {
+
+                                    return <Step status={subItem.complete ? 'finish':undefined} title={<SidebarItem complete={subItem.complete} isStep keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem>}/>
+
+                                })}
+
+                            </Steps>}
+
+                            {!item.isSteps && <div>
+                                {item.subItems && item.subItems.map(subItem => {
+                                    return <SidebarItem isSubItem keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem>
+                                })}
+                            </div>}
+
+                            </div>
+
+                        })}
+
+                        
 
                     </div>
 
@@ -181,7 +276,7 @@ class OnboardingPortal extends React.Component {
 
                     <div class='sidebar-footer' style={{ marginBottom: 50 }}>
                         
-                        {!this.state.loadingUser && <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}><Avatar size='large' icon={<UserOutlined />}/>{this.state.tutor.firstname + ' ' + this.state.tutor.lastname}</span>}
+                        {!this.state.loadingUser && <Popover content={<UserItem />} title='User Options' trigger='click'><span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}} className='hoverable'><Avatar size='large' icon={<UserOutlined />}/>{this.state.tutor.firstname + ' ' + this.state.tutor.lastname}</span></Popover>}
 
                     </div>
 

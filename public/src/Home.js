@@ -191,7 +191,7 @@ class FinalSteps extends React.Component {
         if (this.state.isLoading) return <Skeleton active />
 
         //Otherwise show the dashboard items
-        return <div className='step' style={{ marginTop: 50 }}>
+        return <div className='dashboard-step' style={{ marginTop: 50 }}>
 
             <Title level={3}>You're Ready to be Matched!</Title>
 

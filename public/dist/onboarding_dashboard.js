@@ -13,8 +13,12 @@ var _antd = antd,
     Layout = _antd.Layout,
     Avatar = _antd.Avatar,
     Typography = _antd.Typography,
-    Tabs = _antd.Tabs;
-var Title = Typography.Title;
+    Tabs = _antd.Tabs,
+    Steps = _antd.Steps,
+    Popover = _antd.Popover;
+var Step = Steps.Step;
+var Title = Typography.Title,
+    Link = Typography.Link;
 var TabPane = Tabs.TabPane;
 var _icons = icons,
     HomeOutlined = _icons.HomeOutlined,
@@ -24,7 +28,8 @@ var _icons = icons,
     SecurityScanOutlined = _icons.SecurityScanOutlined,
     RocketOutlined = _icons.RocketOutlined,
     CommentOutlined = _icons.CommentOutlined,
-    UserOutlined = _icons.UserOutlined;
+    UserOutlined = _icons.UserOutlined,
+    QuestionCircleOutlined = _icons.QuestionCircleOutlined;
 var Sider = Layout.Sider,
     Content = Layout.Content,
     Footer = Layout.Footer;
@@ -50,7 +55,7 @@ var SidebarItem = function (_React$Component) {
         key: 'handleOnClick',
         value: function handleOnClick() {
 
-            if (!this.props.disabled) {
+            if (!this.props.disabled && !this.props.complete) {
                 this.props.onClick(this.props.keyId);
             }
         }
@@ -59,7 +64,7 @@ var SidebarItem = function (_React$Component) {
         value: function render() {
             return React.createElement(
                 'div',
-                { onClick: this.handleOnClick, 'class': (this.props.active ? 'active' : '') + ' ' + (this.props.disabled ? 'disabled' : '') },
+                { onClick: this.handleOnClick, className: '' + (this.props.active ? 'active ' : '') + (this.props.disabled || this.props.complete ? 'disabled ' : '') + (this.props.isStep ? 'step ' : '') + (this.props.isSubItem ? 'subitem ' : '') + (this.props.isMainItem ? 'main-item ' : '') + (this.props.complete ? 'complete ' : '') },
                 this.props.icon && this.props.icon,
                 ' ',
                 this.props.children
@@ -89,15 +94,65 @@ var Empty = function (_React$Component2) {
     return Empty;
 }(React.Component);
 
-var OnboardingPortal = function (_React$Component3) {
-    _inherits(OnboardingPortal, _React$Component3);
+var UserItem = function (_React$Component3) {
+    _inherits(UserItem, _React$Component3);
+
+    function UserItem(props) {
+        _classCallCheck(this, UserItem);
+
+        var _this3 = _possibleConstructorReturn(this, (UserItem.__proto__ || Object.getPrototypeOf(UserItem)).call(this, props));
+
+        _this3.onSignOut = _this3.onSignOut.bind(_this3);
+        return _this3;
+    }
+
+    _createClass(UserItem, [{
+        key: 'onSignOut',
+        value: function onSignOut() {
+
+            SIGN_OUT_FIREBASE();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+
+            return React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'p',
+                    null,
+                    React.createElement(
+                        Link,
+                        null,
+                        'Change Email'
+                    )
+                ),
+                React.createElement(
+                    'p',
+                    null,
+                    React.createElement(
+                        Link,
+                        { onClick: this.onSignOut },
+                        'Log Out'
+                    )
+                )
+            );
+        }
+    }]);
+
+    return UserItem;
+}(React.Component);
+
+var OnboardingPortal = function (_React$Component4) {
+    _inherits(OnboardingPortal, _React$Component4);
 
     function OnboardingPortal(props) {
         _classCallCheck(this, OnboardingPortal);
 
-        var _this3 = _possibleConstructorReturn(this, (OnboardingPortal.__proto__ || Object.getPrototypeOf(OnboardingPortal)).call(this, props));
+        var _this4 = _possibleConstructorReturn(this, (OnboardingPortal.__proto__ || Object.getPrototypeOf(OnboardingPortal)).call(this, props));
 
-        _this3.state = {
+        _this4.state = {
 
             tutor: {},
             pages: {
@@ -108,48 +163,82 @@ var OnboardingPortal = function (_React$Component3) {
                 icon: React.createElement(HomeOutlined, null),
                 title: 'Dashboard',
                 active: true,
-                disabled: false
+                disabled: false,
+                isSteps: true,
+                subItems: [{
+                    keyId: 'chat-signup',
+                    icon: React.createElement(CommentOutlined, null),
+                    title: 'Chat Signup',
+                    active: false,
+                    disabled: false,
+                    complete: true
+                }, {
+                    keyId: 'waiver',
+                    icon: React.createElement(SolutionOutlined, null),
+                    title: 'Waiver',
+                    active: false,
+                    disabled: false,
+                    complete: false
+                }, {
+                    keyId: 'workbook',
+                    icon: React.createElement(BookOutlined, null),
+                    title: 'Workbook',
+                    active: false,
+                    disabled: false,
+                    complete: false
+                }, {
+                    keyId: 'livescan',
+                    icon: React.createElement(SecurityScanOutlined, null),
+                    title: 'Background Check',
+                    active: false,
+                    disabled: true,
+                    complete: false
+                }, {
+                    keyId: 'live-training',
+                    icon: React.createElement(RocketOutlined, null),
+                    title: 'Live Training',
+                    active: false,
+                    disabled: true,
+                    complete: false
+                }]
             }, {
-                keyId: 'chat-signup',
-                icon: React.createElement(CommentOutlined, null),
-                title: 'Chat Signup',
+                keyId: 'support',
+                icon: React.createElement(QuestionCircleOutlined, null),
+                title: 'Support',
                 active: false,
-                disabled: false
-            }, {
-                keyId: 'waiver',
-                icon: React.createElement(SolutionOutlined, null),
-                title: 'Waiver',
-                active: false,
-                disabled: false
-            }, {
-                keyId: 'workbook',
-                icon: React.createElement(BookOutlined, null),
-                title: 'Workbook',
-                active: false,
-                disabled: false
-            }, {
-                keyId: 'livescan',
-                icon: React.createElement(SecurityScanOutlined, null),
-                title: 'Background Check',
-                active: false,
-                disabled: true
-            }, {
-                keyId: 'live-training',
-                icon: React.createElement(RocketOutlined, null),
-                title: 'Live Training',
-                active: false,
-                disabled: true
+                disabled: false,
+                subItems: [{
+                    keyId: 'faq',
+                    title: 'FAQ',
+                    active: false,
+                    disabled: false
+                }, {
+                    keyId: 'tutor-resources',
+                    title: 'Tutor Resources',
+                    active: false,
+                    disabled: false
+                }, {
+                    keyId: 'office-hours',
+                    title: 'Sign up for office hours',
+                    active: false,
+                    disabled: false
+                }, {
+                    keyId: 'contact',
+                    title: 'Contact Laura',
+                    active: false,
+                    disabled: false
+                }]
             }],
             currentTab: 'home',
             loadingUser: true
 
         };
 
-        _this3.onSideBarItemClicked = _this3.onSideBarItemClicked.bind(_this3);
-        _this3.onUserFinishedLoading = _this3.onUserFinishedLoading.bind(_this3);
-        _this3.loadUser = _this3.loadUser.bind(_this3);
+        _this4.onSideBarItemClicked = _this4.onSideBarItemClicked.bind(_this4);
+        _this4.onUserFinishedLoading = _this4.onUserFinishedLoading.bind(_this4);
+        _this4.loadUser = _this4.loadUser.bind(_this4);
 
-        return _this3;
+        return _this4;
     }
 
     _createClass(OnboardingPortal, [{
@@ -178,11 +267,11 @@ var OnboardingPortal = function (_React$Component3) {
     }, {
         key: 'loadUser',
         value: function loadUser() {
-            var _this4 = this;
+            var _this5 = this;
 
             firebase.functions().httpsCallable('getTutor')().then(function (result) {
 
-                _this4.onUserFinishedLoading(result.data);
+                _this5.onUserFinishedLoading(result.data);
             }).catch(function (error) {
 
                 //TODO
@@ -192,17 +281,17 @@ var OnboardingPortal = function (_React$Component3) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this5 = this;
+            var _this6 = this;
 
             FIREBASE_RUN_ON_READY.push(function (user) {
 
-                _this5.loadUser();
+                _this6.loadUser();
             });
         }
     }, {
         key: 'render',
         value: function render() {
-            var _this6 = this;
+            var _this7 = this;
 
             var CurrentPage = this.state.pages[this.state.currentTab] || Empty;
 
@@ -224,10 +313,38 @@ var OnboardingPortal = function (_React$Component3) {
                             'div',
                             { 'class': 'sidebar-options' },
                             this.state.sidebarItems.map(function (item) {
+
                                 return React.createElement(
-                                    SidebarItem,
-                                    { keyId: item.keyId, icon: item.icon, active: item.active, disabled: item.disabled, onClick: _this6.onSideBarItemClicked },
-                                    item.title
+                                    'div',
+                                    null,
+                                    React.createElement(
+                                        SidebarItem,
+                                        { isMainItem: true, keyId: item.keyId, icon: item.icon, active: item.active, disabled: item.disabled, onClick: _this7.onSideBarItemClicked },
+                                        item.title
+                                    ),
+                                    item.isSteps && React.createElement(
+                                        Steps,
+                                        { direction: 'vertical', size: 'small', className: 'subitem' },
+                                        item.subItems && item.subItems.map(function (subItem) {
+
+                                            return React.createElement(Step, { status: subItem.complete ? 'finish' : undefined, title: React.createElement(
+                                                    SidebarItem,
+                                                    { complete: subItem.complete, isStep: true, keyId: subItem.keyId, icon: subItem.icon, active: subItem.active, disabled: subItem.disabled, onClick: _this7.onSideBarItemClicked },
+                                                    subItem.title
+                                                ) });
+                                        })
+                                    ),
+                                    !item.isSteps && React.createElement(
+                                        'div',
+                                        null,
+                                        item.subItems && item.subItems.map(function (subItem) {
+                                            return React.createElement(
+                                                SidebarItem,
+                                                { isSubItem: true, keyId: subItem.keyId, icon: subItem.icon, active: subItem.active, disabled: subItem.disabled, onClick: _this7.onSideBarItemClicked },
+                                                subItem.title
+                                            );
+                                        })
+                                    )
                                 );
                             })
                         ),
@@ -236,10 +353,14 @@ var OnboardingPortal = function (_React$Component3) {
                             'div',
                             { 'class': 'sidebar-footer', style: { marginBottom: 50 } },
                             !this.state.loadingUser && React.createElement(
-                                'span',
-                                { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start' } },
-                                React.createElement(Avatar, { size: 'large', icon: React.createElement(UserOutlined, null) }),
-                                this.state.tutor.firstname + ' ' + this.state.tutor.lastname
+                                Popover,
+                                { content: React.createElement(UserItem, null), title: 'User Options', trigger: 'click' },
+                                React.createElement(
+                                    'span',
+                                    { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }, className: 'hoverable' },
+                                    React.createElement(Avatar, { size: 'large', icon: React.createElement(UserOutlined, null) }),
+                                    this.state.tutor.firstname + ' ' + this.state.tutor.lastname
+                                )
                             )
                         )
                     )

@@ -4,7 +4,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
     float: right;
 }
 
-.step {
+.dashboard-step {
     margin-top: 20px;
 }
 
@@ -58,15 +58,29 @@ h3.ant-typography {
 }
 
 .sidebar-options {
-    padding: 25px;
+    padding: 25px 0px 25px 15px;
 }
 
+
 .sidebar-options div {
-    margin-top: 15px;
-    margin-bottom: 15px;
     color: #327D83;
     font-size: 15px;
     transition: 0.3s;
+}
+
+.sidebar-options div:not(.step):not([class*='ant-steps']) {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.sidebar-options div.main-item:not(.step) {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.sidebar-options div.subitem {
+    margin-left: 15px;
 }
 
 .sidebar-options div:hover {
@@ -122,4 +136,12 @@ h3.ant-typography {
     display: flex;
     align-items: center;
 
+}
+
+.sidebar-options div .ant-steps-icon .anticon {
+    margin-right: 0px;
+}
+
+.hoverable:hover {
+    cursor: pointer;
 }
