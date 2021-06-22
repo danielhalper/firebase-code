@@ -3,6 +3,7 @@ const admin = require('firebase-admin') //Firebase Admin SDK
 const adminRequests = require('./adminRequests') //Request callbacks for admin-related tasks
 const tutorPortalRequests = require('./tutorPortalRequests') //Request callbacks for tutor portal tasks
 const messaging = require('./messagingSystemRequests') //Request callbacks for messaging system tasks
+const saml = require('./samlRequests') //Request callbacks for SAML
 
 //Start firebase admin
 admin.initializeApp()
@@ -49,3 +50,6 @@ exports.getTutor = functions.https.onCall(tutorPortalRequests.getTutor)
 exports.getMessagesForStudent = functions.https.onCall(tutorPortalRequests.getMessagesForStudent)
 exports.sendSMSMessage = functions.https.onCall(tutorPortalRequests.sendSMSMessage)
 exports.getTutorData = tutorPortalRequests.getTutorData
+
+//SAML functions
+exports.samlACSCallback = saml.samlACSCallback
