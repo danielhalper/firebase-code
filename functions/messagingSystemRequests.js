@@ -11,7 +11,7 @@ const twilioAuthToken = functions.config().twilio.auth_token
 
 //Get the "password" string used to verify Zapier requests
 const zapierAuthToken = functions.config().zapier.auth_token
- 
+
 //Create a twilio client
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 
@@ -89,7 +89,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
             //If the number assigned to that student is the one they texted...
             if (correspondents[personId] == to) {
-                
+
                 //Get the record of that student
                 secondPersonDoc = await admin.firestore().collection('people').doc(personId).get()
                 break
@@ -97,8 +97,8 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
             }
         }
 
-    } 
-    
+    }
+
     //If it's a student...
     else {
 
@@ -108,11 +108,11 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
         //If there's a tutor in this query...
         if (querySnapshot.size >= 1) {
 
-            
+
             //Get the first one
             secondPersonDoc = querySnapshot.docs[0]
 
-        } 
+        }
 
     }
 
@@ -154,7 +154,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
         id: docId,
         fields: data
-        
+
     }]).catch(err => console.log(err))
 
 
@@ -171,7 +171,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
             //Get the language code for it (defaults to English)
             const toLanguageCode = (preferredLanguage == 'Español') ? 'es' : 'en'
 
-            //Now, translate the message 
+            //Now, translate the message
             const translation = await googleTranslate.translate(message, toLanguageCode)
 
             //Set the message to the translated version
@@ -240,7 +240,7 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
 
             //If the number assigned to that student is the one they texted...
             if (correspondents[personId] == to) {
-                
+
                 //Get the record of that student
                 secondPersonDoc = await admin.firestore().collection('people').doc(personId).get()
                 break
@@ -248,8 +248,8 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
             }
         }
 
-    } 
-    
+    }
+
     //If it's a student...
     else {
 
@@ -259,11 +259,11 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
         //If there's a tutor in this query...
         if (querySnapshot.size >= 1) {
 
-            
+
             //Get the first one
             secondPersonDoc = querySnapshot.docs[0]
 
-        } 
+        }
 
     }
 
@@ -300,12 +300,12 @@ exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => 
     //Update AirTable to reflect their communication status
     const airtableAPIKey = functions.config().airtable.key
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
-    
+
     base('Tutors').update([{
 
         id: docId,
         fields: data
-        
+
     }]).catch(err => console.log(err))
 
     //Otherwise, dial them in to the other person
@@ -355,7 +355,7 @@ exports.respondToPhonePickup = functions.https.onRequest(async (req, res) => {
 
         id: docId,
         fields: data
-        
+
     }]).catch(err => console.log(err))
 
     //Send a hangup response
@@ -390,7 +390,7 @@ function getMediaUrlList(requestBody) {
 
 }
 
-//Util function 
+//Util function
 function notNull(value) {
     return value != null && value != undefined
 }
@@ -423,11 +423,13 @@ exports.syncPeopleData = functions.pubsub.schedule('every 24 hours').onRun((cont
 })
 
 //Absolutely insecure; present for testing purposes only
-exports.syncPeopleDataTest = functions.https.onRequest((req, res) => {
+exports.syncPeopleDataTest = functions.https.onRequest(async (req, res) => {
 
     console.log('Running')
-    updatePeopleData().then(result => console.log('Finished Syncing People'))
-
+    await updatePeopleData()
+    console.log("syncPeopleData");
+    // (result => console.log('Finished Syncing People'))
+    res.send('something');
 })
 
 
@@ -453,7 +455,7 @@ const findInactiveTutorsFunc = async context => {
         fields: ['Match date', 'Tutor communicating?', 'Family communicating?']
     }).eachPage((records, fetchNextPage) => {
         records.forEach(record => {
-            
+
             //Get their matched date
             let matchedDate = record.fields['Match date']
             if (Array.isArray(matchedDate)) matchedDate = matchedDate[0]
@@ -462,7 +464,7 @@ const findInactiveTutorsFunc = async context => {
             if (matchedDate < criticalDate) tutors.push(record)
 
         })
-        
+
         //Go to the next page
         fetchNextPage()
 
@@ -614,7 +616,7 @@ async function updatePeopleData() {
         const docIds = records.map(value => {
             return admin.firestore().collection('people').doc(value.id)
         })
-        
+
         admin.firestore().getAll(...docIds).then(docs => {
 
             //Create a new batch
@@ -633,7 +635,7 @@ async function updatePeopleData() {
 
                 //If they're not equal, add it to the documents we need to update
                 if (!recordsAreEqual(record, firestoreDoc)) documentsToUpdate.push({ doc: firestoreDoc.ref, data: getUpdatedRecordData(record, firestoreDoc, 'tutor') })
-                
+
             })
 
             //Use the newly created list of documents to update to make a batch operation
@@ -653,8 +655,8 @@ async function updatePeopleData() {
             fetchNextPage()
 
         })
-        
-        
+
+
 
     }).catch(err => {
         console.log(err)
@@ -666,14 +668,14 @@ async function updatePeopleData() {
         offset: 0,
         view: 'Matched Students'
     }).eachPage((records, fetchNextPage) => {
-        
+
         let _records = records
 
         //Get the list of ids
         const docIds = records.map(value => {
             return admin.firestore().collection('people').doc(value.id)
         })
-        
+
         admin.firestore().getAll(...docIds).then(docs => {
 
             //Create a new batch
@@ -692,7 +694,7 @@ async function updatePeopleData() {
 
                 //If they're not equal, add it to the documents we need to update
                 if (!recordsAreEqual(record, firestoreDoc, 'student')) documentsToUpdate.push({ doc: firestoreDoc.ref, data: getUpdatedRecordData(record, firestoreDoc, 'student') })
-                
+
             })
 
             //Use the newly created list of documents to update to make a batch operation
@@ -712,8 +714,8 @@ async function updatePeopleData() {
             fetchNextPage()
 
         })
-        
-        
+
+
 
     }).catch(err => {
         console.log(err)
@@ -793,7 +795,7 @@ function recordsAreEqual(airtableRecord, firestoreDoc, role='tutor') {
                 if ( !airtableRecord.fields[ nameMappings[ item ] ].includes( dateMatched ) ) return false
 
             }
-            
+
 
         }
 
@@ -983,7 +985,7 @@ function getFirstAvailableTutorNumber(restrictedNumbers) {
 
 
 async function getRecordFromPhone(phone) {
-    
+
     const pn = parsePhoneNumber(phone, 'US').number
 
     //First, we'll try firestore
