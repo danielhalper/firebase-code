@@ -81,7 +81,8 @@ class OnboardingPortal extends React.Component {
             pages: {
                 'home': Home,
                 'chat-signup': ChatSignup,
-                'waiver': Waiver
+                'waiver': Waiver,
+                'workbook': Workbook
             },
             sidebarItems: [
                 {
