@@ -60,7 +60,7 @@ function SIGN_IN_REDIRECT() {
     if (window.location.hostname.includes('squarespace')) { 
         return 
     }
-    window.location.href = `${EMULATOR ? 'http://localhost:5000/signin.html':`https://stepuptutoring.org/sign-in`}?returnUrl=${encodeURIComponent(window.location.href)}`
+    window.location.href = `${EMULATOR ? 'http://localhost:5000/signin.html':`https://stepup-dashboard.web.app/signin.html`}?returnUrl=${encodeURIComponent(window.location.href)}`
 }
 
 async function SIGN_OUT_FIREBASE() {
