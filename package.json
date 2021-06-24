@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "antd": "^4.15.6",
-    "babel-cli": "^6.26.0",
     "babel-preset-react-app": "^3.1.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
   }
 }

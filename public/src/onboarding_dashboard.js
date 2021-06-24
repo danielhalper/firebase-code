@@ -23,7 +23,7 @@ class SidebarItem extends React.Component {
     handleOnClick() {
 
         if (!this.props.disabled && !this.props.complete) {
-            this.props.onClick(this.props.keyId) 
+            this.props.onClick(this.props.keyId)
         }
 
     }
@@ -79,7 +79,9 @@ class OnboardingPortal extends React.Component {
 
             tutor: {},
             pages: {
-                'home': Home
+                'home': Home,
+                'chat-signup': ChatSignup,
+                'waiver': Waiver
             },
             sidebarItems: [
                 {
@@ -96,7 +98,7 @@ class OnboardingPortal extends React.Component {
                             title: 'Chat Signup',
                             active: false,
                             disabled: false,
-                            complete: true
+                            complete: false
                         },
                         {
                             keyId: 'waiver',
@@ -165,7 +167,7 @@ class OnboardingPortal extends React.Component {
                             disabled: false
                         },
 
-                    ]   
+                    ]
                 }
             ],
             currentTab: 'home',
@@ -184,8 +186,10 @@ class OnboardingPortal extends React.Component {
         const sidebarItems = this.state.sidebarItems
 
         for (let i = 0; i < sidebarItems.length; i++) {
-            if (sidebarItems[i]['keyId'] == key) sidebarItems[i]['active'] = true
-            else sidebarItems[i]['active'] = false
+            if (sidebarItems[i]['keyId'] == key) {
+                sidebarItems[i]['active'] = true
+            }
+            else {sidebarItems[i]['active'] = false}
         }
 
         console.log(sidebarItems)
@@ -197,7 +201,7 @@ class OnboardingPortal extends React.Component {
     onUserFinishedLoading(user) {
 
         this.setState({
-            loadingUser: false, 
+            loadingUser: false,
             tutor: user
         })
 
@@ -235,7 +239,7 @@ class OnboardingPortal extends React.Component {
 
             <Sider theme='light' class='dashboard-sidebar' breakpoint='sm' collapsedWidth='0' collapsible>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-                    
+
                     <div class='sidebar-header'>
                         <img width={180} src='https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng'/>
                     </div>
@@ -268,14 +272,14 @@ class OnboardingPortal extends React.Component {
 
                         })}
 
-                        
+
 
                     </div>
 
                     <div class='sidebar-spacer' style={{ flex: 1 }}></div>
 
                     <div class='sidebar-footer' style={{ marginBottom: 50 }}>
-                        
+
                         {!this.state.loadingUser && <Popover content={<UserItem />} title='User Options' trigger='click'><span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}} className='hoverable'><Avatar size='large' icon={<UserOutlined />}/>{this.state.tutor.firstname + ' ' + this.state.tutor.lastname}</span></Popover>}
 
                     </div>
@@ -284,7 +288,7 @@ class OnboardingPortal extends React.Component {
 
             </Sider>
             <Layout>
-                
+
                 <Layout style={{backgroundColor: 'white'}}>
                     <Content className='content-container'>
                         <div className='main-content'>
@@ -306,7 +310,7 @@ class OnboardingPortal extends React.Component {
 
             </Layout>
 
-            
+
 
         </Layout>
 

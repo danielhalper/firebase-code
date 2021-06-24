@@ -53,11 +53,11 @@ class FirstSteps extends React.Component {
         if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
         if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
         if ('Interview Date' in this.props.userData['user']) this.state.hasScheduledChat = notNull(this.props.userData['user']['Interview Date'])
-        
+
     }
 
     componentDidMount() {
-        
+
     }
 
     render() {
@@ -73,11 +73,11 @@ class FirstSteps extends React.Component {
                 <Title level={3} color='primary'>Chat with Talent Coordinator</Title>
 
                 <p>As soon as you can, we'd like you to schedule a chat with one of our talent coordinators so we can get to know you a little better.</p>
-                
+
                 <Button className='btn' icon={<CalendarFilled/>} type='primary' size='large' href={links['chat']} target='_blank'>
                     Schedule a chat
                 </Button>
-                   
+
             </div>) }
 
             { this.state.hasScheduledChat && <div>
@@ -94,6 +94,7 @@ class FirstSteps extends React.Component {
 
                 <p>While you're waiting, you can work on these items:</p>
 
+                {/* Fix to direct to sidebar page */}
                 { !this.state.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                     The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
                 </RequiredItem> }
@@ -130,11 +131,11 @@ class SecondSteps extends React.Component {
         if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
         if ('Live Scan?' in this.props.userData['user']) this.state.hasCompletedLiveScan = notNull(this.props.userData['user']['Live Scan?'])
         if ('Live Training?' in this.props.userData['user']) this.state.hasCompletedLiveTraining = notNull(this.props.userData['user']['Live Training?'])
-        
+
     }
 
     componentDidMount() {
-        
+
     }
 
     render() {
@@ -178,11 +179,11 @@ class FinalSteps extends React.Component {
         this.state = {
             isLoading: false
         }
-        
+
     }
 
     componentDidMount() {
-        
+
     }
 
     render() {
@@ -247,7 +248,7 @@ class Home extends React.Component {
         firebase.functions().httpsCallable('getTutorData')().then(result => this.receiveUser(result)).catch(error => { this.onError(error) })
 
     }
-    
+
     render() {
 
         //Get the current "step" screen
@@ -255,7 +256,7 @@ class Home extends React.Component {
 
         //If it's still loading, show a skeleton
         if (this.state.loading) return <div><Skeleton active/></div>
-        
+
         //If there was an error (i.e. the record didn't exist) display "Applicant Record Not Found"
         if (this.state.error) return <div>
             <Title>Applicant Record Not Found </Title>
@@ -284,7 +285,7 @@ class Home extends React.Component {
 
             <StepItem userData={this.state.userData}/>
 
-        </div>; 
+        </div>;
 
     }
 }
