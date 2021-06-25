@@ -4,6 +4,7 @@ const adminRequests = require('./adminRequests') //Request callbacks for admin-r
 const tutorPortalRequests = require('./tutorPortalRequests') //Request callbacks for tutor portal tasks
 const messaging = require('./messagingSystemRequests') //Request callbacks for messaging system tasks
 const saml = require('./samlRequests') //Request callbacks for SAML
+const zoomRequests = require('./zoomRequests') //Request callbacks for Zoom
 
 //Start firebase admin
 admin.initializeApp()
@@ -18,6 +19,7 @@ exports.findInactiveTutors = messaging.findInactiveTutors
 exports.findInactiveTutorsTest = messaging.findInactiveTutorsTest
 exports.onNewStudentRow = messaging.onNewStudentRow
 exports.onNewTutorRow = messaging.onNewTutorRow
+exports.zoomLinkTest = messaging.zoomLinkTest
 
 exports.getUserRoles = functions.https.onCall(async (data, context) => {
 

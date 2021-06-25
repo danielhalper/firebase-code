@@ -1,9 +1,11 @@
 const functions = require('firebase-functions') //Cloud Functions
 const admin = require('firebase-admin') //Firebase Admin SDK
+const jwt = require('jsonwebtoken')
 const airtable = require('airtable') //Airtable API Client
 const twilio = require('twilio') //Twilio SDK
 const { Translate } = require('@google-cloud/translate').v2 //Google Translate
 const { parsePhoneNumber } = require('libphonenumber-js') //For formatting phone numbers correctly
+const fetch = require('node-fetch')
 
 //Get Twilio credentials
 const twilioAccountSid = functions.config().twilio.account_sid
@@ -11,6 +13,10 @@ const twilioAuthToken = functions.config().twilio.auth_token
 
 //Get the "password" string used to verify Zapier requests
 const zapierAuthToken = functions.config().zapier.auth_token
+
+//Zoom credentials
+const zoomAPIKey = functions.config().zoom.api_key 
+const zoomAPISecret = functions.config().zoom.api_secret 
 
 //Create a twilio client
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
@@ -556,7 +562,7 @@ exports.onNewStudentRow = functions.https.onRequest(async (req, res) => {
     const firestoreDoc = await admin.firestore().collection('people').doc(recordId).get()
 
     //Get the updated record data
-    const newRecordData = getUpdatedRecordData({ fields: req.body }, firestoreDoc, 'student')
+    const newRecordData = await getUpdatedRecordData({ fields: req.body }, firestoreDoc, 'student')
 
     //Set the new data
     await firestoreDoc.ref.set(newRecordData, { merge: true })
@@ -583,7 +589,7 @@ exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
     const firestoreDoc = await admin.firestore().collection('people').doc(recordId).get()
 
     //Get the updated record data
-    const newRecordData = getUpdatedRecordData({ fields: req.body }, firestoreDoc, 'tutor')
+    const newRecordData = await getUpdatedRecordData({ fields: req.body }, firestoreDoc, 'tutor')
 
     //Set the new data
     await firestoreDoc.ref.set(newRecordData, { merge: true })
@@ -591,6 +597,17 @@ exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
     res.send({
         status: 'success'
     })
+
+})
+
+
+exports.zoomLinkTest = functions.https.onRequest(async (req, res) => {
+
+    const email = req.body.email
+
+    const meetingId = await createZoomLinkForTutor(email)
+
+    res.send(meetingId)
 
 })
 
@@ -628,31 +645,44 @@ async function updatePeopleData() {
             //Now that we have the documents that go with this page of records, we keep track of which ones to update/create
             let documentsToUpdate = []
 
+            let promises = []
+
             _records.forEach(record => {
 
                 //Get the appropriate document
                 const firestoreDoc = docsDict[ record.id ]
 
                 //If they're not equal, add it to the documents we need to update
-                if (!recordsAreEqual(record, firestoreDoc)) documentsToUpdate.push({ doc: firestoreDoc.ref, data: getUpdatedRecordData(record, firestoreDoc, 'tutor') })
+                if (!recordsAreEqual(record, firestoreDoc)) {
+
+                    promises.push( getUpdatedRecordData(record, firestoreDoc, 'tutor').then(result => {
+                        documentsToUpdate.push({ doc: firestoreDoc.ref, data: result })
+                    }) )
+                    
+
+                }
 
             })
 
-            //Use the newly created list of documents to update to make a batch operation
-            for (let i = 0; i < documentsToUpdate.length; i++) {
+            Promise.allSettled(promises).then(results => {
 
-                //Set the data to the doc
-                batch.set(documentsToUpdate[i].doc, documentsToUpdate[i].data)
+                //Use the newly created list of documents to update to make a batch operation
+                for (let i = 0; i < documentsToUpdate.length; i++) {
 
-                writes++
+                    //Set the data to the doc
+                    batch.set(documentsToUpdate[i].doc, documentsToUpdate[i].data)
 
-            }
+                    writes++
 
-            //Commit the batch
-            batch.commit()
+                }
 
-            //Fetch the next page
-            fetchNextPage()
+                //Commit the batch
+                batch.commit()
+
+                //Fetch the next page
+                fetchNextPage()
+
+            })
 
         })
 
@@ -687,31 +717,43 @@ async function updatePeopleData() {
             //Now that we have the documents that go with this page of records, we keep track of which ones to update/create
             let documentsToUpdate = []
 
+            let promises = []
+
             _records.forEach(record => {
 
                 //Get the appropriate document
                 const firestoreDoc = docsDict[ record.id ]
 
                 //If they're not equal, add it to the documents we need to update
-                if (!recordsAreEqual(record, firestoreDoc, 'student')) documentsToUpdate.push({ doc: firestoreDoc.ref, data: getUpdatedRecordData(record, firestoreDoc, 'student') })
+                if (!recordsAreEqual(record, firestoreDoc, 'student')) {
+
+                    promises.push( getUpdatedRecordData(record, firestoreDoc, 'student').then(result => {
+                        documentsToUpdate.push({ doc: firestoreDoc.ref, data: result })
+                    }) )
+
+                }
 
             })
 
-            //Use the newly created list of documents to update to make a batch operation
-            for (let i = 0; i < documentsToUpdate.length; i++) {
+            Promise.allSettled(promises).then(result => {
 
-                //Set the data to the doc
-                batch.set(documentsToUpdate[i].doc, documentsToUpdate[i].data)
+                //Use the newly created list of documents to update to make a batch operation
+                for (let i = 0; i < documentsToUpdate.length; i++) {
 
-                writes++
+                    //Set the data to the doc
+                    batch.set(documentsToUpdate[i].doc, documentsToUpdate[i].data)
 
-            }
+                    writes++
 
-            //Commit the batch
-            batch.commit()
+                }
 
-            //Fetch the next page
-            fetchNextPage()
+                //Commit the batch
+                batch.commit()
+
+                //Fetch the next page
+                fetchNextPage()
+
+            })
 
         })
 
@@ -844,7 +886,7 @@ function recordsAreEqual(airtableRecord, firestoreDoc, role='tutor') {
 
 }
 
-function getUpdatedRecordData(record, firestoreDoc, role) {
+async function getUpdatedRecordData(record, firestoreDoc, role) {
 
     //Get corrected phone number
     let phoneNumber = ''
@@ -881,16 +923,19 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
 
     //Keep track of the person's tutors/students and the phone numbers that are available to assign
     let correspondents = {}
+    let zoomLinks = {}
     let restrictedTutorNumbers = []
 
     let airtableItems = record.fields[role == 'tutor' ? 'Students': 'Tutors']
     
     if (typeof airtableItems == 'string' || airtableItems instanceof String) airtableItems = airtableItems.split(',')
-    console.log(airtableItems)
+
     if (!Array.isArray(airtableItems)) airtableItems = [airtableItems]
 
 
+
     let missingItems = []
+    let zoomMissingItems = []
 
     //If the firestore document exists...
     if (firestoreDoc.exists) {
@@ -901,6 +946,9 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
 
         //Get the items
         const firestoreItems = firestoreDoc.get(role == 'tutor' ? 'students': 'tutors') || []
+
+        //Get potential zoom links
+        zoomLinks = firestoreDoc.get('zoomLinks') || {}
 
         if (notNull(airtableItems)) {
 
@@ -925,6 +973,9 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
 
                 }
 
+                //Collect missing zoom items
+                if (!notNull( zoomLinks[ airtableItems[i] ] )) { zoomMissingItems.push(airtableItems[i]) }
+
             }
 
         }
@@ -933,7 +984,10 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
 
     else {
 
-        if (notNull(airtableItems)) missingItems = [...airtableItems]
+        if (notNull(airtableItems)) {
+            missingItems = [...airtableItems]
+            zoomMissingItems = [...airtableItems]
+        }
 
     }
 
@@ -962,6 +1016,27 @@ function getUpdatedRecordData(record, firestoreDoc, role) {
 
 
     newData[role == 'tutor' ? 'students': 'tutors'] = correspondents
+
+    //Create necessary zoom links
+    for (let i = 0; i < zoomMissingItems.length; i++) {
+        
+        //Start the new item as null
+        let newItem = 'null'
+
+        //If they're a tutor, create a zoom link
+        if (role == 'tutor') {
+            newItem = await createZoomLinkForTutor((record.fields['StepUp Email'] || '').toLowerCase().trim())
+        }
+
+        if (notNull(newItem)) {
+            //Set the zoom link
+            zoomLinks[ zoomMissingItems[i] ] = newItem
+        }
+
+    }
+
+    newData['zoomLinks'] = zoomLinks
+
 
     return newData
 
@@ -1002,5 +1077,49 @@ async function getRecordFromPhone(phone) {
 async function getAirtableRecordFromPhone(phone) {
 
     //TODO: Implement AirTable Record Fetching
+
+}
+
+function createZoomJWT() {
+
+    //Create a payload
+    const payload = {
+        iss: zoomAPIKey,
+        exp: ((new Date()).getTime() + 5000)
+    }
+
+    //Create the token
+    const token = jwt.sign(payload, zoomAPISecret)
+
+    return token
+    
+}
+
+async function createZoomLinkForTutor(email) {
+
+    //Get a JWT for Zoom
+    const token = createZoomJWT()
+
+    const response = await fetch(`https://api.zoom.us/v2/users/${email}/meetings`, {
+        method: 'post',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            'topic': 'Step Up Tutoring Session',
+            'type': 3,
+            'settings': {
+                'auto_recording': 'none',
+                'allow_multiple_devices': true,
+                'waiting_room': false,
+                'use_pmi': false
+            }
+        })
+    })
+
+    const resultData = await response.json()
+
+    return resultData['id']
 
 }
