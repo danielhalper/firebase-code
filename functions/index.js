@@ -52,6 +52,7 @@ exports.getTutor = functions.https.onCall(tutorPortalRequests.getTutor)
 exports.getMessagesForStudent = functions.https.onCall(tutorPortalRequests.getMessagesForStudent)
 exports.sendSMSMessage = functions.https.onCall(tutorPortalRequests.sendSMSMessage)
 exports.getTutorData = tutorPortalRequests.getTutorData
+exports.getZoomLinks = tutorPortalRequests.getZoomLinks
 
 //SAML functions
 exports.samlACSCallback = saml.samlACSCallback
