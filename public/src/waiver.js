@@ -16,6 +16,7 @@ class Waiver extends React.Component {
 
     return (
       <div>
+        <h1>Waiver</h1>
         <p>The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring. It outlines the tutor code of conduct, and responsibilities & expectations for our volunteer tutors. </p>
 
         <Row>

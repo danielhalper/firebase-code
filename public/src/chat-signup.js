@@ -8,7 +8,8 @@ class ChatSignup extends React.Component {
     //center form
    return (
     <div>
-      <p>hi there</p>
+      <h1>15-Minute Chat</h1>
+
       <p>We want to keep it casual, ask a few questions, and get to know you better!</p>
 
       <p>All meetings with us are via Zoom, be on the lookout for the link in your confirmation email.</p>
