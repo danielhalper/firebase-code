@@ -113,7 +113,7 @@ h3.ant-typography {
     height: 100%;
     margin: 30px;
     padding: 20px;
-    padding-top: 50px;
+    padding-top: 25px;
     padding-bottom: 50px;
     overflow-y: scroll;
 }
@@ -144,4 +144,49 @@ h3.ant-typography {
 
 .hoverable:hover {
     cursor: pointer;
+}
+
+.center-embed-chat-signup {
+    display: flex;
+    justify-content: center;
+}
+
+.section-header-h1 {
+    font-size: 36px;
+    text-align: center;
+    font-family: 'Chelsea Market', cursive;
+    color: #238d95;
+}
+
+.section-approx-time {
+    color: #656464;
+    font-size: 14px;
+    text-align: center;
+}
+
+.section-p {
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.waiver-paperform-div {
+    border-radius: 10px;
+    margin-top: 5%
+}
+
+.workbook-tab-style {
+    background-color: white;
+    padding: 5px 15px;
+    margin-top: 5%;
+    border-radius: 10px;
+}
+
+.tab-content-style .ant-tabs-content-holder {
+    align-self: center;
+}
+
+.dashboard-required-items {
+    display: flex;
+    flex-direction: row;
 }
