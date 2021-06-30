@@ -238,7 +238,7 @@ class OnboardingPortal extends React.Component {
 
         return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
 
-            <Sider theme='light' class='dashboard-sidebar' breakpoint='sm' collapsedWidth='0' collapsible>
+            <Sider theme='light' class='dashboard-sidebar' breakpoint='sm' width='240'>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
 
                     <div class='sidebar-header'>
@@ -253,7 +253,7 @@ class OnboardingPortal extends React.Component {
 
                             <SidebarItem isMainItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
 
-                            {item.isSteps && <Steps direction='vertical' size='small' className='subitem'>
+                            {item.isSteps && <Steps direction='vertical' className='subitem'>
 
                                 {item.subItems && item.subItems.map(subItem => {
 
