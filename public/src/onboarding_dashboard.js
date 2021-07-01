@@ -27,37 +27,37 @@ ReactDOM.render(<SidebarLayout pages={{
                 complete: true
             },
             {
-            keyId: 'waiver',
+                keyId: 'waiver',
                 icon: <SolutionOutlined />,
-                    title: 'Waiver',
-                        active: false,
-                            disabled: false,
-                                complete: false
-        },
-        {
-            keyId: 'workbook',
+                title: 'Waiver',
+                active: false,
+                disabled: false,
+                complete: false
+            },
+            {
+                keyId: 'workbook',
                 icon: <BookOutlined />,
-                    title: 'Workbook',
-                        active: false,
-                            disabled: false,
-                                complete: false
-        },
-        {
-            keyId: 'livescan',
+                title: 'Workbook',
+                active: false,
+                disabled: false,
+                complete: false
+            },
+            {
+                keyId: 'livescan',
                 icon: <SecurityScanOutlined />,
-                    title: 'Background Check',
-                        active: false,
-                            disabled: true,
-                                complete: false
-        },
-        {
-            keyId: 'live-training',
+                title: 'Background Check',
+                active: false,
+                disabled: true,
+                complete: false
+            },
+            {
+                keyId: 'live-training',
                 icon: <RocketOutlined />,
-                    title: 'Live Training',
-                        active: false,
-                            disabled: true,
-                                complete: false
-        }
+                title: 'Live Training',
+                active: false,
+                disabled: true,
+                complete: false
+            }
         ]
     },
     {
@@ -94,5 +94,5 @@ ReactDOM.render(<SidebarLayout pages={{
             },
 
         ]
-}
-]} currentTab = 'home' />, mountNode)
+    }
+]} currentTab='home'/>, mountNode)

@@ -1,6 +1,8 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 const airtable = require('airtable')
+const jwt = require('jsonwebtoken')
+const fetch = require('node-fetch')
 const twilio = require('twilio')
 const { Translate } = require('@google-cloud/translate').v2 //Google Translate
 
@@ -8,6 +10,10 @@ const twilioAccountSid = functions.config().twilio.account_sid
 const twilioAuthToken = functions.config().twilio.auth_token
 
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
+
+//Zoom credentials
+const zoomAPIKey = functions.config().zoom.api_key 
+const zoomAPISecret = functions.config().zoom.api_secret 
 
 //Util function 
 function notNull(value) {
@@ -317,6 +323,70 @@ exports.sendSMSMessage = async (data, context) => {
         body: message,
         type: 'to',
         dateSent: newMessage.dateCreated.toISOString()
+    }
+
+}
+
+exports.getZoomLinks = functions.https.onCall(async (data, context) => {
+
+    //Verify the user
+    const user = await verifyUser(context)
+
+    //Get their zoom meeting IDs
+    const zoomIds = user.get('zoomLinks')
+
+    //Keep track of the links
+    let studentLinks = {}
+
+    //For each zoom id
+    for (let student in zoomIds) {
+
+        //Get the links for that meeting id
+        const links = await getZoomLinksForMeeting(zoomIds[student])
+
+        //Add that student's links to the response
+        if (notNull(links)) studentLinks[student] = links
+
+    }
+
+    //Return the links
+    return studentLinks
+
+})
+
+function createZoomJWT() {
+
+    //Create a payload
+    const payload = {
+        iss: zoomAPIKey,
+        exp: ((new Date()).getTime() + 5000)
+    }
+
+    //Create the token
+    const token = jwt.sign(payload, zoomAPISecret)
+
+    return token
+    
+}
+
+async function getZoomLinksForMeeting(meetingId) {
+
+    //Get a JWT for Zoom
+    const token = createZoomJWT()
+
+    const response = await fetch(`https://api.zoom.us/v2/meetings/${meetingId}`, {
+        method: 'get',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+
+    const resultData = await response.json()
+
+    return {
+        'start_url': resultData['start_url'],
+        'join_url': resultData['join_url']
     }
 
 }
