@@ -9,21 +9,13 @@ class Waiver extends React.Component {
 };
 
   render() {
-    // no scroll
-    //class="select-item-box select-item " use display:none to hide duplicate info
-    //center form
-
 
     return (
       <div>
-        <p>The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring. It outlines the tutor code of conduct, and responsibilities & expectations for our volunteer tutors. </p>
-
-        <Row>
-          <Col xs={24}>
-
-            <div data-paperform-id="tqp1uzj8"></div>
-          </Col>
-        </Row>
+        <h1 className="section-header-h1">Waiver</h1>
+        <h3 className="section-approx-time">Approximate time: 5 minutes</h3>
+        <p className="section-p">The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring. It outlines the tutor code of conduct, and responsibilities & expectations for our volunteer tutors. </p>
+            <div className="waiver-paperform-div" data-paperform-id="tqp1uzj8"></div>
       </div>
     )
   }

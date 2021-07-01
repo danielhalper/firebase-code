@@ -93,6 +93,6 @@ ReactDOM.render(<SidebarLayout pages={{
                 disabled: false
             },
 
-        ]   
+        ]
     }
 ]} currentTab='home'/>, mountNode)
