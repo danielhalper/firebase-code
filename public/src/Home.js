@@ -88,12 +88,13 @@ class FirstSteps extends React.Component {
             </div>}
 
 
-            { (!this.state.hasCompletedWaiver || !this.state.hasCompletedWorkbook) && (<div>
+            {this.state.hasScheduledChat && (!this.state.hasCompletedWaiver || !this.state.hasCompletedWorkbook) && (<div>
 
                 <Title level={3}>Other Steps</Title>
 
                 <p>While you're waiting, you can work on these items:</p>
 
+                <div className='dashboard-required-items'>
                 {/* Fix to direct to sidebar page */}
                 { !this.state.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                     The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
@@ -102,7 +103,7 @@ class FirstSteps extends React.Component {
                 { !this.state.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
                     The workbook is our training course for new tutors. It will set you up for success with your student.
                 </RequiredItem> }
-
+                </div>
             </div>) }
 
 
@@ -149,7 +150,7 @@ class SecondSteps extends React.Component {
             <Title level={3}>Thanks for chatting with us!</Title>
 
             <p>You’re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match!</p>
-
+            <div className='dashboard-required-items'>
             { !this.state.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                 The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
             </RequiredItem> }
@@ -165,7 +166,7 @@ class SecondSteps extends React.Component {
             { !this.state.hasCompletedLiveTraining && <RequiredItem link={links['training']} icon={<RocketOutlined/>} title='Live Training'>
                 You will need to complete a live training session with one of our leaders before you can be matched with a student.
             </RequiredItem> }
-
+            </div>
         </div>;
     }
 }
@@ -273,7 +274,7 @@ class Home extends React.Component {
 
         //Otherwise, show the regular dashboard
         return <div>
-            <Title>Your Applicant Dashboard</Title>
+            <Title>Your Onboarding Dashboard</Title>
             <p>There's just a few things we'll need you to complete before proceeding.</p>
             <div class='steps-container'>
                 <Steps current={this.state.currentStep} className='steps' responsive={true}>
