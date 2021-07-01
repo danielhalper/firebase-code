@@ -50,9 +50,9 @@ class FirstSteps extends React.Component {
         }
 
         //Set the tracked items
-        if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
-        if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
-        if ('Interview Date' in this.props.userData['user']) this.state.hasScheduledChat = notNull(this.props.userData['user']['Interview Date'])
+        // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
+        // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
+        // if ('Interview Date' in this.props.userData['user']) this.state.hasScheduledChat = notNull(this.props.userData['user']['Interview Date'])
 
     }
 
@@ -128,10 +128,10 @@ class SecondSteps extends React.Component {
         }
 
         //Set the tracked items
-        if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
-        if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
-        if ('Live Scan?' in this.props.userData['user']) this.state.hasCompletedLiveScan = notNull(this.props.userData['user']['Live Scan?'])
-        if ('Live Training?' in this.props.userData['user']) this.state.hasCompletedLiveTraining = notNull(this.props.userData['user']['Live Training?'])
+        // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
+        // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
+        // if ('Live Scan?' in this.props.userData['user']) this.state.hasCompletedLiveScan = notNull(this.props.userData['user']['Live Scan?'])
+        // if ('Live Training?' in this.props.userData['user']) this.state.hasCompletedLiveTraining = notNull(this.props.userData['user']['Live Training?'])
 
     }
 
@@ -224,12 +224,12 @@ class Home extends React.Component {
     }
 
     receiveUser(user) {
-
+        console.log({user});
         let currentStep = 0
 
-        if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
-        if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
-        if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
+        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
+        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
+        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
 
         //Update the state with the received data
         this.setState({
@@ -240,13 +240,29 @@ class Home extends React.Component {
 
     }
 
+    setUserLocalStorage(user) {
+        let firstname = user.data.user['First Name'];
+        let lastname = user.data.user['Last Name'];
+        let email = user.data.user['Email'];
+        window.localStorage.setItem('userEmail', email);
+        window.localStorage.setItem('userFirstName', firstname);
+        window.localStorage.setItem('userLastName', lastname);
+    }
+
     onError(error) {
         this.setState({ error: true, loading: false})
     }
 
     componentDidMount() {
 
-        firebase.functions().httpsCallable('getTutorData')().then(result => this.receiveUser(result)).catch(error => { this.onError(error) })
+        firebase.functions().httpsCallable('getTutorData')()
+        .then(result => {
+            this.receiveUser(result)
+            this.setUserLocalStorage(result)}
+            )
+        .catch(error =>
+            { this.onError(error) }
+            )
 
     }
 
