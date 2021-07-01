@@ -12,7 +12,8 @@ var _antd = antd,
     Typography = _antd.Typography,
     Tabs = _antd.Tabs,
     Steps = _antd.Steps,
-    Popover = _antd.Popover;
+    Popover = _antd.Popover,
+    Skeleton = _antd.Skeleton;
 var Step = Steps.Step;
 var Title = Typography.Title,
     Link = Typography.Link;
@@ -219,18 +220,18 @@ var SidebarLayout = function (_React$Component4) {
                 { style: { height: '100%' }, className: 'desktop-dashboard' },
                 React.createElement(
                     Sider,
-                    { theme: 'light', 'class': 'dashboard-sidebar', breakpoint: 'sm', collapsedWidth: '0', collapsible: true },
+                    { theme: 'light', className: 'dashboard-sidebar', breakpoint: 'sm', collapsedWidth: '0' },
                     React.createElement(
                         'div',
                         { style: { display: 'flex', flexDirection: 'column', height: '100%' } },
                         React.createElement(
                             'div',
-                            { 'class': 'sidebar-header' },
+                            { className: 'sidebar-header' },
                             React.createElement('img', { width: 180, src: 'https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng' })
                         ),
                         React.createElement(
                             'div',
-                            { 'class': 'sidebar-options' },
+                            { className: 'sidebar-options' },
                             this.state.sidebarItems.map(function (item) {
 
                                 return React.createElement(
@@ -267,10 +268,10 @@ var SidebarLayout = function (_React$Component4) {
                                 );
                             })
                         ),
-                        React.createElement('div', { 'class': 'sidebar-spacer', style: { flex: 1 } }),
+                        React.createElement('div', { className: 'sidebar-spacer', style: { flex: 1 } }),
                         React.createElement(
                             'div',
-                            { 'class': 'sidebar-footer', style: { marginBottom: 50 } },
+                            { className: 'sidebar-footer', style: { marginBottom: 50 } },
                             !this.state.loadingUser && React.createElement(
                                 Popover,
                                 { content: React.createElement(UserItem, null), title: 'User Options', trigger: 'click' },

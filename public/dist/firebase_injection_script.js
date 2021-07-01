@@ -15,7 +15,7 @@ firebase.initializeApp(firebaseConfig);
 
 EMULATOR = window.location.href.includes('localhost')
 
-//if (EMULATOR) firebase.auth().useEmulator('http://localhost:9099')
+if (EMULATOR) firebase.auth().useEmulator('http://localhost:9099')
 
 let FIREBASE_RUN_ON_READY = []
 

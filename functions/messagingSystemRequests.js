@@ -371,7 +371,6 @@ exports.respondToPhonePickup = functions.https.onRequest(async (req, res) => {
 
 })
 
-
 function getMediaUrlList(requestBody) {
 
     //Keep track of the media URLs
@@ -437,7 +436,6 @@ exports.syncPeopleDataTest = functions.https.onRequest(async (req, res) => {
     // (result => console.log('Finished Syncing People'))
     res.send('something');
 })
-
 
 const findInactiveTutorsFunc = async context => {
 
@@ -600,7 +598,6 @@ exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
 
 })
 
-
 exports.zoomLinkTest = functions.https.onRequest(async (req, res) => {
 
     const email = req.body.email
@@ -623,7 +620,7 @@ async function updatePeopleData() {
 
     //Get the tutor data from AirTable
     await base('Tutors').select({
-        fields: ['First Name', 'Last Name', 'Email', 'Phone', 'Students', 'Tutor ID', 'Match date'],
+        fields: ['First Name', 'Last Name', 'Email', 'Phone', 'Students', 'Tutor ID', 'Match date', 'StepUp Email'],
         offset: 0,
         view: 'Matched Tutors'
     }).eachPage((records, fetchNextPage) => {
@@ -778,6 +775,8 @@ function recordsAreEqual(airtableRecord, firestoreDoc, role='tutor') {
         'preferredLanguage': 'Language',
         'matched': 'Match date'
     }
+
+    if (role == 'tutor' && airtableRecord.fields['Email'] == 'caleb.hester@pepperdine.edu') console.log(airtableRecord.fields['Email'])
 
     nameMappings[ role == 'tutor' ? 'students' : 'tutors' ] = role == 'tutor' ? 'Students': 'Tutors'
 
@@ -983,7 +982,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
     }
 
     else {
-
+        
         if (notNull(airtableItems)) {
             missingItems = [...airtableItems]
             zoomMissingItems = [...airtableItems]
@@ -1014,35 +1013,38 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
 
     }
 
-
     newData[role == 'tutor' ? 'students': 'tutors'] = correspondents
 
-    //Create necessary zoom links
-    for (let i = 0; i < zoomMissingItems.length; i++) {
-        
-        //Start the new item as null
-        let newItem = 'null'
+    try {
 
-        //If they're a tutor, create a zoom link
-        if (role == 'tutor') {
-            newItem = await createZoomLinkForTutor((record.fields['StepUp Email'] || '').toLowerCase().trim())
+        //Create necessary zoom links
+        for (let i = 0; i < zoomMissingItems.length; i++) {
+            
+            //Start the new item as null
+            let newItem = 'null'
+
+            //If they're a tutor, create a zoom link
+            if (role == 'tutor') {
+                newItem = await createZoomLinkForTutor((record.fields['StepUp Email'] || '').toLowerCase().trim())
+            }
+
+            if (notNull(newItem)) {
+                //Set the zoom link
+                zoomLinks[ zoomMissingItems[i] ] = newItem
+            }
+
         }
 
-        if (notNull(newItem)) {
-            //Set the zoom link
-            zoomLinks[ zoomMissingItems[i] ] = newItem
-        }
+        newData['zoomLinks'] = zoomLinks
+
+    } catch(err) {
 
     }
-
-    newData['zoomLinks'] = zoomLinks
-
 
     return newData
 
 
 }
-
 
 function getFirstAvailableTutorNumber(restrictedNumbers) {
 
@@ -1056,8 +1058,6 @@ function getFirstAvailableTutorNumber(restrictedNumbers) {
     return undefined
 
 }
-
-
 
 async function getRecordFromPhone(phone) {
 
@@ -1100,6 +1100,9 @@ async function createZoomLinkForTutor(email) {
     //Get a JWT for Zoom
     const token = createZoomJWT()
 
+    if (email == 'caleb@stepuptutoring.org') console.log("______________TEST________________")
+
+
     const response = await fetch(`https://api.zoom.us/v2/users/${email}/meetings`, {
         method: 'post',
         headers: {
@@ -1117,7 +1120,7 @@ async function createZoomLinkForTutor(email) {
             }
         })
     })
-
+    
     const resultData = await response.json()
 
     return resultData['id']

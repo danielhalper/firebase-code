@@ -3,7 +3,7 @@
 
     <head>
         <link rel="stylesheet" href="https://stepup-tutoring.github.io/website-code-snippets/dist/theme.css" crossorigin="anonymous" />
-        <link rel="stylesheet" href="https://stepup-tutoring.github.io/website-code-snippets/dist/index.css" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="./dist/index.css" crossorigin="anonymous"/>
 
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script> 
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
@@ -17,32 +17,14 @@
 
     <body>
 
-        <div id='portal'></div>
+        <div id='portal' style='height: 100%'></div>
 
         <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
-        <script>
-
-            // Your web app's Firebase configuration
-            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-            var firebaseConfig = {
-                apiKey: "AIzaSyDdWpO1sOAUe0U2GY5U7U4EFC3DoUtuSyU",
-                authDomain: "stepup-dashboard.firebaseapp.com",
-                projectId: "stepup-dashboard",
-                storageBucket: "stepup-dashboard.appspot.com",
-                messagingSenderId: "842016444797",
-                appId: "1:842016444797:web:84a086e9291d94c42d7c14",
-                measurementId: "G-VVZDPYH5ZH"
-            };
-            // Initialize Firebase
-            firebase.initializeApp(firebaseConfig);
-            if (window.location.href.includes('localhost')) firebase.auth().useEmulator('http://localhost:9099')
-
-            const provider = new firebase.auth.SAMLAuthProvider('saml.google.com')
-            firebase.auth().signInWithPopup(provider).then(result => {
-                
-            })
-        </script>
+        <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-functions.js"></script>
+        <script src="./dist/firebase_injection_script.js" crossorigin="anonymous"></script>
+        <script src='./dist/sidebarLayout.js'></script>
+        <script src='./dist/messaging_widget.js'></script>
         <script src='./dist/tutorPortal.js'></script>
 
 

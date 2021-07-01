@@ -1,4 +1,4 @@
-const { Layout, Avatar, Typography, Tabs, Steps, Popover } = antd
+const { Layout, Avatar, Typography, Tabs, Steps, Popover, Skeleton } = antd
 const { Step } = Steps
 const { Title, Link } = Typography
 const { TabPane } = Tabs
@@ -136,14 +136,14 @@ class SidebarLayout extends React.Component {
 
         return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
 
-            <Sider theme='light' class='dashboard-sidebar' breakpoint='sm' collapsedWidth='0' collapsible>
+            <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' collapsedWidth='0'>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
                     
-                    <div class='sidebar-header'>
+                    <div className='sidebar-header'>
                         <img width={180} src='https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng'/>
                     </div>
 
-                    <div class='sidebar-options'>
+                    <div className='sidebar-options'>
 
                         { this.state.sidebarItems.map(item => {
 
@@ -175,9 +175,9 @@ class SidebarLayout extends React.Component {
 
                     </div>
 
-                    <div class='sidebar-spacer' style={{ flex: 1 }}></div>
+                    <div className='sidebar-spacer' style={{ flex: 1 }}></div>
 
-                    <div class='sidebar-footer' style={{ marginBottom: 50 }}>
+                    <div className='sidebar-footer' style={{ marginBottom: 50 }}>
                         
                         {!this.state.loadingUser && <Popover content={<UserItem />} title='User Options' trigger='click'><span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}} className='hoverable'><Avatar size='large' icon={<UserOutlined />}/>{this.state.tutor.firstname + ' ' + this.state.tutor.lastname}</span></Popover>}
 

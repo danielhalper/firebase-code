@@ -15,21 +15,31 @@ var _antd = antd,
     Button = _antd.Button,
     Typography = _antd.Typography,
     message = _antd.message;
+var _icons = icons,
+    HomeOutlined = _icons.HomeOutlined,
+    SolutionOutlined = _icons.SolutionOutlined,
+    BookOutlined = _icons.BookOutlined,
+    CalendarFilled = _icons.CalendarFilled,
+    SecurityScanOutlined = _icons.SecurityScanOutlined,
+    RocketOutlined = _icons.RocketOutlined,
+    CommentOutlined = _icons.CommentOutlined,
+    UserOutlined = _icons.UserOutlined,
+    QuestionCircleOutlined = _icons.QuestionCircleOutlined;
 var Title = Typography.Title;
 
 
 var EMULATOR = window.location.href.includes('localhost');
 
-var TutorPortal = function (_React$Component) {
-    _inherits(TutorPortal, _React$Component);
+var TutorHome = function (_React$Component) {
+    _inherits(TutorHome, _React$Component);
 
-    function TutorPortal(props) {
-        _classCallCheck(this, TutorPortal);
+    function TutorHome(props) {
+        _classCallCheck(this, TutorHome);
 
-        return _possibleConstructorReturn(this, (TutorPortal.__proto__ || Object.getPrototypeOf(TutorPortal)).call(this, props));
+        return _possibleConstructorReturn(this, (TutorHome.__proto__ || Object.getPrototypeOf(TutorHome)).call(this, props));
     }
 
-    _createClass(TutorPortal, [{
+    _createClass(TutorHome, [{
         key: 'render',
         value: function render() {
             return React.createElement(
@@ -40,7 +50,52 @@ var TutorPortal = function (_React$Component) {
         }
     }]);
 
-    return TutorPortal;
+    return TutorHome;
 }(React.Component);
 
-ReactDOM.render(React.createElement(TutorPortal, null), mountNode);
+var TutorMessaging = function (_React$Component2) {
+    _inherits(TutorMessaging, _React$Component2);
+
+    function TutorMessaging(props) {
+        _classCallCheck(this, TutorMessaging);
+
+        return _possibleConstructorReturn(this, (TutorMessaging.__proto__ || Object.getPrototypeOf(TutorMessaging)).call(this, props));
+    }
+
+    _createClass(TutorMessaging, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                null,
+                React.createElement(MessagingWidget, { height: 500, tutor: this.props.tutor })
+            );
+        }
+    }]);
+
+    return TutorMessaging;
+}(React.Component);
+
+var pages = {
+    'home': TutorHome,
+    'messaging': TutorMessaging
+};
+
+var sidebarItems = [{
+    keyId: 'home',
+    icon: React.createElement(HomeOutlined, null),
+    title: 'Dashboard',
+    active: true,
+    disabled: false,
+    isSteps: false,
+    subItems: [{
+        keyId: 'messaging',
+        icon: React.createElement(CommentOutlined, null),
+        title: 'Message Students',
+        active: false,
+        disabled: false,
+        complete: false
+    }]
+}];
+
+ReactDOM.render(React.createElement(SidebarLayout, { pages: pages, sidebarItems: sidebarItems, currentTab: 'home' }), mountNode);
