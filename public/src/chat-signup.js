@@ -3,9 +3,9 @@ const { Row, Col } = antd;
 class ChatSignup extends React.Component {
 
   loadDeferredIframe() {
-    const userLocalEmail = window.localStorage.getItem('userEmail');
-    const userLocalFirstName = window.localStorage.getItem('userFirstName');
-    const userLocalLastName = window.localStorage.getItem('userLastName');
+    const userLocalEmail = getEmailFromLocalStorage();
+    const userLocalFirstName = getFirstNameFromLocalStorage();
+    const userLocalLastName = getLastNameFromLocalStorage();
     const iframe = document.getElementById("my-deferred-iframe");
     iframe.src = `https://app.acuityscheduling.com/schedule.php?owner=21394641&appointmentType=18777910&firstName=${userLocalFirstName}&lastName=${userLocalLastName}&email=${userLocalEmail}`;
     iframe.title = "Schedule Appointment";
