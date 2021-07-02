@@ -15,7 +15,7 @@ class SidebarItem extends React.Component {
     handleOnClick() {
 
         if (!this.props.disabled && !this.props.complete) {
-            this.props.onClick(this.props.keyId) 
+            this.props.onClick(this.props.keyId)
         }
 
     }
@@ -100,7 +100,7 @@ class SidebarLayout extends React.Component {
     onUserFinishedLoading(user) {
 
         this.setState({
-            loadingUser: false, 
+            loadingUser: false,
             tutor: user
         })
 
@@ -136,9 +136,9 @@ class SidebarLayout extends React.Component {
 
         return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
 
-            <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' collapsedWidth='0'>
+            <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' width='240'>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-                    
+
                     <div className='sidebar-header'>
                         <img width={180} src='https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng'/>
                     </div>
@@ -151,7 +151,7 @@ class SidebarLayout extends React.Component {
 
                             <SidebarItem isMainItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
 
-                            {item.isSteps && <Steps direction='vertical' size='small' className='subitem'>
+                            {item.isSteps && <Steps direction='vertical' className='subitem'>
 
                                 {item.subItems && item.subItems.map(subItem => {
 
@@ -171,14 +171,14 @@ class SidebarLayout extends React.Component {
 
                         })}
 
-                        
+
 
                     </div>
 
                     <div className='sidebar-spacer' style={{ flex: 1 }}></div>
 
                     <div className='sidebar-footer' style={{ marginBottom: 50 }}>
-                        
+
                         {!this.state.loadingUser && <Popover content={<UserItem />} title='User Options' trigger='click'><span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}} className='hoverable'><Avatar size='large' icon={<UserOutlined />}/>{this.state.tutor.firstname + ' ' + this.state.tutor.lastname}</span></Popover>}
 
                     </div>
@@ -187,7 +187,7 @@ class SidebarLayout extends React.Component {
 
             </Sider>
             <Layout>
-                
+
                 <Layout style={{backgroundColor: 'white'}}>
                     <Content className='content-container'>
                         <div className='main-content'>
@@ -209,7 +209,7 @@ class SidebarLayout extends React.Component {
 
             </Layout>
 
-            
+
 
         </Layout>
 

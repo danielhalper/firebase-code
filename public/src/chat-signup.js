@@ -2,6 +2,23 @@ const { Row, Col } = antd;
 
 class ChatSignup extends React.Component {
 
+  loadDeferredIframe() {
+    const userLocalEmail = getEmailFromLocalStorage();
+    const userLocalFirstName = getFirstNameFromLocalStorage();
+    const userLocalLastName = getLastNameFromLocalStorage();
+    const iframe = document.getElementById("my-deferred-iframe");
+    iframe.src = `https://app.acuityscheduling.com/schedule.php?owner=21394641&appointmentType=18777910&firstName=${userLocalFirstName}&lastName=${userLocalLastName}&email=${userLocalEmail}`;
+    iframe.title = "Schedule Appointment";
+    iframe.width = "90%";
+    iframe.height = "1500";
+    iframe.frameBorder = "0";
+  };
+
+
+  componentDidMount() {
+    this.loadDeferredIframe();
+  };
+
   render() {
   return (
     <div>
@@ -13,7 +30,7 @@ class ChatSignup extends React.Component {
 
       <p className="section-p">If you need assistance, please reach out to our Onboarding Specialist at laura@stepuptutoring.org or (205) 953-1894. If you have already signed up or completed session, please disregard.</p>
       <div className="center-embed-chat-signup">
-        <iframe src="https://app.acuityscheduling.com/schedule.php?owner=21394641&appointmentType=18777910" title="Schedule Appointment" width="90%" height="1200" frameBorder="0"></iframe><script src="https://embed.acuityscheduling.com/js/embed.js" type="text/javascript"></script>
+        <iframe id="my-deferred-iframe" src="about:blank" /><script src="https://embed.acuityscheduling.com/js/embed.js" type="text/javascript"></script>
       </div>
     </div>
     )
