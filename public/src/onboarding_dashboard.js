@@ -8,7 +8,8 @@ if (EMULATOR) firebase.functions().useEmulator("localhost", 5001)
 ReactDOM.render(<SidebarLayout pages={{
     'home': Home,
     'waiver': Waiver,
-    'chat-signup': ChatSignup
+    'chat-signup': ChatSignup,
+    'workbook': Workbook
 }} sidebarItems={[
     {
         keyId: 'home',
@@ -24,7 +25,7 @@ ReactDOM.render(<SidebarLayout pages={{
                 title: 'Chat Signup',
                 active: false,
                 disabled: false,
-                complete: true
+                complete: false
             },
             {
                 keyId: 'waiver',
