@@ -149,6 +149,10 @@ h3.ant-typography {
 .center-embed-chat-signup {
     display: flex;
     justify-content: center;
+    background-color: #d3d3d357;
+    border-radius: 10px;
+    margin-top: 3%;
+    padding-top: 2%;
 }
 
 .section-header-h1 {
@@ -165,7 +169,7 @@ h3.ant-typography {
 }
 
 .section-p {
-    text-align: center;
+    /* text-align: center; */
     font-size: 16px;
     font-family: 'Open Sans', sans-serif;
 }
@@ -189,4 +193,57 @@ h3.ant-typography {
 .dashboard-required-items {
     display: flex;
     flex-direction: row;
+}
+
+.bg-check-div-all-steps {
+    margin-top: 5%;
+}
+
+.bg-check-step-styling {
+    margin-bottom: 4%;
+}
+
+.div-bg-check-number-and-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2%;
+}
+
+.bg-check-number-styling {
+    width: 2em;
+    height: 2em;
+    border-radius: 15px;
+    background-color: teal;
+    color: white;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.bg-check-step-title {
+    color: #1BCBD9;
+    font-size: 1.6em;
+    width: 100%;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+h3.bg-check-step-title:after {
+    content: '';
+    border-top: 2px solid;
+    margin: 0 20px 0 15px;
+    flex: 1 0 20px;
+    color: white;
+}
+
+.bg-check-p {
+    margin-left: 3%;
+}
+
+.bg-check-iframe {
+    margin-left: 3%;
+    border-radius: 5px;
 }
