@@ -110,12 +110,12 @@ h3.ant-typography {
 }
 
 .main-content {
-    height: 100%;
+    height: 90%;
     margin: 30px;
     padding: 20px;
     padding-top: 25px;
     padding-bottom: 50px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .sidebar-footer {
@@ -146,13 +146,14 @@ h3.ant-typography {
     cursor: pointer;
 }
 
-.center-embed-chat-signup {
+.center-embed-iframe {
     display: flex;
     justify-content: center;
     background-color: #d3d3d357;
-    border-radius: 10px;
+    border-radius: 5px;
     margin-top: 3%;
     padding-top: 2%;
+    padding-bottom: 2%;
 }
 
 .section-header-h1 {
@@ -183,7 +184,7 @@ h3.ant-typography {
     background-color: white;
     padding: 5px 15px;
     margin-top: 5%;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .tab-content-style .ant-tabs-content-holder {
@@ -200,7 +201,7 @@ h3.ant-typography {
 }
 
 .bg-check-step-styling {
-    margin-bottom: 4%;
+    margin-bottom: 5%;
 }
 
 .div-bg-check-number-and-title {
@@ -236,11 +237,15 @@ h3.bg-check-step-title:after {
     border-top: 2px solid;
     margin: 0 20px 0 15px;
     flex: 1 0 20px;
-    color: white;
+    color: #ffffffe0;
 }
 
 .bg-check-p {
     margin-left: 3%;
+}
+
+#bg-check-note {
+    color: #706f6f;
 }
 
 .bg-check-iframe {
