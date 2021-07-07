@@ -146,13 +146,14 @@ h3.ant-typography {
     cursor: pointer;
 }
 
-.center-embed-chat-signup {
+.center-embed-iframe {
     display: flex;
     justify-content: center;
     background-color: #d3d3d357;
-    border-radius: 10px;
+    border-radius: 5px;
     margin-top: 3%;
     padding-top: 2%;
+    padding-bottom: 2%;
 }
 
 .section-header-h1 {
@@ -183,7 +184,7 @@ h3.ant-typography {
     background-color: white;
     padding: 5px 15px;
     margin-top: 5%;
-    border-radius: 10px;
+    border-radius: 5ƒpx;
 }
 
 .tab-content-style .ant-tabs-content-holder {
