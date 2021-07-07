@@ -115,7 +115,7 @@ h3.ant-typography {
     padding: 20px;
     padding-top: 25px;
     padding-bottom: 50px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .sidebar-footer {
@@ -200,7 +200,7 @@ h3.ant-typography {
 }
 
 .bg-check-step-styling {
-    margin-bottom: 4%;
+    margin-bottom: 5%;
 }
 
 .div-bg-check-number-and-title {
@@ -236,11 +236,15 @@ h3.bg-check-step-title:after {
     border-top: 2px solid;
     margin: 0 20px 0 15px;
     flex: 1 0 20px;
-    color: white;
+    color: #ffffffe0;
 }
 
 .bg-check-p {
     margin-left: 3%;
+}
+
+#bg-check-note {
+    color: #706f6f;
 }
 
 .bg-check-iframe {
