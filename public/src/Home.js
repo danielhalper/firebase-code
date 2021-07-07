@@ -116,8 +116,6 @@ class SecondSteps extends React.Component {
     constructor(props) {
         super(props)
 
-        console.log(this.props.userData['user'])
-
         //State
         this.state = {
             hasCompletedWaiver:  false,
@@ -225,7 +223,7 @@ class Home extends React.Component {
 
     receiveUser(user) {
         console.log({user});
-        let currentStep = 0
+        let currentStep = 1 //changed from 0 to 1 for testing
 
         // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
         // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2

@@ -10,7 +10,7 @@ class ChatSignup extends React.Component {
     iframe.src = `https://app.acuityscheduling.com/schedule.php?owner=21394641&appointmentType=18777910&firstName=${userLocalFirstName}&lastName=${userLocalLastName}&email=${userLocalEmail}`;
     iframe.title = "Schedule Appointment";
     iframe.width = "90%";
-    iframe.height = "1500";
+    iframe.height = "1600";
     iframe.frameBorder = "0";
   };
 

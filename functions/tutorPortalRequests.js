@@ -12,10 +12,10 @@ const twilioAuthToken = functions.config().twilio.auth_token
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 
 //Zoom credentials
-const zoomAPIKey = functions.config().zoom.api_key 
-const zoomAPISecret = functions.config().zoom.api_secret 
+// const zoomAPIKey = functions.config().zoom.api_key
+// const zoomAPISecret = functions.config().zoom.api_secret
 
-//Util function 
+//Util function
 function notNull(value) {
     return value != null && value != undefined
 }
@@ -95,7 +95,7 @@ exports.getTutor = async (data, context) => {
 
     }
 
-    //Update the students 
+    //Update the students
     userObj['students'] = students
 
     //Update the id
@@ -218,7 +218,7 @@ exports.sendSMSMessage = async (data, context) => {
 
             //If the number assigned to that student is the one they texted...
             if (correspondents[personId] == to) {
-                
+
                 //Get the record of that student
                 secondPersonDoc = await admin.firestore().collection('people').doc(personId).get()
                 break
@@ -226,8 +226,8 @@ exports.sendSMSMessage = async (data, context) => {
             }
         }
 
-    } 
-    
+    }
+
     //If it's a student...
     else {
 
@@ -237,11 +237,11 @@ exports.sendSMSMessage = async (data, context) => {
         //If there's a tutor in this query...
         if (querySnapshot.size >= 1) {
 
-            
+
             //Get the first one
             secondPersonDoc = querySnapshot.docs[0]
 
-        } 
+        }
 
     }
 
@@ -283,7 +283,7 @@ exports.sendSMSMessage = async (data, context) => {
 
         id: docId,
         fields: airtableData
-        
+
     }]).catch(err => console.log(err))
 
 
@@ -300,7 +300,7 @@ exports.sendSMSMessage = async (data, context) => {
             //Get the language code for it (defaults to English)
             const toLanguageCode = (preferredLanguage == 'Español') ? 'es' : 'en'
 
-            //Now, translate the message 
+            //Now, translate the message
             const translation = await googleTranslate.translate(message, toLanguageCode)
 
             //Set the message to the translated version
@@ -366,7 +366,7 @@ function createZoomJWT() {
     const token = jwt.sign(payload, zoomAPISecret)
 
     return token
-    
+
 }
 
 async function getZoomLinksForMeeting(meetingId) {

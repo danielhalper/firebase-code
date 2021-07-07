@@ -9,7 +9,8 @@ ReactDOM.render(<SidebarLayout pages={{
     'home': Home,
     'waiver': Waiver,
     'chat-signup': ChatSignup,
-    'workbook': Workbook
+    'workbook': Workbook,
+    'livescan': BackgroundCheck
 }} sidebarItems={[
     {
         keyId: 'home',
@@ -48,7 +49,7 @@ ReactDOM.render(<SidebarLayout pages={{
                 icon: <SecurityScanOutlined />,
                 title: 'Background Check',
                 active: false,
-                disabled: true,
+                disabled: false,  // make active for testing
                 complete: false
             },
             {
@@ -96,4 +97,4 @@ ReactDOM.render(<SidebarLayout pages={{
 
         ]
     }
-]} currentTab='home'/>, mountNode)
+]} currentTab='livescan'/>, mountNode) // changed to livescan for testing

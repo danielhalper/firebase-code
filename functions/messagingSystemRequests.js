@@ -15,8 +15,8 @@ const twilioAuthToken = functions.config().twilio.auth_token
 const zapierAuthToken = functions.config().zapier.auth_token
 
 //Zoom credentials
-const zoomAPIKey = functions.config().zoom.api_key 
-const zoomAPISecret = functions.config().zoom.api_secret 
+// const zoomAPIKey = functions.config().zoom.api_key
+// const zoomAPISecret = functions.config().zoom.api_secret
 
 //Create a twilio client
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
@@ -655,7 +655,7 @@ async function updatePeopleData() {
                     promises.push( getUpdatedRecordData(record, firestoreDoc, 'tutor').then(result => {
                         documentsToUpdate.push({ doc: firestoreDoc.ref, data: result })
                     }) )
-                    
+
 
                 }
 
@@ -926,7 +926,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
     let restrictedTutorNumbers = []
 
     let airtableItems = record.fields[role == 'tutor' ? 'Students': 'Tutors']
-    
+
     if (typeof airtableItems == 'string' || airtableItems instanceof String) airtableItems = airtableItems.split(',')
 
     if (!Array.isArray(airtableItems)) airtableItems = [airtableItems]
@@ -982,7 +982,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
     }
 
     else {
-        
+
         if (notNull(airtableItems)) {
             missingItems = [...airtableItems]
             zoomMissingItems = [...airtableItems]
@@ -1019,7 +1019,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
 
         //Create necessary zoom links
         for (let i = 0; i < zoomMissingItems.length; i++) {
-            
+
             //Start the new item as null
             let newItem = 'null'
 
@@ -1092,7 +1092,7 @@ function createZoomJWT() {
     const token = jwt.sign(payload, zoomAPISecret)
 
     return token
-    
+
 }
 
 async function createZoomLinkForTutor(email) {
@@ -1120,7 +1120,7 @@ async function createZoomLinkForTutor(email) {
             }
         })
     })
-    
+
     const resultData = await response.json()
 
     return resultData['id']
