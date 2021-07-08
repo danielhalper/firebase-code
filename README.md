@@ -17,6 +17,14 @@ The bulk of the setup will be getting the Firebase emulators running. The first 
 curl -sL https://firebase.tools | bash
 ```
 
+In addition to installing the CLI, you will need to login to Firebase from the CLI so it can connect to the project. For this to work, the Google account you intend to use with Firebase must be added as a user in the Firebase admin console - if it has not yet been added, please talk to [Caleb Hester](mailto:caleb@stepuptutoring.org). 
+
+If your account is added in Firebase, simply login via:
+```
+firebase login
+```
+Make sure to log in with the same Google account that was used for Firebase.
+
 ### Additional Dependencies
 In addition to the Firebase CLI, you will need to make sure Java is installed on your computer, and that you have NodeJS and npm installed.
 
