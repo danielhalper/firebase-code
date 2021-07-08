@@ -6,30 +6,26 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _antd = antd,
-    Row = _antd.Row,
-    Col = _antd.Col;
+var LiveTraining = function (_React$Component) {
+  _inherits(LiveTraining, _React$Component);
 
-var ChatSignup = function (_React$Component) {
-  _inherits(ChatSignup, _React$Component);
+  function LiveTraining() {
+    _classCallCheck(this, LiveTraining);
 
-  function ChatSignup() {
-    _classCallCheck(this, ChatSignup);
-
-    return _possibleConstructorReturn(this, (ChatSignup.__proto__ || Object.getPrototypeOf(ChatSignup)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (LiveTraining.__proto__ || Object.getPrototypeOf(LiveTraining)).apply(this, arguments));
   }
 
-  _createClass(ChatSignup, [{
+  _createClass(LiveTraining, [{
     key: "loadDeferredIframe",
     value: function loadDeferredIframe() {
       var userLocalEmail = getEmailFromLocalStorage();
       var userLocalFirstName = getFirstNameFromLocalStorage();
       var userLocalLastName = getLastNameFromLocalStorage();
-      var iframe = document.getElementById("my-deferred-iframe");
-      iframe.src = "https://app.acuityscheduling.com/schedule.php?owner=21394641&appointmentType=18777910&firstName=" + userLocalFirstName + "&lastName=" + userLocalLastName + "&email=" + userLocalEmail;
-      iframe.title = "Schedule Appointment";
+      var iframe = document.getElementById("deferred-iframe");
+      iframe.src = "https://calendly.com/stepup-tut/training?name=" + userLocalFirstName + "%20" + userLocalLastName + "&email=" + userLocalEmail;
+      iframe.title = "Schedule Live Training";
       iframe.width = "90%";
-      iframe.height = "1600";
+      iframe.height = "800";
       iframe.frameBorder = "0";
     }
   }, {
@@ -46,32 +42,22 @@ var ChatSignup = function (_React$Component) {
         React.createElement(
           "h1",
           { className: "section-header-h1" },
-          "15-Minute Chat"
+          "Live Training"
         ),
         React.createElement(
           "p",
-          { className: "section-p" },
-          "We want to keep it casual, ask a few questions, and get to know you better!"
-        ),
-        React.createElement(
-          "p",
-          { className: "section-p" },
-          "All meetings with us are via Zoom, be on the lookout for the link in your confirmation email."
-        ),
-        React.createElement(
-          "p",
-          { className: "section-p" },
-          "If you need assistance, please reach out to our Onboarding Specialist at laura@stepuptutoring.org or (205) 953-1894. If you have already signed up or completed session, please disregard."
+          null,
+          "Attend an hour long, live virtual session with one of our coaches where you will find out more about how being a tutor with Step Up works, learn about some fun educational resources to use with your student, and ask any questions you may have. Please sign up for a session with Laura through the calendar below."
         ),
         React.createElement(
           "div",
-          { className: "center-embed-iframe" },
-          React.createElement("iframe", { id: "my-deferred-iframe", src: "about:blank" }),
-          React.createElement("script", { src: "https://embed.acuityscheduling.com/js/embed.js", type: "text/javascript" })
+          { className: "center-embed-iframe", id: "live-training-calendly" },
+          React.createElement("iframe", { id: "deferred-iframe", src: "about:blank" }),
+          React.createElement("script", { src: "https://assets.calendly.com/assets/external/widget.js", type: "text/javascript" })
         )
       );
     }
   }]);
 
-  return ChatSignup;
+  return LiveTraining;
 }(React.Component);

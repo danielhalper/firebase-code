@@ -126,7 +126,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
     if (!notNull(secondPersonDoc)) {
 
         //If they don't have a student/tutor corresponding with this phone number, tell them
-        twilioSend(res, constructTwilioMessagingResponse(`StepUp Tutoring here! It looks like this is the wrong number for your ${role == 'tutor' ? 'student': 'tutor'}!`))
+        twilioSend(res, constructTwilioMessagingResponse(`Step Up Tutoring here! It looks like this is the wrong number for your ${role == 'tutor' ? 'student': 'tutor'}!`))
         return
 
     }
@@ -142,7 +142,7 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
     //If their phone doesn't exist, send an explanation
     if (!notNull(toPhone)) {
-        twilioSend(res, constructTwilioMessagingResponse(`StepUpTutoring Here! The person you're trying to contact hasn't set up their phone number with us yet. You may have to contact StepUp staff for assistance.`))
+        twilioSend(res, constructTwilioMessagingResponse(`Step Up Tutoring Here! The person you're trying to contact hasn't set up their phone number with us yet. You may have to contact Step Up staff for assistance.`))
         return
     }
 
@@ -350,8 +350,8 @@ exports.respondToPhonePickup = functions.https.onRequest(async (req, res) => {
 
     //Make sure it says they are communicating
     let data = {}
-    if (role == 'tutor') data['Tutor communicating?'] = 'yes'
-    if (role == 'student') data['Family communicating?'] = 'yes'
+    if (role == 'student') data['Tutor communicating?'] = 'yes'
+    if (role == 'tutor') data['Family communicating?'] = 'yes'
 
     //Update AirTable to reflect those changes
     const airtableAPIKey = functions.config().airtable.key
@@ -1066,17 +1066,11 @@ async function getRecordFromPhone(phone) {
     //First, we'll try firestore
     const querySnapshot = await admin.firestore().collection('people').where('phone', '==', pn).get()
 
-    //If we didn't get anything, get it from AirTable instead
-    if (querySnapshot.size == 0) return await getAirtableRecordFromPhone(phone)
+    //If we didn't get anything, stop
+    if (querySnapshot.size == 0) return
 
     //Othwerwise, we'll return the first document
     return querySnapshot.docs[0]
-
-}
-
-async function getAirtableRecordFromPhone(phone) {
-
-    //TODO: Implement AirTable Record Fetching
 
 }
 
@@ -1099,9 +1093,6 @@ async function createZoomLinkForTutor(email) {
 
     //Get a JWT for Zoom
     const token = createZoomJWT()
-
-    if (email == 'caleb@stepuptutoring.org') console.log("______________TEST________________")
-
 
     const response = await fetch(`https://api.zoom.us/v2/users/${email}/meetings`, {
         method: 'post',

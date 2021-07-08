@@ -220,7 +220,7 @@ var SidebarLayout = function (_React$Component4) {
                 { style: { height: '100%' }, className: 'desktop-dashboard' },
                 React.createElement(
                     Sider,
-                    { theme: 'light', className: 'dashboard-sidebar', breakpoint: 'sm', collapsedWidth: '0' },
+                    { theme: 'light', className: 'dashboard-sidebar', breakpoint: 'sm', width: '240' },
                     React.createElement(
                         'div',
                         { style: { display: 'flex', flexDirection: 'column', height: '100%' } },
@@ -244,7 +244,7 @@ var SidebarLayout = function (_React$Component4) {
                                     ),
                                     item.isSteps && React.createElement(
                                         Steps,
-                                        { direction: 'vertical', size: 'small', className: 'subitem' },
+                                        { direction: 'vertical', className: 'subitem' },
                                         item.subItems && item.subItems.map(function (subItem) {
 
                                             return React.createElement(Step, { status: subItem.complete ? 'finish' : undefined, title: React.createElement(

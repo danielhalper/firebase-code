@@ -94,11 +94,11 @@ var FirstSteps = function (_React$Component2) {
             isLoading: false
 
             //Set the tracked items
-        };if ('Waiver?' in _this2.props.userData['user']) _this2.state.hasCompletedWaiver = notNull(_this2.props.userData['user']['Waiver?']);
-        if ('Section 2' in _this2.props.userData['user']) _this2.state.hasCompletedWorkbook = notNull(_this2.props.userData['user']['Section 2']);
-        if ('Interview Date' in _this2.props.userData['user']) _this2.state.hasScheduledChat = notNull(_this2.props.userData['user']['Interview Date']);
+            // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
+            // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
+            // if ('Interview Date' in this.props.userData['user']) this.state.hasScheduledChat = notNull(this.props.userData['user']['Interview Date'])
 
-        return _this2;
+        };return _this2;
     }
 
     _createClass(FirstSteps, [{
@@ -148,7 +148,7 @@ var FirstSteps = function (_React$Component2) {
                         'Once you\'ve had your interview, you\'ll move on to the next steps!'
                     )
                 ),
-                (!this.state.hasCompletedWaiver || !this.state.hasCompletedWorkbook) && React.createElement(
+                this.state.hasScheduledChat && (!this.state.hasCompletedWaiver || !this.state.hasCompletedWorkbook) && React.createElement(
                     'div',
                     null,
                     React.createElement(
@@ -161,15 +161,19 @@ var FirstSteps = function (_React$Component2) {
                         null,
                         'While you\'re waiting, you can work on these items:'
                     ),
-                    !this.state.hasCompletedWaiver && React.createElement(
-                        RequiredItem,
-                        { link: links['waiver'], icon: React.createElement(SolutionOutlined, null), title: 'Tutor Waiver' },
-                        'The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.'
-                    ),
-                    !this.state.hasCompletedWorkbook && React.createElement(
-                        RequiredItem,
-                        { link: links['workbook'], icon: React.createElement(BookOutlined, null), title: 'The Workbook' },
-                        'The workbook is our training course for new tutors. It will set you up for success with your student.'
+                    React.createElement(
+                        'div',
+                        { className: 'dashboard-required-items' },
+                        !this.state.hasCompletedWaiver && React.createElement(
+                            RequiredItem,
+                            { link: links['waiver'], icon: React.createElement(SolutionOutlined, null), title: 'Tutor Waiver' },
+                            'The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.'
+                        ),
+                        !this.state.hasCompletedWorkbook && React.createElement(
+                            RequiredItem,
+                            { link: links['workbook'], icon: React.createElement(BookOutlined, null), title: 'The Workbook' },
+                            'The workbook is our training course for new tutors. It will set you up for success with your student.'
+                        )
                     )
                 )
             );
@@ -188,11 +192,9 @@ var SecondSteps = function (_React$Component3) {
     function SecondSteps(props) {
         _classCallCheck(this, SecondSteps);
 
+        //State
         var _this3 = _possibleConstructorReturn(this, (SecondSteps.__proto__ || Object.getPrototypeOf(SecondSteps)).call(this, props));
 
-        console.log(_this3.props.userData['user']);
-
-        //State
         _this3.state = {
             hasCompletedWaiver: false,
             hasCompletedWorkbook: false,
@@ -201,12 +203,12 @@ var SecondSteps = function (_React$Component3) {
             isLoading: false
 
             //Set the tracked items
-        };if ('Waiver?' in _this3.props.userData['user']) _this3.state.hasCompletedWaiver = notNull(_this3.props.userData['user']['Waiver?']);
-        if ('Section 2' in _this3.props.userData['user']) _this3.state.hasCompletedWorkbook = notNull(_this3.props.userData['user']['Section 2']);
-        if ('Live Scan?' in _this3.props.userData['user']) _this3.state.hasCompletedLiveScan = notNull(_this3.props.userData['user']['Live Scan?']);
-        if ('Live Training?' in _this3.props.userData['user']) _this3.state.hasCompletedLiveTraining = notNull(_this3.props.userData['user']['Live Training?']);
+            // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
+            // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
+            // if ('Live Scan?' in this.props.userData['user']) this.state.hasCompletedLiveScan = notNull(this.props.userData['user']['Live Scan?'])
+            // if ('Live Training?' in this.props.userData['user']) this.state.hasCompletedLiveTraining = notNull(this.props.userData['user']['Live Training?'])
 
-        return _this3;
+        };return _this3;
     }
 
     _createClass(SecondSteps, [{
@@ -233,25 +235,29 @@ var SecondSteps = function (_React$Component3) {
                     null,
                     'You\u2019re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match!'
                 ),
-                !this.state.hasCompletedWaiver && React.createElement(
-                    RequiredItem,
-                    { link: links['waiver'], icon: React.createElement(SolutionOutlined, null), title: 'Tutor Waiver' },
-                    'The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.'
-                ),
-                !this.state.hasCompletedWorkbook && React.createElement(
-                    RequiredItem,
-                    { link: links['workbook'], icon: React.createElement(BookOutlined, null), title: 'The Workbook' },
-                    'The workbook is our training course for new tutors. It will set you up for success with your student.'
-                ),
-                !this.state.hasCompletedLiveScan && React.createElement(
-                    RequiredItem,
-                    { link: links['livescan'], icon: React.createElement(SecurityScanOutlined, null), title: 'LiveScan' },
-                    'LiveScan is a government requirement for working with children. This is completed outside of StepUp.'
-                ),
-                !this.state.hasCompletedLiveTraining && React.createElement(
-                    RequiredItem,
-                    { link: links['training'], icon: React.createElement(RocketOutlined, null), title: 'Live Training' },
-                    'You will need to complete a live training session with one of our leaders before you can be matched with a student.'
+                React.createElement(
+                    'div',
+                    { className: 'dashboard-required-items' },
+                    !this.state.hasCompletedWaiver && React.createElement(
+                        RequiredItem,
+                        { link: links['waiver'], icon: React.createElement(SolutionOutlined, null), title: 'Tutor Waiver' },
+                        'The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.'
+                    ),
+                    !this.state.hasCompletedWorkbook && React.createElement(
+                        RequiredItem,
+                        { link: links['workbook'], icon: React.createElement(BookOutlined, null), title: 'The Workbook' },
+                        'The workbook is our training course for new tutors. It will set you up for success with your student.'
+                    ),
+                    !this.state.hasCompletedLiveScan && React.createElement(
+                        RequiredItem,
+                        { link: links['livescan'], icon: React.createElement(SecurityScanOutlined, null), title: 'LiveScan' },
+                        'LiveScan is a government requirement for working with children. This is completed outside of StepUp.'
+                    ),
+                    !this.state.hasCompletedLiveTraining && React.createElement(
+                        RequiredItem,
+                        { link: links['training'], icon: React.createElement(RocketOutlined, null), title: 'Live Training' },
+                        'You will need to complete a live training session with one of our leaders before you can be matched with a student.'
+                    )
                 )
             );
         }
@@ -343,12 +349,12 @@ var Home = function (_React$Component5) {
     _createClass(Home, [{
         key: 'receiveUser',
         value: function receiveUser(user) {
+            console.log({ user: user });
+            var currentStep = 1; //changed from 0 to 1 for testing
 
-            var currentStep = 0;
-
-            if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1;
-            if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2;
-            if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4;
+            // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
+            // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
+            // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
 
             //Update the state with the received data
             this.setState({
@@ -356,6 +362,16 @@ var Home = function (_React$Component5) {
                 userData: user.data,
                 currentStep: currentStep
             });
+        }
+    }, {
+        key: 'setUserLocalStorage',
+        value: function setUserLocalStorage(user) {
+            var firstname = user.data.user['First Name'];
+            var lastname = user.data.user['Last Name'];
+            var email = user.data.user['Email'];
+            window.localStorage.setItem('userEmail', email);
+            window.localStorage.setItem('userFirstName', firstname);
+            window.localStorage.setItem('userLastName', lastname);
         }
     }, {
         key: 'onError',
@@ -368,7 +384,8 @@ var Home = function (_React$Component5) {
             var _this6 = this;
 
             firebase.functions().httpsCallable('getTutorData')().then(function (result) {
-                return _this6.receiveUser(result);
+                _this6.receiveUser(result);
+                _this6.setUserLocalStorage(result);
             }).catch(function (error) {
                 _this6.onError(error);
             });
@@ -436,7 +453,7 @@ var Home = function (_React$Component5) {
                 React.createElement(
                     Title,
                     null,
-                    'Your Applicant Dashboard'
+                    'Your Onboarding Dashboard'
                 ),
                 React.createElement(
                     'p',

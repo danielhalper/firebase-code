@@ -6,10 +6,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _antd = antd,
-    Row = _antd.Row,
-    Col = _antd.Col;
-
 var Waiver = function (_React$Component) {
   _inherits(Waiver, _React$Component);
 
@@ -29,28 +25,28 @@ var Waiver = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      // no scroll
-      //class="select-item-box select-item " use display:none to hide duplicate info
-      //center form
-
-
+      var userLocalEmail = getEmailFromLocalStorage();
+      var userLocalFirstName = getFirstNameFromLocalStorage();
+      var userLocalLastName = getLastNameFromLocalStorage();
       return React.createElement(
         "div",
         null,
         React.createElement(
-          "p",
-          null,
-          "The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring. It outlines the tutor code of conduct, and responsibilities & expectations for our volunteer tutors. "
+          "h1",
+          { className: "section-header-h1" },
+          "Waiver"
         ),
         React.createElement(
-          Row,
-          null,
-          React.createElement(
-            Col,
-            { xs: 24 },
-            React.createElement("div", { "data-paperform-id": "tqp1uzj8" })
-          )
-        )
+          "h3",
+          { className: "section-approx-time" },
+          "Approximate time: 5 minutes"
+        ),
+        React.createElement(
+          "p",
+          { className: "section-p" },
+          "The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring. It outlines the tutor code of conduct, and responsibilities & expectations for our volunteer tutors. "
+        ),
+        React.createElement("div", { className: "waiver-paperform-div", "data-prefill": "firstName=" + userLocalFirstName + "&lastName=" + userLocalLastName + "&email=" + userLocalEmail + "&2n0v7=" + userLocalFirstName + "%20" + userLocalLastName, "data-paperform-id": "tqp1uzj8" })
       );
     }
   }]);

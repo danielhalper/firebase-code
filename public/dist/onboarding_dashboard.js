@@ -8,7 +8,10 @@ if (EMULATOR) firebase.functions().useEmulator("localhost", 5001);
 ReactDOM.render(React.createElement(SidebarLayout, { pages: {
         'home': Home,
         'waiver': Waiver,
-        'chat-signup': ChatSignup
+        'chat-signup': ChatSignup,
+        'workbook': Workbook,
+        'livescan': BackgroundCheck,
+        'live-training': LiveTraining
     }, sidebarItems: [{
         keyId: 'home',
         icon: React.createElement(HomeOutlined, null),
@@ -22,7 +25,7 @@ ReactDOM.render(React.createElement(SidebarLayout, { pages: {
             title: 'Chat Signup',
             active: false,
             disabled: false,
-            complete: true
+            complete: false
         }, {
             keyId: 'waiver',
             icon: React.createElement(SolutionOutlined, null),
@@ -42,14 +45,14 @@ ReactDOM.render(React.createElement(SidebarLayout, { pages: {
             icon: React.createElement(SecurityScanOutlined, null),
             title: 'Background Check',
             active: false,
-            disabled: true,
+            disabled: false, // make 'false' for testing
             complete: false
         }, {
             keyId: 'live-training',
             icon: React.createElement(RocketOutlined, null),
             title: 'Live Training',
             active: false,
-            disabled: true,
+            disabled: false, // make 'false' for testing
             complete: false
         }]
     }, {
@@ -79,4 +82,4 @@ ReactDOM.render(React.createElement(SidebarLayout, { pages: {
             active: false,
             disabled: false
         }]
-    }], currentTab: 'home' }), mountNode);
+    }], currentTab: 'home' }), mountNode); // changed to livescan for testing
