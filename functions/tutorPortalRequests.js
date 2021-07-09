@@ -72,31 +72,35 @@ exports.getTutor = async (data, context) => {
     //Create a user object
     let userObj = userData.data()
 
-    //Keep track of students
-    let students = []
+    if (notNull(userObj['students'])) {
 
-    //Go through the students
-    for (let studentId in userObj['students']) {
+        //Keep track of students
+        let students = []
 
-        //Get their record
-        const studentRecord = await admin.firestore().collection('people').doc(studentId).get()
+        //Go through the students
+        for (let studentId in userObj['students']) {
 
-        //Turn it into an object
-        let studentObj = studentRecord.data()
+            //Get their record
+            const studentRecord = await admin.firestore().collection('people').doc(studentId).get()
 
-        //Add the proxy number
-        studentObj['proxyNumber'] = userObj['students'][studentId]
+            //Turn it into an object
+            let studentObj = studentRecord.data()
 
-        //Add the id
-        studentObj['id'] = studentId
+            //Add the proxy number
+            studentObj['proxyNumber'] = userObj['students'][studentId]
 
-        //Add it to the array of students
-        students.push(studentObj)
+            //Add the id
+            studentObj['id'] = studentId
+
+            //Add it to the array of students
+            students.push(studentObj)
+
+        }
+
+        //Update the students
+        userObj['students'] = students
 
     }
-
-    //Update the students
-    userObj['students'] = students
 
     //Update the id
     userObj['id'] = userData.id
