@@ -12,8 +12,8 @@ const twilioAuthToken = functions.config().twilio.auth_token
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 
 //Zoom credentials
-// const zoomAPIKey = functions.config().zoom.api_key
-// const zoomAPISecret = functions.config().zoom.api_secret
+const zoomAPIKey = functions.config().zoom.api_key
+const zoomAPISecret = functions.config().zoom.api_secret
 
 //Util function
 function notNull(value) {
@@ -23,7 +23,7 @@ function notNull(value) {
 //For getting the tutor data from an email
 async function getTutorDataRaw(email) {
 
-    //Get the aritable API key
+    //Get the airtable API key
     const airtableAPIKey = functions.config().airtable.key
 
     //Set up the airtable base
