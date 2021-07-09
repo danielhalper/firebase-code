@@ -15,8 +15,8 @@ const twilioAuthToken = functions.config().twilio.auth_token
 const zapierAuthToken = functions.config().zapier.auth_token
 
 //Zoom credentials
-const zoomAPIKey = functions.config().zoom.api_key
-const zoomAPISecret = functions.config().zoom.api_secret
+// const zoomAPIKey = functions.config().zoom.api_key
+// const zoomAPISecret = functions.config().zoom.api_secret
 
 //Create a twilio client
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
@@ -427,6 +427,16 @@ exports.syncPeopleData = functions.pubsub.schedule('every 24 hours').onRun((cont
 
 })
 
+//Absolutely insecure; present for testing purposes only
+exports.syncPeopleDataTest = functions.https.onRequest(async (req, res) => {
+
+    console.log('Running')
+    await updatePeopleData()
+    console.log("syncPeopleData");
+    // (result => console.log('Finished Syncing People'))
+    res.send('something');
+})
+
 const findInactiveTutorsFunc = async context => {
 
     //Keep track of the tutors to consider
@@ -528,6 +538,11 @@ const findInactiveTutorsFunc = async context => {
 
 }
 
+//Again, just here for testing; should be removed eventually
+exports.findInactiveTutorsTest = functions.https.onRequest((req, res) => {
+    findInactiveTutorsFunc({})
+})
+
 exports.findInactiveTutors = functions.pubsub.schedule('every 24 hours').onRun(findInactiveTutorsFunc)
 
 exports.onNewStudentRow = functions.https.onRequest(async (req, res) => {
@@ -580,6 +595,16 @@ exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
     res.send({
         status: 'success'
     })
+
+})
+
+exports.zoomLinkTest = functions.https.onRequest(async (req, res) => {
+
+    const email = req.body.email
+
+    const meetingId = await createZoomLinkForTutor(email)
+
+    res.send(meetingId)
 
 })
 
