@@ -1,10 +1,6 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
-const airtable = require('airtable')
 const twilio = require('twilio')
-const { FunctionInstance } = require('twilio/lib/rest/serverless/v1/service/function')
-const { firestore } = require('firebase-admin')
-const { user } = require('firebase-functions/lib/providers/auth')
 
 const twilioAccountSid = functions.config().twilio.account_sid
 const twilioAuthToken = functions.config().twilio.auth_token

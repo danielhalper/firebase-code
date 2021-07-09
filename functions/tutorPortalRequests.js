@@ -12,8 +12,8 @@ const twilioAuthToken = functions.config().twilio.auth_token
 const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 
 //Zoom credentials
-// const zoomAPIKey = functions.config().zoom.api_key
-// const zoomAPISecret = functions.config().zoom.api_secret
+const zoomAPIKey = functions.config().zoom.api_key
+const zoomAPISecret = functions.config().zoom.api_secret
 
 //Util function
 function notNull(value) {
