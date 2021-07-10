@@ -29,12 +29,25 @@ Make sure to log in with the same Google account that was used for Firebase.
 In addition to the Firebase CLI, you will need to make sure Java is installed on your computer, and that you have NodeJS and npm installed.
 
 ### Starting the emulators
-Clone this repository, then `cd` into the folder. From here, run:
+Clone this repository, then `cd` into the `firebase-code` folder. From here, run:
 ```
 npm install
 ```
+This installs the dependencies for the startup script, but there are also separate dependencies for Cloud functions.
+To install these, `cd` into the `functions` folder, then run:
+```
+npm install
+```
+
+You will also have to get the configuration file for Cloud Functions; to do this, run:
+```
+firebase functions:config:get > .runtimeconfig.json
+```
+in the `functions` folder. 
+
 Once this is done, run:
 ```
+cd ..
 ./startup
 ```
 This will start the Firebase emulators and begin watching the JS files in the `src` folder, so any changes you make to the frontend or backend code should be immediately reflected.
