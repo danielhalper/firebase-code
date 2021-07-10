@@ -902,6 +902,8 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
 
     if (typeof airtableItems == 'string' || airtableItems instanceof String) airtableItems = airtableItems.split(',')
 
+    if (!notNull(airtableItems)) return newData
+
     if (!Array.isArray(airtableItems)) airtableItems = [airtableItems]
 
 
