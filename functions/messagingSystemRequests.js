@@ -596,8 +596,7 @@ async function updatePeopleData() {
     //Get the tutor data from AirTable
     await base('Tutors').select({
         fields: ['First Name', 'Last Name', 'Email', 'Phone', 'Students', 'Tutor ID', 'Match date', 'StepUp Email'],
-        offset: 0,
-        view: 'Matched Tutors'
+        offset: 0
     }).eachPage((records, fetchNextPage) => {
         let _records = records
 
@@ -668,7 +667,6 @@ async function updatePeopleData() {
     return await base('Students').select({
         fields: ['Student ID', 'First Name', 'Last Name', "Guardian's Email", "Guardian's Phone", 'Tutors', 'Language'],
         offset: 0,
-        view: 'Matched Students'
     }).eachPage((records, fetchNextPage) => {
 
         let _records = records
@@ -903,6 +901,8 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
     let airtableItems = record.fields[role == 'tutor' ? 'Students': 'Tutors']
 
     if (typeof airtableItems == 'string' || airtableItems instanceof String) airtableItems = airtableItems.split(',')
+
+    if (!notNull(airtableItems)) return newData
 
     if (!Array.isArray(airtableItems)) airtableItems = [airtableItems]
 
