@@ -38,302 +38,96 @@ function twilioSayMessage(res, message) {
     res.send(response.toString())
 }
 
+class PhoneMatchingError extends Error {
+    constructor(message) {
+        super(message)
+        this.name = 'PhoneMatchingError'
+    }
+}
+
 exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) => {
 
     //Instantiate Google Translate
     const googleTranslate = new Translate()
 
-    //Get the phone number that we're receiving from
-    const from = req.body.From
+    try {
+        const { toPhone, personDoc, secondPersonDoc, role, fromNumber } = await matchPhoneNumberToCorrespondent(req)
 
-    //Get the phone number being sent to
-    const to = req.body.To
+        //Make sure it says they are communicating
+        let docId = role == 'tutor' ? personDoc.id : secondPersonDoc.id
+        updateCommunicatingStatus(docId, role)
 
-    //This is a hack to work around the fact that I can't end this function from inside another function
-    let keepGoing = true
+        //Placeholder for the message
+        let message = req.body.Body
 
-    //Use that phone number as a key to retrieve a tutor or parent record
-    const personDoc = await getRecordFromPhone(from).catch(error => {
-        twilioSend(res, constructTwilioMessagingResponse(`StepUp Tutoring here! It looks like your number was formatted incorrectly when you signed up.`))
-        keepGoing = false
-    })
+        //Get their preferred language
+        const preferredLanguage = secondPersonDoc.get('preferredLanguage')
 
-    if (!keepGoing) return
+        //If their preferred language exists...
+        if (notNull(preferredLanguage)) {
+            try {
+                //Get the language code for it (defaults to English)
+                const toLanguageCode = (preferredLanguage == 'Español') ? 'es' : 'en'
 
-    //Make sure the person's record exists
-    if (!notNull(personDoc)) {
-        twilioSend(res, constructTwilioMessagingResponse(`Could not find your record`))
-        return
-    }
+                //Now, translate the message
+                const translation = await googleTranslate.translate(message, toLanguageCode)
 
-    //Get the role of this person
-    const role = personDoc.get('role')
+                //Set the message to the translated version
+                message = translation
 
-    //Track their correspondents
-    let correspondents;
-
-    //If they're a tutor, get the students field
-    if (role == 'tutor') correspondents = personDoc.get('students')
-
-    //And vice versa for students
-    else if (role == 'student') correspondents = personDoc.get('tutors')
-
-    //If there are no correspondents, the tutor/student has not been matched yet; inform them of this
-    if (!notNull(correspondents) || correspondents.length == 0) {
-        twilioSend(res, constructTwilioMessagingResponse(`StepUp Tutoring here! It looks like you haven't been matched with a ${role == 'tutor' ? 'student':'tutor'} yet. If this doesn't sound right, please contact laura@stepuptutoring.org`))
-        return
-    }
-
-    //Keep track of the second person's record
-    let secondPersonDoc;
-
-    //If the person sending is a tutor...
-    if (role == 'tutor') {
-
-        //Go through their students
-        for (let personId in correspondents) {
-
-            //If the number assigned to that student is the one they texted...
-            if (correspondents[personId] == to) {
-
-                //Get the record of that student
-                secondPersonDoc = await admin.firestore().collection('people').doc(personId).get()
-                break
-
+            } catch(err) {
+                console.log(err) //Errors relating to translation aren't necessarily critical errors
             }
-        }
-
-    }
-
-    //If it's a student...
-    else {
-
-        //Find the tutor that is connected to this student through the phone number they sent the message to
-        const querySnapshot = await admin.firestore().collection('people').where(`students.${personDoc.id}`, '==', to).get()
-
-        //If there's a tutor in this query...
-        if (querySnapshot.size >= 1) {
-
-
-            //Get the first one
-            secondPersonDoc = querySnapshot.docs[0]
 
         }
 
-    }
+        //Next, forward the text message
+        await forwardMessageTwilio(message, getMediaUrlList(req.body), toPhone, fromNumber)
 
-    //Make sure the other person exists
-    if (!notNull(secondPersonDoc)) {
+        //Reply with an empty response
+        twilioSend(res, new twilio.twiml.MessagingResponse().toString())
 
-        //If they don't have a student/tutor corresponding with this phone number, tell them
-        twilioSend(res, constructTwilioMessagingResponse(`Step Up Tutoring here! It looks like this is the wrong number for your ${role == 'tutor' ? 'student': 'tutor'}!`))
-        return
-
-    }
-
-    //If that person doesn't exist, send a message
-    if (!secondPersonDoc.exists) {
-        twilioSend(res, constructTwilioMessagingResponse("We couldn't find your correspondent in our database!"))
-        return
-    }
-
-    //Otherwise, get their phone number
-    const toPhone = secondPersonDoc.get('phone')
-
-    //If their phone doesn't exist, send an explanation
-    if (!notNull(toPhone)) {
-        twilioSend(res, constructTwilioMessagingResponse(`Step Up Tutoring Here! The person you're trying to contact hasn't set up their phone number with us yet. You may have to contact Step Up staff for assistance.`))
-        return
-    }
-
-    //Make sure it says they are communicating
-    let data = {}
-    let docId = role == 'tutor' ? personDoc.id : secondPersonDoc.id
-    if (role == 'tutor') data['Tutor communicating?'] = 'yes'
-    if (role == 'student') data['Family communicating?'] = 'yes'
-
-    //Update AirTable to reflect their communication status
-    const airtableAPIKey = functions.config().airtable.key
-    const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
-
-    base('Tutors').update([{
-
-        id: docId,
-        fields: data
-
-    }]).catch(err => console.log(err))
-
-
-
-    //Placeholder for the message
-    let message = req.body.Body
-
-    //Get their preferred language
-    const preferredLanguage = secondPersonDoc.get('preferredLanguage')
-
-    //If their preferred language exists...
-    if (notNull(preferredLanguage)) {
-        try {
-            //Get the language code for it (defaults to English)
-            const toLanguageCode = (preferredLanguage == 'Español') ? 'es' : 'en'
-
-            //Now, translate the message
-            const translation = await googleTranslate.translate(message, toLanguageCode)
-
-            //Set the message to the translated version
-            message = translation
-
-        } catch(err) {
-            console.log(err) //Errors relating to translation aren't necessarily critical errors
+    } catch(err) {
+        if (err instanceof PhoneMatchingError) {
+            twilioSend(res, constructTwilioMessagingResponse(err.message))
         }
-
     }
-
-    //Next, forward the text message
-    await forwardMessageTwilio(message, getMediaUrlList(req.body), toPhone, to)
-
-    //Reply with an empty response
-    twilioSend(res, new twilio.twiml.MessagingResponse().toString())
 
 })
 
 exports.handleCallToTutorNumber = functions.https.onRequest(async (req, res) => {
+    try {
+        const { toPhone, personDoc, secondPersonDoc, role, fromNumber } = await matchPhoneNumberToCorrespondent(req)
 
-    //Get the phone number that we're receiving from
-    const from = req.body.From
+        //Make sure it says they are communicating
+        let docId = role == 'tutor' ? personDoc.id : secondPersonDoc.id
+        updateCommunicatingStatus(docId, role)
 
-    //Get the phone number being sent to
-    const to = req.body.To
+        //Otherwise, dial them in to the other person
+        const response = new twilio.twiml.VoiceResponse()
 
-    //Use that phone number as a key to retrieve a tutor or parent record
-    const personDoc = await getRecordFromPhone(from).catch(error => {
-        twilioSayMessage(res, `StepUp Tutoring here! It looks like your number was formatted incorrectly when you signed up.`)
-        return
-    })
+        //Create a potential action
+        let action = undefined
 
-    //Make sure the person's record exists
-    if (!notNull(personDoc)) {
-        twilioSayMessage(res, `Could not find your record`)
-        return
-    }
+        //If the student is calling the tutor and the tutor hasn't initiated contact, set the action
+        action = `https://us-central1-stepup-dashboard.cloudfunctions.net/respondToPhonePickup?docId=${role == 'tutor' ? personDoc.id : secondPersonDoc.id}&role=${role}`
 
-    //Get the role of this person
-    const role = personDoc.get('role')
+        //Dial the other person using the proxy number as a caller ID
+        const dial = response.dial({
+            callerId: fromNumber,
+            action: action
+        })
 
-    //Track their correspondents
-    let correspondents;
+        dial.number(toPhone)
 
-    //If they're a tutor, get the students field
-    if (role == 'tutor') correspondents = personDoc.get('students')
-
-    //And vice versa for students
-    else if (role == 'student') correspondents = personDoc.get('tutors')
-
-    //If there are no correspondents, the tutor/student has not been matched yet; inform them of this
-    if (!notNull(correspondents) || correspondents.length == 0) {
-        twilioSayMessage(`StepUp Tutoring here! It looks like you haven't been matched with a ${role == 'tutor' ? 'student':'tutor'} yet. If this doesn't sound right, please contact laura@stepuptutoring.org`)
-        return
-    }
-
-    //Keep track of the second person's record
-    let secondPersonDoc;
-
-    //If the person sending is a tutor...
-    if (role == 'tutor') {
-
-        //Go through their students
-        for (let personId in correspondents) {
-
-            //If the number assigned to that student is the one they texted...
-            if (correspondents[personId] == to) {
-
-                //Get the record of that student
-                secondPersonDoc = await admin.firestore().collection('people').doc(personId).get()
-                break
-
-            }
+        //Send the response
+        res.type('text/xml')
+        res.send(response.toString())
+    } catch(err) {
+        if (err instanceof PhoneMatchingError) {
+            twilioSayMessage(res, err.message)
         }
-
     }
-
-    //If it's a student...
-    else {
-
-        //Find the tutor that is connected to this student through the phone number they sent the message to
-        const querySnapshot = await admin.firestore().collection('people').where(`students.${personDoc.id}`, '==', to).get()
-
-        //If there's a tutor in this query...
-        if (querySnapshot.size >= 1) {
-
-
-            //Get the first one
-            secondPersonDoc = querySnapshot.docs[0]
-
-        }
-
-    }
-
-
-    if (!notNull(secondPersonDoc)) {
-
-        //If they don't have a student corresponding with this phone number, tell them
-        twilioSayMessage(res, `StepUp Tutoring here! It looks like this is the wrong number for your ${role == 'tutor' ? 'student': 'tutor'}!`)
-        return
-
-    }
-
-    //If that person doesn't exist, send a message
-    if (!secondPersonDoc.exists) {
-        twilioSayMessage(res, "We couldn't find your correspondent in our database!")
-        return
-    }
-
-    //Otherwise, get their phone number
-    const toPhone = secondPersonDoc.get('phone')
-
-    //If their phone doesn't exist, send an explanation
-    if (!notNull(toPhone)) {
-        twilioSayMessage(res, `StepUpTutoring Here! The person you're trying to contact hasn't set up their phone number with us yet. You may have to contact StepUp staff for assistance.`)
-        return
-    }
-
-    //Make sure it says they are communicating
-    let data = {}
-    let docId = role == 'tutor' ? personDoc.id : secondPersonDoc.id
-    if (role == 'tutor') data['Tutor communicating?'] = 'yes'
-    if (role == 'student') data['Family communicating?'] = 'yes'
-
-    //Update AirTable to reflect their communication status
-    const airtableAPIKey = functions.config().airtable.key
-    const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
-
-    base('Tutors').update([{
-
-        id: docId,
-        fields: data
-
-    }]).catch(err => console.log(err))
-
-    //Otherwise, dial them in to the other person
-    const response = new twilio.twiml.VoiceResponse()
-
-    //Create a potential action
-    let action = undefined
-
-    //If the student is calling the tutor and the tutor hasn't initiated contact, set the action
-    action = `https://us-central1-stepup-dashboard.cloudfunctions.net/respondToPhonePickup?docId=${role == 'tutor' ? personDoc.id : secondPersonDoc.id}&role=${role}`
-
-    //Dial the other person using the proxy number as a caller ID
-    const dial = response.dial({
-        callerId: to,
-        action: action
-    })
-
-    dial.number(toPhone)
-
-    //Send the response
-    res.type('text/xml')
-    res.send(response.toString())
 
 })
 
@@ -349,20 +143,7 @@ exports.respondToPhonePickup = functions.https.onRequest(async (req, res) => {
     if (!notNull(docId) || !notNull(role)) return
 
     //Make sure it says they are communicating
-    let data = {}
-    if (role == 'student') data['Tutor communicating?'] = 'yes'
-    if (role == 'tutor') data['Family communicating?'] = 'yes'
-
-    //Update AirTable to reflect those changes
-    const airtableAPIKey = functions.config().airtable.key
-    const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
-
-    base('Tutors').update([{
-
-        id: docId,
-        fields: data
-
-    }]).catch(err => console.log(err))
+    updateCommunicatingStatus(docId, role == 'tutor' ? 'student':'tutor')
 
     //Send a hangup response
     const response = new twilio.twiml.VoiceResponse()
@@ -417,6 +198,136 @@ function constructTwilioMessagingResponse(message) {
     const response = new twilio.twiml.MessagingResponse()
     response.message(message)
     return response.toString()
+}
+
+async function matchPhoneNumberToCorrespondent(req) {
+
+    //Get the phone number that we're receiving from
+    const from = req.body.From
+
+    //Get the phone number being sent to
+    const to = req.body.To
+
+    //This is a hack to work around the fact that I can't end this function from inside another function
+    let keepGoing = true
+
+    //Use that phone number as a key to retrieve a tutor or parent record
+    const personDoc = await getRecordFromPhone(from).catch(error => {
+        keepGoing = false
+    })
+
+    if (!keepGoing) throw new PhoneMatchingError(`StepUp Tutoring here! It looks like your number was formatted incorrectly when you signed up.`)
+
+    //Make sure the person's record exists
+    if (!notNull(personDoc)) {
+        throw new PhoneMatchingError(`Could not find your record`)
+    }
+
+    //Get the role of this person
+    const role = personDoc.get('role')
+
+    //Track their correspondents
+    let correspondents;
+
+    //If they're a tutor, get the students field
+    if (role == 'tutor') correspondents = personDoc.get('students')
+
+    //And vice versa for students
+    else if (role == 'student') correspondents = personDoc.get('tutors')
+
+    //If there are no correspondents, the tutor/student has not been matched yet; inform them of this
+    if (!notNull(correspondents) || correspondents.length == 0) {
+        throw new Error(`StepUp Tutoring here! It looks like you haven't been matched with a ${role == 'tutor' ? 'student':'tutor'} yet. If this doesn't sound right, please contact laura@stepuptutoring.org`)
+    }
+
+    //Keep track of the second person's record
+    let secondPersonDoc;
+
+    //If the person sending is a tutor...
+    if (role == 'tutor') {
+
+        //Go through their students
+        for (let personId in correspondents) {
+
+            //If the number assigned to that student is the one they texted...
+            if (correspondents[personId] == to) {
+
+                //Get the record of that student
+                secondPersonDoc = await admin.firestore().collection('people').doc(personId).get()
+                break
+
+            }
+        }
+
+    }
+
+    //If it's a student...
+    else {
+
+        //Find the tutor that is connected to this student through the phone number they sent the message to
+        const querySnapshot = await admin.firestore().collection('people').where(`students.${personDoc.id}`, '==', to).get()
+
+        //If there's a tutor in this query...
+        if (querySnapshot.size >= 1) {
+
+
+            //Get the first one
+            secondPersonDoc = querySnapshot.docs[0]
+
+        }
+
+    }
+
+    //Make sure the other person exists
+    if (!notNull(secondPersonDoc)) {
+
+        //If they don't have a student/tutor corresponding with this phone number, tell them
+        throw new PhoneMatchingError(`Step Up Tutoring here! It looks like this is the wrong number for your ${role == 'tutor' ? 'student': 'tutor'}!`)
+
+    }
+
+    //If that person doesn't exist, send a message
+    if (!secondPersonDoc.exists) {
+        throw new PhoneMatchingError("We couldn't find your correspondent in our database!")
+    }
+
+    //Otherwise, get their phone number
+    const toPhone = secondPersonDoc.get('phone')
+
+    //If their phone doesn't exist, send an explanation
+    if (!notNull(toPhone)) {
+        throw new PhoneMatchingError(`Step Up Tutoring Here! The person you're trying to contact hasn't set up their phone number with us yet. You may have to contact Step Up staff for assistance.`)
+    }
+
+    return {
+        toPhone,
+        personDoc,
+        secondPersonDoc,
+        role,
+        fromNumber: to
+    }
+
+}
+
+function updateCommunicatingStatus(docId, role) {
+
+    let data = {}
+    
+    if (role == 'tutor') data['Tutor communicating?'] = 'yes'
+    if (role == 'student') data['Family communicating?'] = 'yes'
+
+    //Update AirTable to reflect their communication status
+    const airtableAPIKey = functions.config().airtable.key
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
+
+    base('Tutors').update([{
+
+        id: docId,
+        fields: data
+
+    }]).catch(err => console.log(err))
+
+
 }
 
 //Probably to be deprecated; replaced by updates via Zapier integrations with AirTable
@@ -532,33 +443,19 @@ exports.findInactiveTutors = functions.pubsub.schedule('every 24 hours').onRun(f
 
 exports.onNewStudentRow = functions.https.onRequest(async (req, res) => {
 
-    //First check for authentication
-    const authToken = req.body['authToken']
-
-    //Make sure it exists and is correct
-    if (!notNull(authToken) || authToken != zapierAuthToken) { res.status(401); res.send(); return }
-
-    //Get the record id
-    const recordId = req.body['record_id']
-
-    //Get the potential firestore doc for that record id
-    const firestoreDoc = await admin.firestore().collection('people').doc(recordId).get()
-
-    //Get the updated record data
-    const newRecordData = await getUpdatedRecordData({ fields: req.body }, firestoreDoc, 'student')
-
-    //Set the new data
-    await firestoreDoc.ref.set(newRecordData, { merge: true })
-
-    res.send({
-        status: 'success'
-    })
+    return updatePersonRecord(req, res, role)
 
 })
 
 //Could probably be consolidated with `onNewStudentRow`
 exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
 
+    return updatePersonRecord(req, res, 'tutor')
+
+})
+
+async function updatePersonRecord(req, res, role) {
+
     //First check for authentication
     const authToken = req.body['authToken']
 
@@ -572,7 +469,7 @@ exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
     const firestoreDoc = await admin.firestore().collection('people').doc(recordId).get()
 
     //Get the updated record data
-    const newRecordData = await getUpdatedRecordData({ fields: req.body }, firestoreDoc, 'tutor')
+    const newRecordData = await getUpdatedRecordData({ fields: req.body }, firestoreDoc, role)
 
     //Set the new data
     await firestoreDoc.ref.set(newRecordData, { merge: true })
@@ -581,7 +478,7 @@ exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
         status: 'success'
     })
 
-})
+}
 
 //Hopefully will be deprecated in favor of incremental updates as they come, but comes in handy when we need to make sure everything is synced up
 async function updatePeopleData() {
@@ -1086,6 +983,10 @@ async function createZoomLinkForTutor(email) {
             }
         })
     })
+
+    const zoomTrackingWebhook = 'https://hooks.zapier.com/hooks/catch/7732277/b2u4fkr/'
+
+    //Send zoom meeting id, student and tutor record ids 
 
     const resultData = await response.json()
 
