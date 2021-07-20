@@ -81,6 +81,7 @@ class SidebarLayout extends React.Component {
         this.onSideBarItemClicked = this.onSideBarItemClicked.bind(this)
         this.onUserFinishedLoading = this.onUserFinishedLoading.bind(this)
         this.loadUser = this.loadUser.bind(this)
+        this.onSideBarLogoClicked = this.onSideBarLogoClicked.bind(this)
 
     }
 
@@ -89,6 +90,8 @@ class SidebarLayout extends React.Component {
         const sidebarItems = this.state.sidebarItems
 
         for (let i = 0; i < sidebarItems.length; i++) {
+            console.log({sidebarItems});
+            console.log({ key });
             if (sidebarItems[i]['keyId'] == key) sidebarItems[i]['active'] = true
             else sidebarItems[i]['active'] = false
         }
@@ -120,6 +123,10 @@ class SidebarLayout extends React.Component {
 
     }
 
+    onSideBarLogoClicked() {
+        this.setState({ currentTab: 'home' }) //make active to change font color & add pointer
+    }
+
     componentDidMount() {
 
         FIREBASE_RUN_ON_READY.push((user) => {
@@ -139,7 +146,7 @@ class SidebarLayout extends React.Component {
             <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' width='240'>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
 
-                    <div className='sidebar-header'>
+                    <div className='sidebar-header' onClick={this.onSideBarLogoClicked} >
                         <img width={180} src='https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng'/>
                     </div>
 
