@@ -89,11 +89,15 @@ class SidebarLayout extends React.Component {
 
         const sidebarItems = this.state.sidebarItems
 
-        // highlights sidebar item that is the current tab
+        // highlights side navigation item that is the current tab
         for (let i = 0; i < sidebarItems.length; i++) {
             if (sidebarItems[i]['keyId'] == key) {
                 sidebarItems[i]['active'] = true
-            } else if (sidebarItems[i].subItems) {
+                if (sidebarItems[i].subItems) {
+                    sidebarItems[i].subItems.map(item => item.active = false)}
+            } else sidebarItems[i]['active'] = false
+
+            if (sidebarItems[i].subItems) {
                 for (let x = 0; x < sidebarItems[i].subItems.length; x++) {
                     if (sidebarItems[i].subItems[x]['keyId'] == key) {
                         sidebarItems[i].subItems[x]['active'] = true
