@@ -646,8 +646,6 @@ function recordsAreEqual(airtableRecord, firestoreDoc, role='tutor') {
         'matched': 'Match date'
     }
 
-    if (role == 'tutor' && airtableRecord.fields['Email'] == 'caleb.hester@pepperdine.edu') console.log(airtableRecord.fields['Email'])
-
     nameMappings[ role == 'tutor' ? 'students' : 'tutors' ] = role == 'tutor' ? 'Students': 'Tutors'
 
     //Get the fields from the doc
@@ -993,3 +991,7 @@ async function createZoomLinkForTutor(email) {
     return resultData['id']
 
 }
+
+
+//If we're in an emulator, run updatePeopleData
+if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') updatePeopleData().then(result => console.log('Populated Firestore with data'))
