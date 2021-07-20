@@ -98,4 +98,4 @@ ReactDOM.render(<SidebarLayout pages={{
 
         ]
     }
-]} currentTab='home'/>, mountNode) // changed to livescan for testing
+]} currentTab='home'/>, mountNode)
