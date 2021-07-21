@@ -68,9 +68,12 @@ class SidebarLayout extends React.Component {
         super(props)
 
         this.state = {
-
             tutor: {},
-            loadingUser: true
+            loadingUser: true,
+            userData: {},
+            currentStep: 0,
+            loading: true,
+            error: false
 
         }
 
@@ -120,14 +123,51 @@ class SidebarLayout extends React.Component {
 
     }
 
+    setUserLocalStorage(user) {
+        let firstname = user.data.user['First Name'];
+        let lastname = user.data.user['Last Name'];
+        let email = user.data.user['Email'];
+        window.localStorage.setItem('userEmail', email);
+        window.localStorage.setItem('userFirstName', firstname);
+        window.localStorage.setItem('userLastName', lastname);
+    }
+
+    receiveUser(user) {
+        console.log({ user });
+        let currentStep = 0 //changed from 0 to 1 for testing
+
+        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
+        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
+        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
+
+        //Update the state with the received data
+        this.setState({
+            loading: false,
+            userData: user.data,
+            currentStep: currentStep
+        })
+
+    }
+
     loadUser() {
 
-        firebase.functions().httpsCallable('getTutor')().then(result => {
+        firebase.functions().httpsCallable('getTutor')().then(tutorResult => {
+            console.log('tutorResult here first', tutorResult);
+            this.onUserFinishedLoading(tutorResult.data)
+            console.log('2nd result', tutorResult);
+            firebase.functions().httpsCallable('getTutorData')()
+                .then(tutorDetailedResult => {
+                    this.receiveUser(tutorDetailedResult)
+                    this.setUserLocalStorage(tutorDetailedResult)
+                }
+                )
+                .catch(error => { console.log(error) }
+                )
 
-            this.onUserFinishedLoading(result.data)
+
 
         }).catch(error => {
-
+            console.log(error)
             //TODO
 
         })
@@ -210,7 +250,8 @@ class SidebarLayout extends React.Component {
                     <Content className='content-container'>
                         <div className='main-content'>
                             {this.state.loadingUser && <Skeleton active/>}
-                            {!this.state.loadingUser && <CurrentPage tutor={this.state.tutor} />}
+                            {!this.state.loadingUser && <CurrentPage tutor={this.state.tutor} tutorDetails={this.state.userData}
+                                currentStep={this.state.currentStep} isLoadingUser={this.state.loadingUser} error={this.state.error} />}
                         </div>
                     </Content>
                 </Layout>

@@ -43,7 +43,7 @@ class FirstSteps extends React.Component {
 
         //State
         this.state = {
-            hasScheduledChat: false,
+            hasScheduledChat: true, // changed to true
             hasCompletedWaiver:  false,
             hasCompletedWorkbook: false,
             isLoading: false
@@ -84,6 +84,7 @@ class FirstSteps extends React.Component {
 
                 <Title level={3} color='primary'>Thanks for scheduling a chat with us!</Title>
                 <p>Once you've had your interview, you'll move on to the next steps!</p>
+                <strong><p>Your interview date: date here</p></strong>
 
             </div>}
 
@@ -211,74 +212,26 @@ const steps = [FirstSteps, SecondSteps, FinalSteps]
 class Home extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            loading: true,
-            currentStep: 0,
-            error: false,
-        }
-
-        this.onError = this.onError.bind(this)
-    }
-
-    receiveUser(user) {
-        console.log({user});
-        let currentStep = 1 //changed from 0 to 1 for testing
-
-        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
-        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
-        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
-
-        //Update the state with the received data
-        this.setState({
-            loading: false,
-            userData: user.data,
-            currentStep: currentStep
-        })
-
-    }
-
-    setUserLocalStorage(user) {
-        let firstname = user.data.user['First Name'];
-        let lastname = user.data.user['Last Name'];
-        let email = user.data.user['Email'];
-        window.localStorage.setItem('userEmail', email);
-        window.localStorage.setItem('userFirstName', firstname);
-        window.localStorage.setItem('userLastName', lastname);
-    }
-
-    onError(error) {
-        this.setState({ error: true, loading: false})
     }
 
     componentDidMount() {
-
-        firebase.functions().httpsCallable('getTutorData')()
-        .then(result => {
-            this.receiveUser(result)
-            this.setUserLocalStorage(result)}
-            )
-        .catch(error =>
-            { this.onError(error) }
-            )
-
     }
 
     render() {
 
         //Get the current "step" screen
-        const StepItem = steps[this.state.currentStep];
+        const StepItem = steps[this.props.currentStep];
 
         //If it's still loading, show a skeleton
-        if (this.state.loading) return <div><Skeleton active/></div>
+        if (this.props.loading) return <div><Skeleton active/></div>
 
         //If there was an error (i.e. the record didn't exist) display "Applicant Record Not Found"
-        if (this.state.error) return <div>
+        if (this.props.error) return <div>
             <Title>Applicant Record Not Found </Title>
             <p>We can't find your record in the database - if this doesn't seem right, please contact <Link href='mailto:laura@stepuptutoring.org'>laura@stepuptutoring.org</Link>.</p>
         </div>
 
-        if (this.state.currentStep == 4) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        if (this.props.currentStep == 4) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
 
             <Title level={1}>🎉 You've Been Matched! 🎉</Title>
             <p>From now on, you'll be using your tutor portal. We'll see you there!</p>
@@ -291,14 +244,14 @@ class Home extends React.Component {
             <Title>Your Onboarding Dashboard</Title>
             <p>There's just a few things we'll need you to complete before proceeding.</p>
             <div class='steps-container'>
-                <Steps current={this.state.currentStep} className='steps' responsive={true}>
+                <Steps current={this.props.currentStep} className='steps' responsive={true}>
                     <Step title='First Steps'/>
                     <Step title='LiveScan & Info Session'/>
                     <Step title='Student Match'/>
                 </Steps>
             </div>
 
-            <StepItem userData={this.state.userData}/>
+            <StepItem userData={this.props.userData}/>
 
         </div>;
 
