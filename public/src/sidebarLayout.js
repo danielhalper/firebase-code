@@ -73,7 +73,12 @@ class SidebarLayout extends React.Component {
             userData: {},
             currentStep: 0,
             loading: true,
-            error: false
+            error: false,
+            hasScheduledChat: false,
+            hasCompletedWaiver: false,
+            hasCompletedWorkbook: false,
+            hasCompletedLiveScan: false,
+            hasCompletedLiveTraining: false
 
         }
 
@@ -143,8 +148,42 @@ class SidebarLayout extends React.Component {
         //Update the state with the received data
         this.setState({
             loading: false,
-            userData: user.data,
+            userData: user.data.user,
             currentStep: currentStep
+        })
+
+    }
+
+    setUserProgress(user) {
+        let scheduledChat = false;
+        let completedWaiver = false;
+        let completedWorkbook = false;
+        let completedLiveScan = false;
+        let completedLiveTraining = false;
+
+
+        if ('Interview Date' in user.data['user']) {
+            scheduledChat = notNull(user.data['user']['Interview Date'])
+        }
+        if ('Waiver?' in user.data['user']) {
+            completedWaiver = notNull(user.data['user']['Waiver?'])
+        }
+        if ('Section 2' in user.data['user']) {
+            completedWorkbook = notNull(user.data['user']['Section 2'])
+        }
+        if ('Live Scan?' in user.data['user']) {
+            completedLiveScan = notNull(user.data['user']['Live Scan?'])
+        }
+        if ('Live Training?' in user.data['user']) {
+            completedLiveTraining = notNull(user.data['user']['Live Training?'])
+        }
+
+        this.setState({
+            hasScheduledChat: scheduledChat,
+            hasCompletedWaiver: completedWaiver,
+            hasCompletedWorkbook: completedWorkbook,
+            hasCompletedLiveScan: completedLiveScan,
+            hasCompletedLiveTraining: completedLiveTraining
         })
 
     }
@@ -159,6 +198,7 @@ class SidebarLayout extends React.Component {
                 .then(tutorDetailedResult => {
                     this.receiveUser(tutorDetailedResult)
                     this.setUserLocalStorage(tutorDetailedResult)
+                    this.setUserProgress(tutorDetailedResult)
                 }
                 )
                 .catch(error => { console.log(error) }
