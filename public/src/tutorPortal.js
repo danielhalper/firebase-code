@@ -7,17 +7,6 @@ const { Title } = Typography;
 
 const EMULATOR = window.location.href.includes('localhost')
 
-class TutorHome extends React.Component {
-    constructor(props) {
-        super(props)
-
-    }
-
-    render() {
-        return <div>Hi</div>
-    }
-}
-
 class TutorMessaging extends React.Component {
     constructor(props) {
         super(props)

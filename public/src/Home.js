@@ -18,24 +18,6 @@ function notNull(value) {
     return value != undefined && value != null && value != NaN
 }
 
-//Required item component
-class RequiredItem extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return <Link className='requirement' href={this.props.link} target='_blank'>
-            <div>
-            {this.props.icon && this.props.icon} {this.props.title}
-                <p className='description'>
-                    {this.props.children}
-                </p>
-            </div>
-        </Link>;
-    }
-}
-
 //Step 1 Component
 class FirstSteps extends React.Component {
     constructor(props) {
