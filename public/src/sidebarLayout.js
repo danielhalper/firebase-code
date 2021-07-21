@@ -97,7 +97,7 @@ class SidebarLayout extends React.Component {
                     sidebarItems[i].subItems.map(item => item.active = false)}
             } else sidebarItems[i]['active'] = false
 
-            if (sidebarItems[i].subItems) {
+            if (sidebarItems[i].subItems && sidebarItems[i]['active'] === false) {
                 for (let x = 0; x < sidebarItems[i].subItems.length; x++) {
                     if (sidebarItems[i].subItems[x]['keyId'] == key) {
                         sidebarItems[i].subItems[x]['active'] = true
