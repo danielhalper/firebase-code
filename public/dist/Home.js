@@ -39,55 +39,18 @@ var links = {
     return value != undefined && value != null && value != NaN;
 }
 
-//Required item component
-
-var RequiredItem = function (_React$Component) {
-    _inherits(RequiredItem, _React$Component);
-
-    function RequiredItem(props) {
-        _classCallCheck(this, RequiredItem);
-
-        return _possibleConstructorReturn(this, (RequiredItem.__proto__ || Object.getPrototypeOf(RequiredItem)).call(this, props));
-    }
-
-    _createClass(RequiredItem, [{
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                Link,
-                { className: 'requirement', href: this.props.link, target: '_blank' },
-                React.createElement(
-                    'div',
-                    null,
-                    this.props.icon && this.props.icon,
-                    ' ',
-                    this.props.title,
-                    React.createElement(
-                        'p',
-                        { className: 'description' },
-                        this.props.children
-                    )
-                )
-            );
-        }
-    }]);
-
-    return RequiredItem;
-}(React.Component);
-
 //Step 1 Component
 
-
-var FirstSteps = function (_React$Component2) {
-    _inherits(FirstSteps, _React$Component2);
+var FirstSteps = function (_React$Component) {
+    _inherits(FirstSteps, _React$Component);
 
     function FirstSteps(props) {
         _classCallCheck(this, FirstSteps);
 
         //State
-        var _this2 = _possibleConstructorReturn(this, (FirstSteps.__proto__ || Object.getPrototypeOf(FirstSteps)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (FirstSteps.__proto__ || Object.getPrototypeOf(FirstSteps)).call(this, props));
 
-        _this2.state = {
+        _this.state = {
             hasScheduledChat: false,
             hasCompletedWaiver: false,
             hasCompletedWorkbook: false,
@@ -98,7 +61,7 @@ var FirstSteps = function (_React$Component2) {
             // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
             // if ('Interview Date' in this.props.userData['user']) this.state.hasScheduledChat = notNull(this.props.userData['user']['Interview Date'])
 
-        };return _this2;
+        };return _this;
     }
 
     _createClass(FirstSteps, [{
@@ -186,16 +149,16 @@ var FirstSteps = function (_React$Component2) {
 //Step 2 Component
 
 
-var SecondSteps = function (_React$Component3) {
-    _inherits(SecondSteps, _React$Component3);
+var SecondSteps = function (_React$Component2) {
+    _inherits(SecondSteps, _React$Component2);
 
     function SecondSteps(props) {
         _classCallCheck(this, SecondSteps);
 
         //State
-        var _this3 = _possibleConstructorReturn(this, (SecondSteps.__proto__ || Object.getPrototypeOf(SecondSteps)).call(this, props));
+        var _this2 = _possibleConstructorReturn(this, (SecondSteps.__proto__ || Object.getPrototypeOf(SecondSteps)).call(this, props));
 
-        _this3.state = {
+        _this2.state = {
             hasCompletedWaiver: false,
             hasCompletedWorkbook: false,
             hasCompletedLiveScan: false,
@@ -208,7 +171,7 @@ var SecondSteps = function (_React$Component3) {
             // if ('Live Scan?' in this.props.userData['user']) this.state.hasCompletedLiveScan = notNull(this.props.userData['user']['Live Scan?'])
             // if ('Live Training?' in this.props.userData['user']) this.state.hasCompletedLiveTraining = notNull(this.props.userData['user']['Live Training?'])
 
-        };return _this3;
+        };return _this2;
     }
 
     _createClass(SecondSteps, [{
@@ -269,20 +232,20 @@ var SecondSteps = function (_React$Component3) {
 //Step 3 Component
 
 
-var FinalSteps = function (_React$Component4) {
-    _inherits(FinalSteps, _React$Component4);
+var FinalSteps = function (_React$Component3) {
+    _inherits(FinalSteps, _React$Component3);
 
     function FinalSteps(props) {
         _classCallCheck(this, FinalSteps);
 
         //State
-        var _this4 = _possibleConstructorReturn(this, (FinalSteps.__proto__ || Object.getPrototypeOf(FinalSteps)).call(this, props));
+        var _this3 = _possibleConstructorReturn(this, (FinalSteps.__proto__ || Object.getPrototypeOf(FinalSteps)).call(this, props));
 
-        _this4.state = {
+        _this3.state = {
             isLoading: false
         };
 
-        return _this4;
+        return _this3;
     }
 
     _createClass(FinalSteps, [{
@@ -328,22 +291,22 @@ var steps = [FirstSteps, SecondSteps, FinalSteps];
 
 //The main dashboard component
 
-var Home = function (_React$Component5) {
-    _inherits(Home, _React$Component5);
+var Home = function (_React$Component4) {
+    _inherits(Home, _React$Component4);
 
     function Home(props) {
         _classCallCheck(this, Home);
 
-        var _this5 = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
+        var _this4 = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
 
-        _this5.state = {
+        _this4.state = {
             loading: true,
             currentStep: 0,
             error: false
         };
 
-        _this5.onError = _this5.onError.bind(_this5);
-        return _this5;
+        _this4.onError = _this4.onError.bind(_this4);
+        return _this4;
     }
 
     _createClass(Home, [{
@@ -381,13 +344,13 @@ var Home = function (_React$Component5) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var _this6 = this;
+            var _this5 = this;
 
             firebase.functions().httpsCallable('getTutorData')().then(function (result) {
-                _this6.receiveUser(result);
-                _this6.setUserLocalStorage(result);
+                _this5.receiveUser(result);
+                _this5.setUserLocalStorage(result);
             }).catch(function (error) {
-                _this6.onError(error);
+                _this5.onError(error);
             });
         }
     }, {

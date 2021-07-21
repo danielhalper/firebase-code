@@ -30,31 +30,8 @@ var Title = Typography.Title;
 
 var EMULATOR = window.location.href.includes('localhost');
 
-var TutorHome = function (_React$Component) {
-    _inherits(TutorHome, _React$Component);
-
-    function TutorHome(props) {
-        _classCallCheck(this, TutorHome);
-
-        return _possibleConstructorReturn(this, (TutorHome.__proto__ || Object.getPrototypeOf(TutorHome)).call(this, props));
-    }
-
-    _createClass(TutorHome, [{
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                null,
-                'Hi'
-            );
-        }
-    }]);
-
-    return TutorHome;
-}(React.Component);
-
-var TutorMessaging = function (_React$Component2) {
-    _inherits(TutorMessaging, _React$Component2);
+var TutorMessaging = function (_React$Component) {
+    _inherits(TutorMessaging, _React$Component);
 
     function TutorMessaging(props) {
         _classCallCheck(this, TutorMessaging);
