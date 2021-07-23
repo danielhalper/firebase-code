@@ -34,7 +34,6 @@ exports.listPrivilegedUsers = async function(data, context) {
 
     //Get all the users with those uids
     const uids = userRecords.docs.map( record => {
-        console.log(record.id)
         return { uid: record.id }
     } )
     
@@ -43,7 +42,6 @@ exports.listPrivilegedUsers = async function(data, context) {
     //Merge the role data
     let userRolesIndex = {}
     for (let i = 0; i < userRecords.docs.length; i++) {
-        console.log(userRecords.docs[i].get('roles'))
         userRolesIndex[ userRecords.docs[i].id ] = userRecords.docs[i].get('roles')
     }
 

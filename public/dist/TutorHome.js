@@ -42,6 +42,11 @@ var TutorHome = function (_React$Component) {
                             value: "7/1/21"
                         }] }),
                     React.createElement("div", { style: { flex: 1 } })
+                ),
+                React.createElement(
+                    "a",
+                    { href: "#messaging" },
+                    "Messaging"
                 )
             );
         }
