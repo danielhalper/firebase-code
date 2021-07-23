@@ -279,3 +279,8 @@ div.info-bar {
     font-size: 36px;
     margin: 0px;
 }
+.title {
+    color: #327D83;
+    font-family: "Chelsea Market";
+    font-size: 50px;
+}

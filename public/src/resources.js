@@ -1,3 +1,6 @@
+const { Tabs } = antd
+const { TabPane } = Tabs
+
 //Required item component
 class RequiredItem extends React.Component {
     constructor(props) {
@@ -6,7 +9,7 @@ class RequiredItem extends React.Component {
 
     render() {
         return <Link className='requirement' href={this.props.link} target='_blank'>
-            <div>
+            <div style={{float:"left",width:"200px", height:"150px"}}>
             {this.props.icon && this.props.icon} {this.props.title}
                 <p className='description'>
                     {this.props.children}
@@ -30,5 +33,20 @@ class InformationBar extends React.Component {
         return <div className="info-bar">
             {info}
         </div>
+    }
+}
+// Student Widget Component
+class StudentWidget extends React.Component {
+    constructor(props){
+        super(props)
+    }
+    render(){
+        const students = this.props.students.map((student) => 
+            <TabPane key={student.id} tab={student.firstname+" "+student.lastname}></TabPane>
+        )
+
+        return <Tabs onChange={this.props.onTabChange}>
+            {students}
+        </Tabs>
     }
 }

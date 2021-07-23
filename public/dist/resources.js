@@ -6,7 +6,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var _antd = antd,
+    Tabs = _antd.Tabs;
+var TabPane = Tabs.TabPane;
+
 //Required item component
+
 var RequiredItem = function (_React$Component) {
     _inherits(RequiredItem, _React$Component);
 
@@ -24,7 +29,7 @@ var RequiredItem = function (_React$Component) {
                 { className: 'requirement', href: this.props.link, target: '_blank' },
                 React.createElement(
                     'div',
-                    null,
+                    { style: { float: "left", width: "200px", height: "150px" } },
                     this.props.icon && this.props.icon,
                     ' ',
                     this.props.title,
@@ -80,4 +85,33 @@ var InformationBar = function (_React$Component2) {
     }]);
 
     return InformationBar;
+}(React.Component);
+// Student Widget Component
+
+
+var StudentWidget = function (_React$Component3) {
+    _inherits(StudentWidget, _React$Component3);
+
+    function StudentWidget(props) {
+        _classCallCheck(this, StudentWidget);
+
+        return _possibleConstructorReturn(this, (StudentWidget.__proto__ || Object.getPrototypeOf(StudentWidget)).call(this, props));
+    }
+
+    _createClass(StudentWidget, [{
+        key: 'render',
+        value: function render() {
+            var students = this.props.students.map(function (student) {
+                return React.createElement(TabPane, { key: student.id, tab: student.firstname + " " + student.lastname });
+            });
+
+            return React.createElement(
+                Tabs,
+                { onChange: this.props.onTabChange },
+                students
+            );
+        }
+    }]);
+
+    return StudentWidget;
 }(React.Component);
