@@ -15,13 +15,19 @@ class SidebarItem extends React.Component {
     handleOnClick() {
 
         if (!this.props.disabled && !this.props.complete) {
+
+            if (!this.props.active) {
+                window.location.hash = '#' + this.props.keyId 
+            }
+
             this.props.onClick(this.props.keyId)
+
         }
 
     }
 
     render() {
-        return <div onClick={this.handleOnClick} className={`${this.props.active ? 'active ':''}${this.props.disabled || this.props.complete ? 'disabled ':''}${this.props.isStep ? 'step ':''}${this.props.isSubItem ? 'subitem ':''}${this.props.isMainItem ? 'main-item ':''}${this.props.complete ? 'complete ':''}`}>{this.props.icon && this.props.icon} {this.props.children}</div>
+        return <div id={this.props.keyId} onFocus={this.handleOnClick} onClick={this.handleOnClick} className={`${this.props.active ? 'active ':''}${this.props.disabled || this.props.complete ? 'disabled ':''}${this.props.isStep ? 'step ':''}${this.props.isSubItem ? 'subitem ':''}${this.props.isMainItem ? 'main-item ':''}${this.props.complete ? 'complete ':''}`}>{this.props.icon && this.props.icon} {this.props.children}</div>
     }
 }
 
@@ -122,12 +128,32 @@ class SidebarLayout extends React.Component {
 
     componentDidMount() {
 
+        try {
+            const element = document.querySelector(window.location.hash)
+            if (element) element.click()
+        } catch(err) {
+            
+        }
+
+        this.listenForAnchorChanges()
+
         FIREBASE_RUN_ON_READY.push((user) => {
 
             this.loadUser()
 
         })
 
+    }
+
+    listenForAnchorChanges() {
+        window.onhashchange = (e) => {
+            try {
+                const element = document.querySelector(window.location.hash)
+                if (element) element.click()
+            } catch(err) {
+
+            }
+        }
     }
 
     render() {

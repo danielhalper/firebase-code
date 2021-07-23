@@ -31,6 +31,7 @@ class TutorHome extends React.Component {
                 ]}/>
                 <div style={{flex:1}}></div>
             </div>
+            <a href='#messaging'>Messaging</a>
         </div>
     }
 }

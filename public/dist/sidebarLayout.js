@@ -49,6 +49,11 @@ var SidebarItem = function (_React$Component) {
         value: function handleOnClick() {
 
             if (!this.props.disabled && !this.props.complete) {
+
+                if (!this.props.active) {
+                    window.location.hash = '#' + this.props.keyId;
+                }
+
                 this.props.onClick(this.props.keyId);
             }
         }
@@ -57,7 +62,7 @@ var SidebarItem = function (_React$Component) {
         value: function render() {
             return React.createElement(
                 'div',
-                { onClick: this.handleOnClick, className: '' + (this.props.active ? 'active ' : '') + (this.props.disabled || this.props.complete ? 'disabled ' : '') + (this.props.isStep ? 'step ' : '') + (this.props.isSubItem ? 'subitem ' : '') + (this.props.isMainItem ? 'main-item ' : '') + (this.props.complete ? 'complete ' : '') },
+                { id: this.props.keyId, onFocus: this.handleOnClick, onClick: this.handleOnClick, className: '' + (this.props.active ? 'active ' : '') + (this.props.disabled || this.props.complete ? 'disabled ' : '') + (this.props.isStep ? 'step ' : '') + (this.props.isSubItem ? 'subitem ' : '') + (this.props.isMainItem ? 'main-item ' : '') + (this.props.complete ? 'complete ' : '') },
                 this.props.icon && this.props.icon,
                 ' ',
                 this.props.children
@@ -203,10 +208,27 @@ var SidebarLayout = function (_React$Component4) {
         value: function componentDidMount() {
             var _this6 = this;
 
+            try {
+                var element = document.querySelector(window.location.hash);
+                if (element) element.click();
+            } catch (err) {}
+
+            this.listenForAnchorChanges();
+
             FIREBASE_RUN_ON_READY.push(function (user) {
 
                 _this6.loadUser();
             });
+        }
+    }, {
+        key: 'listenForAnchorChanges',
+        value: function listenForAnchorChanges() {
+            window.onhashchange = function (e) {
+                try {
+                    var element = document.querySelector(window.location.hash);
+                    if (element) element.click();
+                } catch (err) {}
+            };
         }
     }, {
         key: 'render',
