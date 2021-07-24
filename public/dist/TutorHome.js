@@ -12,18 +12,39 @@ var TutorHome = function (_React$Component) {
     function TutorHome(props) {
         _classCallCheck(this, TutorHome);
 
-        return _possibleConstructorReturn(this, (TutorHome.__proto__ || Object.getPrototypeOf(TutorHome)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (TutorHome.__proto__ || Object.getPrototypeOf(TutorHome)).call(this, props));
+
+        _this.students = {};
+        _this.state = { student: _this.props.tutor.students[0] };
+        for (var i = 0; i < _this.props.tutor.students.length; i++) {
+            _this.students[_this.props.tutor.students[i].id] = _this.props.tutor.students[i];
+        }
+        return _this;
     }
 
     _createClass(TutorHome, [{
         key: "render",
         value: function render() {
+            var _this2 = this;
+
             return React.createElement(
                 "div",
-                { style: { display: "flex", width: "100%" } },
+                { style: { display: "flex", width: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center" } },
+                React.createElement(
+                    "h1",
+                    { className: "title" },
+                    "Tutor Dashboard"
+                ),
                 React.createElement(
                     "div",
-                    { style: { display: "flex", flexDirection: "row", flex: 1 } },
+                    { style: { marginBottom: 20 } },
+                    React.createElement(StudentWidget, { students: this.props.tutor.students, onTabChange: function onTabChange(activeKey) {
+                            _this2.setState({ student: _this2.students[activeKey] });
+                        } })
+                ),
+                React.createElement(
+                    "div",
+                    { style: { display: "flex", flexDirection: "row", flex: 1, marginBottom: 20 } },
                     React.createElement("div", { style: { flex: 1 } }),
                     React.createElement(InformationBar, { info: [{
                             label: "Total Sessions",
@@ -44,9 +65,43 @@ var TutorHome = function (_React$Component) {
                     React.createElement("div", { style: { flex: 1 } })
                 ),
                 React.createElement(
-                    "a",
-                    { href: "#messaging" },
-                    "Messaging"
+                    "div",
+                    { style: { display: "flex", flexDirection: "row", flex: 1, marginBottom: 20 } },
+                    React.createElement(
+                        RequiredItem,
+                        { link: "undefined", icon: React.createElement(SolutionOutlined, null), title: "Message Students" },
+                        "Communicate with your student through texting with our online messaging application."
+                    ),
+                    React.createElement(
+                        RequiredItem,
+                        { link: "undefined", icon: React.createElement(SolutionOutlined, null), title: "Start Zoom Meeting" },
+                        "Meet with your student face-to-face over Zoom."
+                    ),
+                    React.createElement(RequiredItem, { link: "undefined", icon: React.createElement(SolutionOutlined, null), title: "Weekly Resources" })
+                ),
+                React.createElement(
+                    "div",
+                    { style: { float: "left", color: "#5A5A5A", borderBottom: "solid #5A5A5A 3px", width: "800px", textAlign: "center", fontSize: "36px", marginBottom: 20 } },
+                    React.createElement(
+                        "strong",
+                        null,
+                        "Weekly Action Items"
+                    )
+                ),
+                React.createElement(
+                    "div",
+                    { style: { display: "flex", flexDirection: "row", flex: 1 } },
+                    React.createElement(
+                        RequiredItem,
+                        { link: "undefined", icon: React.createElement(SolutionOutlined, null), title: "Weekly Form" },
+                        "Fill this out each week... so the student's teacher and parent are up-to-date."
+                    ),
+                    React.createElement(RequiredItem, { link: "undefined", icon: React.createElement(SolutionOutlined, null), title: "Weekly Announcements" }),
+                    React.createElement(
+                        RequiredItem,
+                        { link: "undefined", icon: React.createElement(SolutionOutlined, null), title: "Events & Gamification" },
+                        "You should check this page at least once a week to update your student!"
+                    )
                 )
             );
         }
