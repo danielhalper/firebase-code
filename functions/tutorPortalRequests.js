@@ -86,6 +86,8 @@ exports.getTutor = async (data, context) => {
             //Turn it into an object
             let studentObj = studentRecord.data()
 
+            //TODO: Exclude phone number and email
+
             //Add the proxy number
             studentObj['proxyNumber'] = userObj['students'][studentId]
 

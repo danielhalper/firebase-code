@@ -10,7 +10,6 @@ class TutorHome extends React.Component {
         }
     }
     render() {
-        console.log(this.students)
         return <div style={{display:"flex", width:"100%", flexDirection:"column", justifyContent: "center", alignItems:"center"}}>
             <h1 className="title">Tutor Dashboard</h1>
             <div style={{marginBottom:20}}>

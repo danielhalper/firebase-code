@@ -27,7 +27,6 @@ var TutorHome = function (_React$Component) {
         value: function render() {
             var _this2 = this;
 
-            console.log(this.students);
             return React.createElement(
                 "div",
                 { style: { display: "flex", width: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center" } },
