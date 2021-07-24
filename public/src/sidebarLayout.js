@@ -69,16 +69,16 @@ class SidebarLayout extends React.Component {
 
         this.state = {
             tutor: {},
-            loadingUser: true,
-            userData: {},
-            currentStep: 0,
-            loading: true,
-            error: false,
-            hasScheduledChat: false,
-            hasCompletedWaiver: false,
-            hasCompletedWorkbook: false,
-            hasCompletedLiveScan: false,
-            hasCompletedLiveTraining: false
+            loadingUser: true
+            // userData: {}
+            // currentStep: 0,
+            // loading: true,
+            // error: false,
+            // hasScheduledChat: false,
+            // hasCompletedWaiver: false,
+            // hasCompletedWorkbook: false,
+            // hasCompletedLiveScan: false,
+            // hasCompletedLiveTraining: false
 
         }
 
@@ -128,65 +128,65 @@ class SidebarLayout extends React.Component {
 
     }
 
-    setUserLocalStorage(user) {
-        let firstname = user.data.user['First Name'];
-        let lastname = user.data.user['Last Name'];
-        let email = user.data.user['Email'];
-        window.localStorage.setItem('userEmail', email);
-        window.localStorage.setItem('userFirstName', firstname);
-        window.localStorage.setItem('userLastName', lastname);
-    }
+    // setUserLocalStorage(user) {
+    //     let firstname = user.data.user['First Name'];
+    //     let lastname = user.data.user['Last Name'];
+    //     let email = user.data.user['Email'];
+    //     window.localStorage.setItem('userEmail', email);
+    //     window.localStorage.setItem('userFirstName', firstname);
+    //     window.localStorage.setItem('userLastName', lastname);
+    // }
 
-    receiveUser(user) {
-        console.log({ user });
-        let currentStep = 0 //changed from 0 to 1 for testing
+    // receiveUser(user) {
+    //     console.log({ user });
+    //     let currentStep = 0 //changed from 0 to 1 for testing
 
-        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
-        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
-        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
+    //     // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
+    //     // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
+    //     // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
 
-        //Update the state with the received data
-        this.setState({
-            loading: false,
-            userData: user.data.user,
-            currentStep: currentStep
-        })
+    //     //Update the state with the received data
+    //     this.setState({
+    //         loading: false,
+    //         userData: user.data.user,
+    //         currentStep: currentStep
+    //     })
 
-    }
+    // }
 
-    setUserProgress(user) {
-        let scheduledChat = false;
-        let completedWaiver = false;
-        let completedWorkbook = false;
-        let completedLiveScan = false;
-        let completedLiveTraining = false;
+    // setUserProgress(user) {
+    //     let scheduledChat = false;
+    //     let completedWaiver = false;
+    //     let completedWorkbook = false;
+    //     let completedLiveScan = false;
+    //     let completedLiveTraining = false;
 
 
-        if ('Interview Date' in user.data['user']) {
-            scheduledChat = notNull(user.data['user']['Interview Date'])
-        }
-        if ('Waiver?' in user.data['user']) {
-            completedWaiver = notNull(user.data['user']['Waiver?'])
-        }
-        if ('Section 2' in user.data['user']) {
-            completedWorkbook = notNull(user.data['user']['Section 2'])
-        }
-        if ('Live Scan?' in user.data['user']) {
-            completedLiveScan = notNull(user.data['user']['Live Scan?'])
-        }
-        if ('Live Training?' in user.data['user']) {
-            completedLiveTraining = notNull(user.data['user']['Live Training?'])
-        }
+    //     if ('Interview Date' in user.data['user']) {
+    //         scheduledChat = notNull(user.data['user']['Interview Date'])
+    //     }
+    //     if ('Waiver?' in user.data['user']) {
+    //         completedWaiver = notNull(user.data['user']['Waiver?'])
+    //     }
+    //     if ('Section 2' in user.data['user']) {
+    //         completedWorkbook = notNull(user.data['user']['Section 2'])
+    //     }
+    //     if ('Live Scan?' in user.data['user']) {
+    //         completedLiveScan = notNull(user.data['user']['Live Scan?'])
+    //     }
+    //     if ('Live Training?' in user.data['user']) {
+    //         completedLiveTraining = notNull(user.data['user']['Live Training?'])
+    //     }
 
-        this.setState({
-            hasScheduledChat: scheduledChat,
-            hasCompletedWaiver: completedWaiver,
-            hasCompletedWorkbook: completedWorkbook,
-            hasCompletedLiveScan: completedLiveScan,
-            hasCompletedLiveTraining: completedLiveTraining
-        })
+    //     this.setState({
+    //         hasScheduledChat: scheduledChat,
+    //         hasCompletedWaiver: completedWaiver,
+    //         hasCompletedWorkbook: completedWorkbook,
+    //         hasCompletedLiveScan: completedLiveScan,
+    //         hasCompletedLiveTraining: completedLiveTraining
+    //     })
 
-    }
+    // }
 
     loadUser() {
 
@@ -194,15 +194,15 @@ class SidebarLayout extends React.Component {
             console.log('tutorResult here first', tutorResult);
             this.onUserFinishedLoading(tutorResult.data)
             console.log('2nd result', tutorResult);
-            firebase.functions().httpsCallable('getTutorData')()
-                .then(tutorDetailedResult => {
-                    this.receiveUser(tutorDetailedResult)
-                    this.setUserLocalStorage(tutorDetailedResult)
-                    this.setUserProgress(tutorDetailedResult)
-                }
-                )
-                .catch(error => { console.log(error) }
-                )
+            // firebase.functions().httpsCallable('getTutorData')()
+            //     .then(tutorDetailedResult => {
+            //         this.receiveUser(tutorDetailedResult)
+            //         this.setUserLocalStorage(tutorDetailedResult)
+            //         this.setUserProgress(tutorDetailedResult)
+            //     }
+            //     )
+            //     .catch(error => { console.log(error) }
+            //     )
 
 
 
@@ -221,9 +221,7 @@ class SidebarLayout extends React.Component {
     componentDidMount() {
 
         FIREBASE_RUN_ON_READY.push((user) => {
-
             this.loadUser()
-
         })
 
     }
@@ -290,8 +288,8 @@ class SidebarLayout extends React.Component {
                     <Content className='content-container'>
                         <div className='main-content'>
                             {this.state.loadingUser && <Skeleton active/>}
-                            {!this.state.loadingUser && <CurrentPage tutor={this.state.tutor} tutorDetails={this.state.userData}
-                                currentStep={this.state.currentStep} isLoadingUser={this.state.loadingUser} error={this.state.error} />}
+                            {!this.state.loadingUser && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
+                                currentStep={this.props.currentStep} isLoadingUser={this.state.loadingUser} error={this.props.error} />}
                         </div>
                     </Content>
                 </Layout>
@@ -307,8 +305,6 @@ class SidebarLayout extends React.Component {
                 </Footer>}
 
             </Layout>
-
-
 
         </Layout>
 

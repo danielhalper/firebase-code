@@ -34,7 +34,7 @@ ReactDOM.render(<SidebarLayout pages={{
                 icon: <SolutionOutlined />,
                 title: 'Waiver',
                 active: false,
-                disabled: false,
+                disabled: true,  // changed to true
                 complete: false
             },
             {
@@ -42,7 +42,7 @@ ReactDOM.render(<SidebarLayout pages={{
                 icon: <BookOutlined />,
                 title: 'Workbook',
                 active: false,
-                disabled: false,
+                disabled: true,  // chagned to true
                 complete: false
             },
             {
@@ -50,7 +50,7 @@ ReactDOM.render(<SidebarLayout pages={{
                 icon: <SecurityScanOutlined />,
                 title: 'Background Check',
                 active: false,
-                disabled: false,  // make 'false' for testing
+                disabled: true,  // make 'false' for testing
                 complete: false
             },
             {
@@ -58,7 +58,7 @@ ReactDOM.render(<SidebarLayout pages={{
                 icon: <RocketOutlined />,
                 title: 'Live Training',
                 active: false,
-                disabled: false,  // make 'false' for testing
+                disabled: true,  // make 'false' for testing
                 complete: false
             }
         ]
