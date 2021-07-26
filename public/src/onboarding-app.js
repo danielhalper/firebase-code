@@ -72,7 +72,6 @@ class OnboardingApp extends React.Component {
           active: false,
           disabled: false,
           subItems: [
-
             {
               keyId: 'faq',
               title: 'FAQ',
@@ -97,90 +96,18 @@ class OnboardingApp extends React.Component {
               active: false,
               disabled: false
             },
-
           ]
         }
       ]
     }
+
+    this.setUserProgress = this.setUserProgress.bind(this)
+    // this.state.checkInterviewDate = this.state.checkInterviewDate.bind(this)
+    this.disableSideItems = this.disableSideItems.bind(this)
+
   }
-          // subItems: [
-          //   {
-          //     keyId: 'chat-signup',
-          //     icon: <CommentOutlined />,
-          //     title: 'Chat Signup',
-          //     active: false,
-          //     disabled: false,
-          //     complete: false
-          //   },
-          //   {
-          //     keyId: 'waiver',
-          //     icon: <SolutionOutlined />,
-          //     title: 'Waiver',
-          //     active: false,
-          //     disabled: true,  // changed to true
-          //     complete: false
-          //   },
-          //   {
-          //     keyId: 'workbook',
-          //     icon: <BookOutlined />,
-          //     title: 'Workbook',
-          //     active: false,
-          //     disabled: true,  // chagned to true
-          //     complete: false
-          //   },
-          //   {
-          //     keyId: 'livescan',
-          //     icon: <SecurityScanOutlined />,
-          //     title: 'Background Check',
-          //     active: false,
-          //     disabled: true,  // make 'false' for testing
-          //     complete: false
-          //   },
-          //   {
-          //     keyId: 'live-training',
-          //     icon: <RocketOutlined />,
-          //     title: 'Live Training',
-          //     active: false,
-          //     disabled: true,  // make 'false' for testing
-          //     complete: false
-          //   }]
-        // }
-        // ]
 
-          // {
-        //   keyId: 'support',
-        //   icon: <QuestionCircleOutlined />,
-        //   title: 'Support',
-        //   active: false,
-        //   disabled: false,
-        //   subItems: [
-        //     {
-        //       keyId: 'faq',
-        //       title: 'FAQ',
-        //       active: false,
-        //       disabled: false
-        //     },
-        //     {
-        //       keyId: 'tutor-resources',
-        //       title: 'Tutor Resources',
-        //       active: false,
-        //       disabled: false
-        //     },
-        //     {
-        //       keyId: 'office-hours',
-        //       title: 'Sign up for office hours',
-        //       active: false,
-        //       disabled: false
-        //     },
-        //     {
-        //       keyId: 'contact',
-        //       title: 'Contact Laura',
-        //       active: false,
-        //       disabled: false
-        //     },
-        //   ]
-        // }
-
+  // takes user data and sets currentStep
   receiveUser(user) {
     console.log({ user });
     let currentStep = 0 //changed from 0 to 1 for testing
@@ -197,6 +124,7 @@ class OnboardingApp extends React.Component {
     })
   }
 
+  // takes user data and sets info to localstorage for use in prefilling forms
   setUserLocalStorage(user) {
     let firstname = user.data.user['First Name'];
     let lastname = user.data.user['Last Name'];
@@ -206,6 +134,7 @@ class OnboardingApp extends React.Component {
     window.localStorage.setItem('userLastName', lastname);
   }
 
+  // takes user data and sets completed tracked items in state
   setUserProgress(user) {
     let scheduledChat = false;
     let completedWaiver = false;
@@ -246,17 +175,46 @@ class OnboardingApp extends React.Component {
         this.receiveUser(tutorDetailedResult)
         this.setUserLocalStorage(tutorDetailedResult)
         this.setUserProgress(tutorDetailedResult)
-          }
-                  )
-                  .catch(error => { console.log(error) }
-                  )
+        this.disableSideItems()})
+      .catch(error => {
+        console.log(error)
+      })
   }
+  // if interview has not been scheduled, disable all other subitems on sidebar
+  disableSideItems() {
+    const sidebarItems = this.state.sidebarItems
+    const userData = this.state.userData
+    const hasScheduledChat = this.state.progress.hasScheduledChat
+
+    if (!hasScheduledChat) {
+      for (let i = 1; i < sidebarItems[0].subItems.length; i++) {
+        sidebarItems[0].subItems[i]['disabled'] = true;
+      }
+    }
+
+    if (hasScheduledChat) {
+      sidebarItems[0].subItems[1]['disabled'] = false;
+      sidebarItems[0].subItems[2]['disabled'] = false;
+    }
+
+    // if has passed interview enable all sidebar items
+    if ('Status' in userData && userData['Status'] == 'Ready to Tutor') {
+      sidebarItems[0].subItems.map(item => item.disabled = false)
+    }
+  }
+
+  // if interview date exists, save it -> will be used to display on dashboard
+  // checkInterviewDate(user) {
+  //   if ('Interview Date' in user.data['user']) {
+  //     let interview = notNull(user.data['user']['Interview Date'])
+  //     let interviewDate = user.data['user']['Interview Date'];
+  //     return interviewDate;
+  //   }
+  // }
 
 componentDidMount() {
   FIREBASE_RUN_ON_READY.push((user) => {
-
     this.loadTutorData()
-
   })
 }
 
@@ -278,7 +236,11 @@ componentDidMount() {
         currentStep={this.state.currentStep}
         loading={this.state.loading}
         error={this.state.error}
-        progress={this.state.progress} />
-        )
+        progress={this.state.progress}
+        setUserProgress={this.state.setUserProgress}
+        // checkInterviewDate={this.state.checkInterviewDate}
+        disableSideItems={this.state.disableSideItems}
+      />
+    )
   }
 }
