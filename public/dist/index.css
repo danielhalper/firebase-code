@@ -252,3 +252,35 @@ h3.bg-check-step-title:after {
     margin-left: 3%;
     border-radius: 5px;
 }
+
+div.info-bar {
+    background-color: #327D83;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 15px 0px 15px;
+}
+.info-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+}
+.info-label {
+    color: white;
+    font-size: 15px;
+    margin: 0px;
+}
+.info-value {
+    color: white;
+    font-size: 36px;
+    margin: 0px;
+}
+.title {
+    color: #327D83;
+    font-family: "Chelsea Market";
+    font-size: 50px;
+}
