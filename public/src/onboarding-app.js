@@ -106,14 +106,25 @@ class OnboardingApp extends React.Component {
 
   }
 
+  calculateCurrentStep(user) {
+    let currentStep = 0;
+
+    if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') {
+      currentStep = 1
+    }
+    if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') {
+      currentStep = 2
+    }
+    if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') {
+      currentStep = 4
+    }
+    return currentStep
+  }
+
   // takes user data and sets currentStep
   receiveUser(user) {
-    console.log({ user });
-    let currentStep = 0 //changed from 0 to 1 for testing
 
-    // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
-    // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
-    // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
+    let currentStep = this.calculateCurrentStep(user)
 
     //Update the state with the received data
     this.setState({
