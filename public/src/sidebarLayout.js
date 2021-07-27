@@ -204,7 +204,7 @@ class SidebarLayout extends React.Component {
 
                             {/* Will render this view for Onboarding Portal */}
                             {!this.state.loadingUser && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
-                                currentStep={this.props.currentStep} isLoadingUser={this.state.loadingUser} error={this.props.error} />}
+                                currentStep={this.props.currentStep} isLoadingUser={this.state.loadingUser} error={this.props.error} progress={this.props.progress}/>}
                         </div>
                     </Content>
                 </Layout>

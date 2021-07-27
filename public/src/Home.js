@@ -43,18 +43,15 @@ class FirstSteps extends React.Component {
 
         //State
         this.state = {
-            hasScheduledChat: true, // changed to true
-            hasCompletedWaiver:  false,
-            hasCompletedWorkbook: false,
             isLoading: false
         }
-
     }
 
     componentDidMount() {
     }
 
     render() {
+        let progress = this.props.progress
         let tutorDetails = this.props.tutorDetails
         let interviewDate = '';
         if ('Interview Date' in tutorDetails && tutorDetails['Interview Date']) {
@@ -67,7 +64,8 @@ class FirstSteps extends React.Component {
         //Otherwise show the dashboard items
         return <div className='step'>
 
-            { !this.state.hasScheduledChat && (<div>
+            {/* Show when interview has not been scheduled */}
+            { !progress.hasScheduledChat && (<div>
 
                 <Title level={3} color='primary'>Chat with Talent Coordinator</Title>
 
@@ -79,7 +77,8 @@ class FirstSteps extends React.Component {
 
             </div>) }
 
-            { this.state.hasScheduledChat && <div>
+            {/* Show when interview has been scheduled but not yet passed */}
+            {progress.hasScheduledChat && <div>
 
                 <Title level={3} color='primary'>Thanks for scheduling a chat with us!</Title>
                 <p>Once you've had your interview, you'll move on to the next steps!</p>
@@ -88,7 +87,8 @@ class FirstSteps extends React.Component {
             </div>}
 
 
-            {this.state.hasScheduledChat && (!this.state.hasCompletedWaiver || !this.state.hasCompletedWorkbook) && (<div>
+            {/* Show when interview scheduled but waiver or workbook not completed */}
+            {progress.hasScheduledChat && (!progress.hasCompletedWaiver || !progress.hasCompletedWorkbook) && (<div>
 
                 <Title level={3}>Other Steps</Title>
 
@@ -96,11 +96,11 @@ class FirstSteps extends React.Component {
 
                 <div className='dashboard-required-items'>
                 {/* Fix to direct to sidebar page */}
-                { !this.state.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
+                    {!progress.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                     The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
                 </RequiredItem> }
 
-                { !this.state.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
+                    {!progress.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
                     The workbook is our training course for new tutors. It will set you up for success with your student.
                 </RequiredItem> }
                 </div>
@@ -118,13 +118,8 @@ class SecondSteps extends React.Component {
 
         //State
         this.state = {
-            hasCompletedWaiver:  false,
-            hasCompletedWorkbook: false,
-            hasCompletedLiveScan: false,
-            hasCompletedLiveTraining: false,
             isLoading: false
         }
-
     }
 
     componentDidMount() {
@@ -132,30 +127,31 @@ class SecondSteps extends React.Component {
     }
 
     render() {
+        let progress = this.props.progress
 
         //Show a skeleton when loading
         if (this.state.isLoading) return <Skeleton active />
 
-        //Otherwise show the dashboard items
+        //Otherwise show the dashboard items --> Shows when interview has been passed but other items need to be completed
         return <div className='step'>
 
             <Title level={3}>Thanks for chatting with us!</Title>
 
             <p>You’re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match!</p>
             <div className='dashboard-required-items'>
-            { !this.state.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
+                {!progress.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                 The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
             </RequiredItem> }
 
-            { !this.state.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
+                {!progress.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
                 The workbook is our training course for new tutors. It will set you up for success with your student.
             </RequiredItem> }
 
-            { !this.state.hasCompletedLiveScan && <RequiredItem link={links['livescan']} icon={<SecurityScanOutlined/>} title='LiveScan'>
+                {!progress.hasCompletedLiveScan && <RequiredItem link={links['livescan']} icon={<SecurityScanOutlined/>} title='LiveScan'>
                 LiveScan is a government requirement for working with children. This is completed outside of StepUp.
             </RequiredItem> }
 
-            { !this.state.hasCompletedLiveTraining && <RequiredItem link={links['training']} icon={<RocketOutlined/>} title='Live Training'>
+                {!progress.hasCompletedLiveTraining && <RequiredItem link={links['training']} icon={<RocketOutlined/>} title='Live Training'>
                 You will need to complete a live training session with one of our leaders before you can be matched with a student.
             </RequiredItem> }
             </div>
@@ -244,7 +240,7 @@ class Home extends React.Component {
                 </Steps>
             </div>
 
-            <StepItem tutorDetails={this.props.tutorDetails} />
+            <StepItem tutorDetails={this.props.tutorDetails} progress={this.props.progress} />
 
         </div>;
 

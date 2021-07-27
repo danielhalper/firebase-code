@@ -52,7 +52,7 @@ class OnboardingApp extends React.Component {
               icon: <SecurityScanOutlined />,
               title: 'Background Check',
               active: false,
-              disabled: true,  // make 'false' for testing
+              disabled: true,
               complete: false
             },
             {
@@ -60,7 +60,7 @@ class OnboardingApp extends React.Component {
               icon: <RocketOutlined />,
               title: 'Live Training',
               active: false,
-              disabled: true,  // make 'false' for testing
+              disabled: true,
               complete: false
             }
           ]
@@ -123,7 +123,6 @@ class OnboardingApp extends React.Component {
 
   // takes user data and sets currentStep
   receiveUser(user) {
-
     let currentStep = this.calculateCurrentStep(user)
 
     //Update the state with the received data
@@ -190,6 +189,7 @@ class OnboardingApp extends React.Component {
         console.log(error)
       })
   }
+
   // if interview has not been scheduled, disable all other subitems on sidebar
   disableSideItems() {
     const sidebarItems = this.state.sidebarItems
