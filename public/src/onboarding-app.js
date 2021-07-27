@@ -102,7 +102,6 @@ class OnboardingApp extends React.Component {
     }
 
     this.setUserProgress = this.setUserProgress.bind(this)
-    // this.state.checkInterviewDate = this.state.checkInterviewDate.bind(this)
     this.disableSideItems = this.disableSideItems.bind(this)
 
   }
@@ -198,19 +197,14 @@ class OnboardingApp extends React.Component {
     }
 
     // if has passed interview enable all sidebar items
-    if ('Status' in userData && userData['Status'] == 'Ready to Tutor') {
+    if ('Status' in userData && userData['Status'] == 'Application Accepted') {
       sidebarItems[0].subItems.map(item => item.disabled = false)
     }
-  }
 
-  // if interview date exists, save it -> will be used to display on dashboard
-  // checkInterviewDate(user) {
-  //   if ('Interview Date' in user.data['user']) {
-  //     let interview = notNull(user.data['user']['Interview Date'])
-  //     let interviewDate = user.data['user']['Interview Date'];
-  //     return interviewDate;
-  //   }
-  // }
+    this.setState({
+      sidebarItems: sidebarItems
+    })
+  }
 
 componentDidMount() {
   FIREBASE_RUN_ON_READY.push((user) => {
@@ -238,7 +232,6 @@ componentDidMount() {
         error={this.state.error}
         progress={this.state.progress}
         setUserProgress={this.state.setUserProgress}
-        // checkInterviewDate={this.state.checkInterviewDate}
         disableSideItems={this.state.disableSideItems}
       />
     )
