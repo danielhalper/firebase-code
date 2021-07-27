@@ -49,18 +49,17 @@ class FirstSteps extends React.Component {
             isLoading: false
         }
 
-        //Set the tracked items
-        // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
-        // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
-        // if ('Interview Date' in this.props.userData['user']) this.state.hasScheduledChat = notNull(this.props.userData['user']['Interview Date'])
-
     }
 
     componentDidMount() {
-
     }
 
     render() {
+        let tutorDetails = this.props.tutorDetails
+        let interviewDate = '';
+        if ('Interview Date' in tutorDetails && tutorDetails['Interview Date']) {
+            interviewDate = tutorDetails['Interview Date']
+        }
 
         //Show a skeleton when loading
         if (this.state.isLoading) return <Skeleton active />
@@ -84,7 +83,7 @@ class FirstSteps extends React.Component {
 
                 <Title level={3} color='primary'>Thanks for scheduling a chat with us!</Title>
                 <p>Once you've had your interview, you'll move on to the next steps!</p>
-                <strong><p>Your interview date: date here</p></strong>
+                <strong><p>Your interview date: {interviewDate}</p></strong>
 
             </div>}
 
@@ -125,12 +124,6 @@ class SecondSteps extends React.Component {
             hasCompletedLiveTraining: false,
             isLoading: false
         }
-
-        //Set the tracked items
-        // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
-        // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
-        // if ('Live Scan?' in this.props.userData['user']) this.state.hasCompletedLiveScan = notNull(this.props.userData['user']['Live Scan?'])
-        // if ('Live Training?' in this.props.userData['user']) this.state.hasCompletedLiveTraining = notNull(this.props.userData['user']['Live Training?'])
 
     }
 
@@ -244,14 +237,14 @@ class Home extends React.Component {
             <Title>Your Onboarding Dashboard</Title>
             <p>There's just a few things we'll need you to complete before proceeding.</p>
             <div class='steps-container'>
-                <Steps current={this.props.currentStep} className='steps' responsive={true}>
+                <Steps current={this.props.currentStep}  className='steps' responsive={true}>
                     <Step title='First Steps'/>
                     <Step title='LiveScan & Info Session'/>
                     <Step title='Student Match'/>
                 </Steps>
             </div>
 
-            <StepItem userData={this.props.userData}/>
+            <StepItem tutorDetails={this.props.tutorDetails} />
 
         </div>;
 
