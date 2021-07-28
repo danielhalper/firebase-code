@@ -25,24 +25,20 @@ class FirstSteps extends React.Component {
 
         //State
         this.state = {
-            hasScheduledChat: false,
-            hasCompletedWaiver:  false,
-            hasCompletedWorkbook: false,
             isLoading: false
         }
-
-        //Set the tracked items
-        // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
-        // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
-        // if ('Interview Date' in this.props.userData['user']) this.state.hasScheduledChat = notNull(this.props.userData['user']['Interview Date'])
-
     }
 
     componentDidMount() {
-
     }
 
     render() {
+        let progress = this.props.progress
+        let tutorDetails = this.props.tutorDetails
+        let interviewDate = '';
+        if ('Interview Date' in tutorDetails && tutorDetails['Interview Date']) {
+            interviewDate = tutorDetails['Interview Date']
+        }
 
         //Show a skeleton when loading
         if (this.state.isLoading) return <Skeleton active />
@@ -50,7 +46,8 @@ class FirstSteps extends React.Component {
         //Otherwise show the dashboard items
         return <div className='step'>
 
-            { !this.state.hasScheduledChat && (<div>
+            {/* Show when interview has not been scheduled */}
+            { !progress.hasScheduledChat && (<div>
 
                 <Title level={3} color='primary'>Chat with Talent Coordinator</Title>
 
@@ -62,15 +59,18 @@ class FirstSteps extends React.Component {
 
             </div>) }
 
-            { this.state.hasScheduledChat && <div>
+            {/* Show when interview has been scheduled but not yet passed */}
+            {progress.hasScheduledChat && <div>
 
                 <Title level={3} color='primary'>Thanks for scheduling a chat with us!</Title>
                 <p>Once you've had your interview, you'll move on to the next steps!</p>
+                <strong><p>Your interview date: {interviewDate}</p></strong>
 
             </div>}
 
 
-            {this.state.hasScheduledChat && (!this.state.hasCompletedWaiver || !this.state.hasCompletedWorkbook) && (<div>
+            {/* Show when interview scheduled but waiver or workbook not completed */}
+            {progress.hasScheduledChat && (!progress.hasCompletedWaiver || !progress.hasCompletedWorkbook) && (<div>
 
                 <Title level={3}>Other Steps</Title>
 
@@ -78,11 +78,11 @@ class FirstSteps extends React.Component {
 
                 <div className='dashboard-required-items'>
                 {/* Fix to direct to sidebar page */}
-                { !this.state.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
+                    {!progress.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                     The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
                 </RequiredItem> }
 
-                { !this.state.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
+                    {!progress.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
                     The workbook is our training course for new tutors. It will set you up for success with your student.
                 </RequiredItem> }
                 </div>
@@ -100,19 +100,8 @@ class SecondSteps extends React.Component {
 
         //State
         this.state = {
-            hasCompletedWaiver:  false,
-            hasCompletedWorkbook: false,
-            hasCompletedLiveScan: false,
-            hasCompletedLiveTraining: false,
             isLoading: false
         }
-
-        //Set the tracked items
-        // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
-        // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
-        // if ('Live Scan?' in this.props.userData['user']) this.state.hasCompletedLiveScan = notNull(this.props.userData['user']['Live Scan?'])
-        // if ('Live Training?' in this.props.userData['user']) this.state.hasCompletedLiveTraining = notNull(this.props.userData['user']['Live Training?'])
-
     }
 
     componentDidMount() {
@@ -120,30 +109,31 @@ class SecondSteps extends React.Component {
     }
 
     render() {
+        let progress = this.props.progress
 
         //Show a skeleton when loading
         if (this.state.isLoading) return <Skeleton active />
 
-        //Otherwise show the dashboard items
+        //Otherwise show the dashboard items --> Shows when interview has been passed but other items need to be completed
         return <div className='step'>
 
             <Title level={3}>Thanks for chatting with us!</Title>
 
             <p>You’re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match!</p>
             <div className='dashboard-required-items'>
-            { !this.state.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
+                {!progress.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                 The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
             </RequiredItem> }
 
-            { !this.state.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
+                {!progress.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
                 The workbook is our training course for new tutors. It will set you up for success with your student.
             </RequiredItem> }
 
-            { !this.state.hasCompletedLiveScan && <RequiredItem link={links['livescan']} icon={<SecurityScanOutlined/>} title='LiveScan'>
+                {!progress.hasCompletedLiveScan && <RequiredItem link={links['livescan']} icon={<SecurityScanOutlined/>} title='LiveScan'>
                 LiveScan is a government requirement for working with children. This is completed outside of StepUp.
             </RequiredItem> }
 
-            { !this.state.hasCompletedLiveTraining && <RequiredItem link={links['training']} icon={<RocketOutlined/>} title='Live Training'>
+                {!progress.hasCompletedLiveTraining && <RequiredItem link={links['training']} icon={<RocketOutlined/>} title='Live Training'>
                 You will need to complete a live training session with one of our leaders before you can be matched with a student.
             </RequiredItem> }
             </div>
@@ -193,74 +183,26 @@ const steps = [FirstSteps, SecondSteps, FinalSteps]
 class Home extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            loading: true,
-            currentStep: 0,
-            error: false,
-        }
-
-        this.onError = this.onError.bind(this)
-    }
-
-    receiveUser(user) {
-        console.log({user});
-        let currentStep = 1 //changed from 0 to 1 for testing
-
-        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
-        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
-        // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
-
-        //Update the state with the received data
-        this.setState({
-            loading: false,
-            userData: user.data,
-            currentStep: currentStep
-        })
-
-    }
-
-    setUserLocalStorage(user) {
-        let firstname = user.data.user['First Name'];
-        let lastname = user.data.user['Last Name'];
-        let email = user.data.user['Email'];
-        window.localStorage.setItem('userEmail', email);
-        window.localStorage.setItem('userFirstName', firstname);
-        window.localStorage.setItem('userLastName', lastname);
-    }
-
-    onError(error) {
-        this.setState({ error: true, loading: false})
     }
 
     componentDidMount() {
-
-        firebase.functions().httpsCallable('getTutorData')()
-        .then(result => {
-            this.receiveUser(result)
-            this.setUserLocalStorage(result)}
-            )
-        .catch(error =>
-            { this.onError(error) }
-            )
-
     }
 
     render() {
 
         //Get the current "step" screen
-        const StepItem = steps[this.state.currentStep];
+        const StepItem = steps[this.props.currentStep];
 
         //If it's still loading, show a skeleton
-        if (this.state.loading) return <div><Skeleton active/></div>
+        if (this.props.loading) return <div><Skeleton active/></div>
 
         //If there was an error (i.e. the record didn't exist) display "Applicant Record Not Found"
-        if (this.state.error) return <div>
+        if (this.props.error) return <div>
             <Title>Applicant Record Not Found </Title>
             <p>We can't find your record in the database - if this doesn't seem right, please contact <Link href='mailto:laura@stepuptutoring.org'>laura@stepuptutoring.org</Link>.</p>
         </div>
 
-        if (this.state.currentStep == 4) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        if (this.props.currentStep == 4) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
 
             <Title level={1}>🎉 You've Been Matched! 🎉</Title>
             <p>From now on, you'll be using your tutor portal. We'll see you there!</p>
@@ -273,14 +215,14 @@ class Home extends React.Component {
             <Title>Your Onboarding Dashboard</Title>
             <p>There's just a few things we'll need you to complete before proceeding.</p>
             <div class='steps-container'>
-                <Steps current={this.state.currentStep} className='steps' responsive={true}>
+                <Steps current={this.props.currentStep}  className='steps' responsive={true}>
                     <Step title='First Steps'/>
                     <Step title='LiveScan & Info Session'/>
                     <Step title='Student Match'/>
                 </Steps>
             </div>
 
-            <StepItem userData={this.state.userData}/>
+            <StepItem tutorDetails={this.props.tutorDetails} progress={this.props.progress} />
 
         </div>;
 

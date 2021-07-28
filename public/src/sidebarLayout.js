@@ -74,10 +74,8 @@ class SidebarLayout extends React.Component {
         super(props)
 
         this.state = {
-
             tutor: {},
             loadingUser: true
-
         }
 
         this.state.sidebarItems = this.props.sidebarItems
@@ -87,16 +85,29 @@ class SidebarLayout extends React.Component {
         this.onSideBarItemClicked = this.onSideBarItemClicked.bind(this)
         this.onUserFinishedLoading = this.onUserFinishedLoading.bind(this)
         this.loadUser = this.loadUser.bind(this)
+        this.onSideBarLogoClicked = this.onSideBarLogoClicked.bind(this)
 
     }
 
     onSideBarItemClicked(key) {
-
         const sidebarItems = this.state.sidebarItems
 
+        // highlights side navigation item that is the current tab
         for (let i = 0; i < sidebarItems.length; i++) {
-            if (sidebarItems[i]['keyId'] == key) sidebarItems[i]['active'] = true
-            else sidebarItems[i]['active'] = false
+            if (sidebarItems[i]['keyId'] == key) {
+                sidebarItems[i]['active'] = true
+                if (sidebarItems[i].subItems) {
+                    sidebarItems[i].subItems.map(item => item.active = false)}
+            } else sidebarItems[i]['active'] = false
+
+            if (sidebarItems[i].subItems && sidebarItems[i]['active'] === false) {
+                for (let x = 0; x < sidebarItems[i].subItems.length; x++) {
+                    if (sidebarItems[i].subItems[x]['keyId'] == key) {
+                        sidebarItems[i].subItems[x]['active'] = true
+                        sidebarItems[i]['active'] = false
+                    } else sidebarItems[i].subItems[x]['active'] = false
+                }
+            }
         }
 
         this.setState({ currentTab: key, sidebarItems: sidebarItems })
@@ -104,26 +115,23 @@ class SidebarLayout extends React.Component {
     }
 
     onUserFinishedLoading(user) {
-
         this.setState({
             loadingUser: false,
             tutor: user
         })
-
     }
 
     loadUser() {
-
-        firebase.functions().httpsCallable('getTutor')().then(result => {
-
-            this.onUserFinishedLoading(result.data)
-
+        firebase.functions().httpsCallable('getTutor')().then(tutorResult => {
+            this.onUserFinishedLoading(tutorResult.data)
         }).catch(error => {
-
+            console.log(error)
             //TODO
-
         })
+    }
 
+    onSideBarLogoClicked() {
+        this.setState({ currentTab: 'home' }) //make active to change font color & add pointer
     }
 
     componentDidMount() {
@@ -138,11 +146,8 @@ class SidebarLayout extends React.Component {
         this.listenForAnchorChanges()
 
         FIREBASE_RUN_ON_READY.push((user) => {
-
             this.loadUser()
-
         })
-
     }
 
     listenForAnchorChanges() {
@@ -165,7 +170,7 @@ class SidebarLayout extends React.Component {
             <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' width='240'>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
 
-                    <div className='sidebar-header'>
+                    <div className='sidebar-header' onClick={this.onSideBarLogoClicked} >
                         <img width={180} src='https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng'/>
                     </div>
 
@@ -217,8 +222,16 @@ class SidebarLayout extends React.Component {
                 <Layout style={{backgroundColor: 'white'}}>
                     <Content className='content-container'>
                         <div className='main-content'>
+
+                            {/* Will render this view when page is loading */}
                             {this.state.loadingUser && <Skeleton active/>}
-                            {!this.state.loadingUser && <CurrentPage tutor={this.state.tutor} />}
+
+                            {/* Will render this view for Tutor Portal */}
+                            {!this.state.loadingUser && !this.props.progress && <CurrentPage tutor={this.state.tutor} />}
+
+                            {/* Will render this view for Onboarding Portal */}
+                            {!this.state.loadingUser && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
+                                currentStep={this.props.currentStep} isLoadingUser={this.state.loadingUser} error={this.props.error} progress={this.props.progress}/>}
                         </div>
                     </Content>
                 </Layout>
@@ -234,8 +247,6 @@ class SidebarLayout extends React.Component {
                 </Footer>}
 
             </Layout>
-
-
 
         </Layout>
 
