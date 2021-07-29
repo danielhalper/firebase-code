@@ -66,28 +66,30 @@ class FirstSteps extends React.Component {
                 <p>Once you've had your interview, you'll move on to the next steps!</p>
                 <strong><p>Your interview date: {interviewDate}</p></strong>
 
+                <div>
+
+                    <Title level={3}>Other Steps</Title>
+
+                    <p>While you're waiting, you can work on these items:</p>
+
+                    <div className='dashboard-required-items'>
+                        {/* Fix to direct to sidebar page */}
+                        {<RequiredItem link={links['waiver']} icon={<SolutionOutlined />} title='Tutor Waiver'>
+                            The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
+                        </RequiredItem>}
+
+                        {<RequiredItem link={links['workbook']} icon={<BookOutlined />} title='The Workbook'>
+                            The workbook is our training course for new tutors. It will set you up for success with your student.
+                        </RequiredItem>}
+                    </div>
+                </div>
+
+
+
             </div>}
 
 
             {/* Show when interview scheduled but waiver or workbook not completed */}
-            {progress.hasScheduledChat && (!progress.hasCompletedWaiver || !progress.hasCompletedWorkbook) && (<div>
-
-                <Title level={3}>Other Steps</Title>
-
-                <p>While you're waiting, you can work on these items:</p>
-
-                <div className='dashboard-required-items'>
-                {/* Fix to direct to sidebar page */}
-                    {!progress.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
-                    The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
-                </RequiredItem> }
-
-                    {!progress.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
-                    The workbook is our training course for new tutors. It will set you up for success with your student.
-                </RequiredItem> }
-                </div>
-            </div>) }
-
 
         </div>;
     }
