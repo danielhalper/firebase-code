@@ -123,19 +123,19 @@ class SecondSteps extends React.Component {
 
             <p>You’re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match!</p>
             <div className='dashboard-required-items'>
-                {!progress.hasCompletedWaiver && <RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
+                {<RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                 The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
             </RequiredItem> }
 
-                {!progress.hasCompletedWorkbook && <RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
+                {<RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
                 The workbook is our training course for new tutors. It will set you up for success with your student.
             </RequiredItem> }
 
-                {!progress.hasCompletedLiveScan && <RequiredItem link={links['livescan']} icon={<SecurityScanOutlined/>} title='LiveScan'>
+                {<RequiredItem link={links['livescan']} icon={<SecurityScanOutlined/>} title='LiveScan'>
                 LiveScan is a government requirement for working with children. This is completed outside of StepUp.
             </RequiredItem> }
 
-                {!progress.hasCompletedLiveTraining && <RequiredItem link={links['training']} icon={<RocketOutlined/>} title='Live Training'>
+                {<RequiredItem link={links['training']} icon={<RocketOutlined/>} title='Live Training'>
                 You will need to complete a live training session with one of our leaders before you can be matched with a student.
             </RequiredItem> }
             </div>
