@@ -129,9 +129,11 @@ class OnboardingApp extends React.Component {
     this.setState({
       loading: false,
       userData: user.data.user,
-      currentStep: currentStep
+      currentStep: 1
     })
   }
+
+  // ----------Changed to 1 instead of currentStep for testing
 
   // takes user data and sets info to localstorage for use in prefilling forms
   setUserLocalStorage(user) {
@@ -176,6 +178,8 @@ class OnboardingApp extends React.Component {
         hasCompletedLiveTraining: completedLiveTraining
       }
     })
+
+    console.log('user stuff', user);
   }
 
   loadTutorData() {
@@ -190,7 +194,7 @@ class OnboardingApp extends React.Component {
       })
   }
 
-  // if interview has not been scheduled, disable all other subitems on sidebar
+  // Depending on what step in process user is, sidebar items will become enabled and clickable
   disableSideItems() {
     const sidebarItems = this.state.sidebarItems
     const userData = this.state.userData

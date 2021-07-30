@@ -18,6 +18,24 @@ function notNull(value) {
     return value != undefined && value != null && value != NaN
 }
 
+//Required item component
+class RequiredOBItem extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return <Link className='requirement' onClick={() => this.props.linkTo(this.props.pageKey)}>
+            <div style={{ float: "left", width: "200px", height: "150px" }}>
+                {this.props.icon && this.props.icon} {this.props.title}
+                <p className='description'>
+                    {this.props.children}
+                </p>
+            </div>
+        </Link>;
+    }
+}
+
 //Step 1 Component
 class FirstSteps extends React.Component {
     constructor(props) {
@@ -74,13 +92,13 @@ class FirstSteps extends React.Component {
 
                     <div className='dashboard-required-items'>
                         {/* Fix to direct to sidebar page */}
-                        {<RequiredItem link={links['waiver']} icon={<SolutionOutlined />} title='Tutor Waiver'>
+                        {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'waiver'} icon={<SolutionOutlined />} title='Tutor Waiver'>
                             The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
-                        </RequiredItem>}
+                        </RequiredOBItem>}
 
-                        {<RequiredItem link={links['workbook']} icon={<BookOutlined />} title='The Workbook'>
+                        {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined />} title='The Workbook'>
                             The workbook is our training course for new tutors. It will set you up for success with your student.
-                        </RequiredItem>}
+                        </RequiredOBItem>}
                     </div>
                 </div>
 
@@ -123,21 +141,21 @@ class SecondSteps extends React.Component {
 
             <p>You’re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match!</p>
             <div className='dashboard-required-items'>
-                {<RequiredItem link={links['waiver']} icon={<SolutionOutlined/>} title='Tutor Waiver'>
+                {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'waiver'} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                 The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
-            </RequiredItem> }
+            </RequiredOBItem> }
 
-                {<RequiredItem link={links['workbook']} icon={<BookOutlined/>} title='The Workbook'>
+                {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined/>} title='The Workbook'>
                 The workbook is our training course for new tutors. It will set you up for success with your student.
-            </RequiredItem> }
+            </RequiredOBItem> }
 
-                {<RequiredItem link={links['livescan']} icon={<SecurityScanOutlined/>} title='LiveScan'>
+                {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'livescan'} icon={<SecurityScanOutlined/>} title='LiveScan'>
                 LiveScan is a government requirement for working with children. This is completed outside of StepUp.
-            </RequiredItem> }
+            </RequiredOBItem> }
 
-                {<RequiredItem link={links['training']} icon={<RocketOutlined/>} title='Live Training'>
+                {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'training'} icon={<RocketOutlined/>} title='Live Training'>
                 You will need to complete a live training session with one of our leaders before you can be matched with a student.
-            </RequiredItem> }
+            </RequiredOBItem> }
             </div>
         </div>;
     }
@@ -224,7 +242,7 @@ class Home extends React.Component {
                 </Steps>
             </div>
 
-            <StepItem tutorDetails={this.props.tutorDetails} progress={this.props.progress} />
+            <StepItem tutorDetails={this.props.tutorDetails} progress={this.props.progress} onSideBarItemClicked={this.props.onSideBarItemClicked} />
 
         </div>;
 

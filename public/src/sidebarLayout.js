@@ -17,7 +17,7 @@ class SidebarItem extends React.Component {
         if (!this.props.disabled && !this.props.complete) {
 
             if (!this.props.active) {
-                window.location.hash = '#' + this.props.keyId 
+                window.location.hash = '#' + this.props.keyId
             }
 
             this.props.onClick(this.props.keyId)
@@ -124,6 +124,7 @@ class SidebarLayout extends React.Component {
     loadUser() {
         firebase.functions().httpsCallable('getTutor')().then(tutorResult => {
             this.onUserFinishedLoading(tutorResult.data)
+            console.log(tutorResult.data)
         }).catch(error => {
             console.log(error)
             //TODO
@@ -140,7 +141,7 @@ class SidebarLayout extends React.Component {
             const element = document.querySelector(window.location.hash)
             if (element) element.click()
         } catch(err) {
-            
+
         }
 
         this.listenForAnchorChanges()
@@ -231,7 +232,7 @@ class SidebarLayout extends React.Component {
 
                             {/* Will render this view for Onboarding Portal */}
                             {!this.state.loadingUser && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
-                                currentStep={this.props.currentStep} isLoadingUser={this.state.loadingUser} error={this.props.error} progress={this.props.progress}/>}
+                                currentStep={this.props.currentStep} isLoadingUser={this.state.loadingUser} error={this.props.error} progress={this.props.progress} onSideBarItemClicked={this.onSideBarItemClicked} />}
                         </div>
                     </Content>
                 </Layout>
