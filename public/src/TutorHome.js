@@ -58,9 +58,7 @@ class TutorHome extends React.Component {
 
     retrieveZoomLinks() {
         firebase.functions().httpsCallable('getZoomLinks')().then((result) => {
-            this.setState({
-                zoomLinks: result.data
-            })
+            
         }).catch(console.log)
     }
 
