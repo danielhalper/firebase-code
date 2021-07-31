@@ -26,7 +26,7 @@ var RequiredItem = function (_React$Component) {
         value: function render() {
             return React.createElement(
                 Link,
-                { className: 'requirement', href: this.props.link, target: '_blank' },
+                { className: 'requirement', href: this.props.link, onClick: this.props.onClick, target: '_blank' },
                 React.createElement(
                     'div',
                     { style: { float: "left", width: "200px", height: "150px" } },
