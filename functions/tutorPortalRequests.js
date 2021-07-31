@@ -72,6 +72,8 @@ exports.getTutor = async (data, context) => {
     //Create a user object
     let userObj = userData.data()
 
+    console.log(userObj)
+
     if (notNull(userObj['students'])) {
 
         //Keep track of students

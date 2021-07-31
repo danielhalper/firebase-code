@@ -991,7 +991,3 @@ async function createZoomLinkForTutor(email) {
     return resultData['id']
 
 }
-
-
-//If we're in an emulator, run updatePeopleData
-if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') updatePeopleData().then(result => console.log('Populated Firestore with data'))
