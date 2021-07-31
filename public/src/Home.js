@@ -4,15 +4,6 @@ const { SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, Ro
 const { Title, Link } = Typography;
 const { Step } = Steps;
 
-//Item links
-const links = {
-    'waiver': 'https://stepuptutoring.org/waiver',
-    'workbook': 'https://docs.google.com/document/d/11FkYrhdTmi4GHODKcb91HOqVd8og5EfPdRQYesDSDlI',
-    'chat': 'https://stepuptutoring.org/tutor-application-2',
-    'livescan': 'https://oag.ca.gov/fingerprints/locations/live-scan-salinas?county=Los+Angeles',
-    'training': ''
-}
-
 //Util function
 function notNull(value) {
     return value != undefined && value != null && value != NaN
