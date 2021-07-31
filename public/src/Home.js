@@ -71,9 +71,11 @@ class FirstSteps extends React.Component {
 
                 <p>As soon as you can, we'd like you to schedule a chat with one of our talent coordinators so we can get to know you a little better.</p>
 
-                <Button className='btn' icon={<CalendarFilled/>} type='primary' size='large' href={links['chat']} target='_blank'>
+                <Button className='btn' icon={<CalendarFilled />} type='primary' size='large' onClick={() => this.props.onSideBarItemClicked('chat-signup')} >
                     Schedule a chat
                 </Button>
+
+                {/* onClick={() => this.props.onSideBarItemClicked('chat-signup')} */}
 
             </div>) }
 
