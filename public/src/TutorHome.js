@@ -1,3 +1,4 @@
+const { message } = antd
 const { CloseOutlined } = icons
 
 class Modal extends React.Component {
@@ -43,9 +44,10 @@ class TutorHome extends React.Component {
 
         this.state = {
             student: this.props.tutor.students[0],
-            zoomLinks: {},
+            zoomLinks: undefined,
             modals: {
-                'zoom': false
+                'zoom': false,
+                'weekly-form': false
             }
         }
 
@@ -58,6 +60,11 @@ class TutorHome extends React.Component {
 
     retrieveZoomLinks() {
         firebase.functions().httpsCallable('getZoomLinks')().then((result) => {
+
+            const currentStudentZoomLinks = result.data[ this.state.student['id'] ]
+            this.setState({
+                zoomLinks: currentStudentZoomLinks
+            })
             
         }).catch(console.log)
     }
@@ -70,6 +77,8 @@ class TutorHome extends React.Component {
         this.setState({
             modals: modalsCopy
         })
+
+        this.retrieveZoomLinks()
     }
 
     onModalClose(id){
@@ -91,15 +100,16 @@ class TutorHome extends React.Component {
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
+
+        message.success('Link Copied!')
     }
 
     render() {
-        this.retrieveZoomLinks()
         return <div style={{display:"flex", width:"100%", flexDirection:"column", justifyContent: "center", alignItems:"center"}}>
             <h1 className="title">Tutor Dashboard</h1>
             <div style={{ marginBottom: 20 }}>
             <StudentWidget students = {this.props.tutor.students} onTabChange={(activeKey) => {
-                this.setState({student:this.students[activeKey]})
+                this.setState( { student:this.students[activeKey], zoomLinks: undefined } )
             }}/>
             </div>
             <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:20}}>
@@ -129,42 +139,60 @@ class TutorHome extends React.Component {
             </div>
             <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:20}}>
                 <RequiredItem link={"#messaging"} icon={<SolutionOutlined/>} title='Message Students'>
-                    Communicate with your student through texting with our online messaging application.
+                    Communicate with your student through our online messaging application.
                 </RequiredItem>
-                <RequiredItem onClick={() => this.displayModal('zoom')} icon={<SolutionOutlined/>} title='Start Zoom Meeting'>
+                <RequiredItem onClick={() => {
+                    firebase.analytics().logEvent('started_zoom_call')
+                    this.displayModal('zoom')
+                }} icon={<SolutionOutlined/>} title='Start Zoom Meeting'>
                     Meet with your student face-to-face over Zoom.
                 </RequiredItem>
-                <RequiredItem link={"undefined"} icon={<SolutionOutlined/>} title='Weekly Resources'>
+                <RequiredItem link={"https://www.stepuptutoring.org/resources-extended"} newTab icon={<SolutionOutlined/>} title='Weekly Resources'>
+                    Your weekly session guide, customized to your student's needs
                 </RequiredItem>
             </div>
             <div style={{float:"left",color:"#5A5A5A",borderBottom: "solid #5A5A5A 3px", width: "800px", textAlign:"center", fontSize:"36px", marginBottom:20}}><strong>Weekly Action Items</strong></div>
             <div style={{display:"flex", flexDirection:"row", flex:1}}>
-                <RequiredItem link={"undefined"} icon={<SolutionOutlined/>} title='Weekly Form'>
+                <RequiredItem onClick={() => this.displayModal('weekly-form')} icon={<SolutionOutlined/>} title='Weekly Form'>
                     Fill this out each week... so the student's teacher and parent are up-to-date.
                 </RequiredItem>
-                <RequiredItem link={"undefined"} icon={<SolutionOutlined/>} title='Weekly Announcements'>
+                <RequiredItem link={"undefined"} icon={<SolutionOutlined/>} title='Weekly Announcements' onClick={() => {
+                    firebase.analytics().logEvent('check_announcements')
+                }}>
+                    All the Step Up updates, program changes, and newsletters in one place!
                 </RequiredItem>
-                <RequiredItem link={"undefined"} icon={<SolutionOutlined/>} title='Events & Gamification'>
+                <RequiredItem link='https://www.stepuptutoring.org/tutor-events' newTab icon={<SolutionOutlined/>} title='Events & Gamification' onClick={() => {
+                    firebase.analytics().logEvent('check_events')
+                }}>
                     You should check this page at least once a week to update your student!
                 </RequiredItem>
             </div>
             <div className="modal-container">
                 <Modal title="Start Zoom Meeting" display = {this.state.modals.zoom} options={{submit:false}} onClose = {() => this.onModalClose('zoom')}>
-                    <div style={{width: '70%'}}>
-                        Use the button below to start a video call with your student! They can use the same link to join each time, and if they're having trouble finding it you can copy it below and send it to them!
-                    </div>
-                    <button className="modal-submit" style={{marginBottom:20, marginTop:20}}>Start Meeting</button>
+                    { !this.state.zoomLinks && <Skeleton active/> }
                     
-                    <div style={{ position: 'relative', width: '70%', height: 40 }}>
-                        <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
-                            https://www.example.com/example?example_key=1234567890987654321234567890
+                    { this.state.zoomLinks && <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                        <div style={{width: '70%'}}>
+                            Use the button below to start a video call with your student! They can use the same link to join each time, and if they're having trouble finding it you can copy it below and send it to them!
                         </div>
+                        <a href={ this.state.zoomLinks['start_url'] } target='_blank' className="modal-submit" style={{marginBottom:20, marginTop:20}}>Start Meeting</a>
+                        
+                        <div style={{ position: 'relative', width: '70%', height: 40 }}>
+                            <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
+                                { this.state.zoomLinks['join_url'] }
+                            </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
-                            <div style={{flex: 1}}></div>
-                            <button className="copy-link" onClick={()=>this.copyLink("https://www.example.com/example?example_key=1234567890987654321234567890")}>Copy</button>
+                            <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
+                                <div style={{flex: 1}}></div>
+                                <button className="copy-link" onClick={()=>this.copyLink(this.state.zoomLinks['join_url'])}>Copy</button>
+                            </div>
                         </div>
-                    </div>
+                    </div> }
+                    
+                </Modal>
+
+                <Modal title='Weekly Form' display={this.state.modals['weekly-form']} options={{ submit: false }} onClose={() => this.onModalClose('weekly-form')}>
+                    <iframe className="airtable-embed" src="https://airtable.com/embed/shrHFVAQ4wbWOEt7Z?backgroundColor=cyanLight" frameborder="0" onmousewheel="" width="100%" height="533" style={{ background: 'transparent', border: '0px solid #ccc' }}></iframe>
                 </Modal>
             </div>
         </div>

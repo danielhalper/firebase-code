@@ -1,4 +1,4 @@
-const { Select, Layout, Input, Spin, Form } = antd
+const { Select, Layout, Input, Spin, Form, message } = antd
 const { Option } = Select
 const { Sider, Content, Header } = Layout
 const { Search } = Input
@@ -203,6 +203,12 @@ class MessagingWidget extends React.Component {
 
     sendMessage(value, e) {
 
+        if (this.state.student == null) {
+            message.error('Please select a student before sending a message')
+            this.setState({ isSendingMessage: false })
+            return
+        }
+
         this.setState({ isSendingMessage: true })
 
         this.messagesDisplay.current.scrollToBottom()
@@ -237,9 +243,16 @@ class MessagingWidget extends React.Component {
 
         return <div>
 
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
             <Select placeholder='Choose a student' loading={this.state.isLoadingStudents} style={{width: 200}} onChange={this.loadStudentMessages}>
                 {this.getStudentOptions()}
             </Select>
+
+            {this.state.student != null && <h3 style={{ marginLeft: 15 }}>Phone Number: {(() => {
+                const number = libphonenumber.parsePhoneNumber(this.state.student.proxyNumber)
+                return number.formatNational()
+            })()}</h3>}
+            </div>
 
             <Layout style={{borderRadius: 10, marginTop: 5, padding: 20}}>
 

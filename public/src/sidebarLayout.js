@@ -59,7 +59,6 @@ class UserItem extends React.Component {
 
         return <div>
 
-            <p><Link>Change Email</Link></p>
             <p><Link onClick={this.onSignOut}>Log Out</Link></p>
 
         </div>
