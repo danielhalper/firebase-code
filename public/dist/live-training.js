@@ -24,7 +24,7 @@ var LiveTraining = function (_React$Component) {
       var iframe = document.getElementById("deferred-iframe");
       iframe.src = "https://calendly.com/stepup-tut/training?name=" + userLocalFirstName + "%20" + userLocalLastName + "&email=" + userLocalEmail;
       iframe.title = "Schedule Live Training";
-      iframe.width = "90%";
+      iframe.width = "100%";
       iframe.height = "800";
       iframe.frameBorder = "0";
     }
@@ -51,7 +51,7 @@ var LiveTraining = function (_React$Component) {
         ),
         React.createElement(
           "div",
-          { className: "center-embed-iframe", id: "live-training-calendly" },
+          { id: "live-training-calendly" },
           React.createElement("iframe", { id: "deferred-iframe", src: "about:blank" }),
           React.createElement("script", { src: "https://assets.calendly.com/assets/external/widget.js", type: "text/javascript" })
         )

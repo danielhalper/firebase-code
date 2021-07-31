@@ -151,10 +151,8 @@ var SidebarLayout = function (_React$Component4) {
         var _this4 = _possibleConstructorReturn(this, (SidebarLayout.__proto__ || Object.getPrototypeOf(SidebarLayout)).call(this, props));
 
         _this4.state = {
-
             tutor: {},
             loadingUser: true
-
         };
 
         _this4.state.sidebarItems = _this4.props.sidebarItems;
@@ -164,6 +162,7 @@ var SidebarLayout = function (_React$Component4) {
         _this4.onSideBarItemClicked = _this4.onSideBarItemClicked.bind(_this4);
         _this4.onUserFinishedLoading = _this4.onUserFinishedLoading.bind(_this4);
         _this4.loadUser = _this4.loadUser.bind(_this4);
+        _this4.onSideBarLogoClicked = _this4.onSideBarLogoClicked.bind(_this4);
 
         return _this4;
     }
@@ -171,11 +170,27 @@ var SidebarLayout = function (_React$Component4) {
     _createClass(SidebarLayout, [{
         key: 'onSideBarItemClicked',
         value: function onSideBarItemClicked(key) {
-
             var sidebarItems = this.state.sidebarItems;
 
+            // highlights side navigation item that is the current tab
             for (var i = 0; i < sidebarItems.length; i++) {
-                if (sidebarItems[i]['keyId'] == key) sidebarItems[i]['active'] = true;else sidebarItems[i]['active'] = false;
+                if (sidebarItems[i]['keyId'] == key) {
+                    sidebarItems[i]['active'] = true;
+                    if (sidebarItems[i].subItems) {
+                        sidebarItems[i].subItems.map(function (item) {
+                            return item.active = false;
+                        });
+                    }
+                } else sidebarItems[i]['active'] = false;
+
+                if (sidebarItems[i].subItems && sidebarItems[i]['active'] === false) {
+                    for (var x = 0; x < sidebarItems[i].subItems.length; x++) {
+                        if (sidebarItems[i].subItems[x]['keyId'] == key) {
+                            sidebarItems[i].subItems[x]['active'] = true;
+                            sidebarItems[i]['active'] = false;
+                        } else sidebarItems[i].subItems[x]['active'] = false;
+                    }
+                }
             }
 
             this.setState({ currentTab: key, sidebarItems: sidebarItems });
@@ -183,7 +198,6 @@ var SidebarLayout = function (_React$Component4) {
     }, {
         key: 'onUserFinishedLoading',
         value: function onUserFinishedLoading(user) {
-
             this.setState({
                 loadingUser: false,
                 tutor: user
@@ -194,14 +208,17 @@ var SidebarLayout = function (_React$Component4) {
         value: function loadUser() {
             var _this5 = this;
 
-            firebase.functions().httpsCallable('getTutor')().then(function (result) {
-
-                _this5.onUserFinishedLoading(result.data);
+            firebase.functions().httpsCallable('getTutor')().then(function (tutorResult) {
+                _this5.onUserFinishedLoading(tutorResult.data);
             }).catch(function (error) {
-
+                console.log(error);
                 //TODO
-
             });
+        }
+    }, {
+        key: 'onSideBarLogoClicked',
+        value: function onSideBarLogoClicked() {
+            this.setState({ currentTab: 'home' }); //make active to change font color & add pointer
         }
     }, {
         key: 'componentDidMount',
@@ -216,7 +233,6 @@ var SidebarLayout = function (_React$Component4) {
             this.listenForAnchorChanges();
 
             FIREBASE_RUN_ON_READY.push(function (user) {
-
                 _this6.loadUser();
             });
         }
@@ -248,7 +264,7 @@ var SidebarLayout = function (_React$Component4) {
                         { style: { display: 'flex', flexDirection: 'column', height: '100%' } },
                         React.createElement(
                             'div',
-                            { className: 'sidebar-header' },
+                            { className: 'sidebar-header', onClick: this.onSideBarLogoClicked },
                             React.createElement('img', { width: 180, src: 'https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng' })
                         ),
                         React.createElement(
@@ -320,7 +336,9 @@ var SidebarLayout = function (_React$Component4) {
                                 'div',
                                 { className: 'main-content' },
                                 this.state.loadingUser && React.createElement(Skeleton, { active: true }),
-                                !this.state.loadingUser && React.createElement(CurrentPage, { tutor: this.state.tutor })
+                                !this.state.loadingUser && !this.props.progress && React.createElement(CurrentPage, { tutor: this.state.tutor }),
+                                !this.state.loadingUser && this.props.progress && React.createElement(CurrentPage, { tutor: this.state.tutor, tutorDetails: this.props.userData,
+                                    currentStep: this.props.currentStep, isLoadingUser: this.state.loadingUser, error: this.props.error, progress: this.props.progress })
                             )
                         )
                     ),

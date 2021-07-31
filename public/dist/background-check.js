@@ -152,10 +152,20 @@ var BackgroundCheck = function (_React$Component) {
                 React.createElement(
                   "a",
                   { href: "https://docs.google.com/document/d/1M_ZBQeidwncFqY4vR3bPNKM30_dGhEl5AcojcwCvnVw/edit", target: "_blank" },
+                  "here"
+                )
+              ),
+              ", or ",
+              React.createElement(
+                "strong",
+                null,
+                React.createElement(
+                  "a",
+                  { href: "https://www.google.com/search?tbs=lf:1,lf_ui:2&tbm=lcl&sxsrf=ALeKk013pgArTsmwJ_nOnVa8wW1e_vESvg:1625706667067&q=live+scan+near+me&rflfq=1&num=10&sa=X&ved=2ahUKEwjhzpijpdLxAhUGXc0KHRM-AaUQjGp6BAgWEGs&biw=1680&bih=885#rlfi=hd:;si:;mv:[[34.2058882,-118.2770793],[33.8910519,-118.6512465]];tbs:lrf:!1m4!1u17!2m2!17m1!1e2!1m4!1u3!2m2!3m1!1e1!1m4!1u2!2m2!2m1!1e1!2m1!1e2!2m1!1e3!2m4!1e17!4m2!17m1!1e2!3sIAE,lf:1,lf_ui:2", target: "_blank" },
                   "here."
                 )
               ),
-              " Select the county and type your neighborhood in the search. You can find the same list of counties at the end of this document."
+              "  Select the county and type your neighborhood in the search. You can find the same list of counties at the end of this document."
             ),
             React.createElement(
               "p",

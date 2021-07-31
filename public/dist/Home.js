@@ -51,17 +51,9 @@ var FirstSteps = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (FirstSteps.__proto__ || Object.getPrototypeOf(FirstSteps)).call(this, props));
 
         _this.state = {
-            hasScheduledChat: false,
-            hasCompletedWaiver: false,
-            hasCompletedWorkbook: false,
             isLoading: false
-
-            //Set the tracked items
-            // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
-            // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
-            // if ('Interview Date' in this.props.userData['user']) this.state.hasScheduledChat = notNull(this.props.userData['user']['Interview Date'])
-
-        };return _this;
+        };
+        return _this;
     }
 
     _createClass(FirstSteps, [{
@@ -70,6 +62,12 @@ var FirstSteps = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
+            var progress = this.props.progress;
+            var tutorDetails = this.props.tutorDetails;
+            var interviewDate = '';
+            if ('Interview Date' in tutorDetails && tutorDetails['Interview Date']) {
+                interviewDate = tutorDetails['Interview Date'];
+            }
 
             //Show a skeleton when loading
             if (this.state.isLoading) return React.createElement(Skeleton, { active: true });
@@ -78,7 +76,7 @@ var FirstSteps = function (_React$Component) {
             return React.createElement(
                 'div',
                 { className: 'step' },
-                !this.state.hasScheduledChat && React.createElement(
+                !progress.hasScheduledChat && React.createElement(
                     'div',
                     null,
                     React.createElement(
@@ -97,7 +95,7 @@ var FirstSteps = function (_React$Component) {
                         'Schedule a chat'
                     )
                 ),
-                this.state.hasScheduledChat && React.createElement(
+                progress.hasScheduledChat && React.createElement(
                     'div',
                     null,
                     React.createElement(
@@ -109,9 +107,19 @@ var FirstSteps = function (_React$Component) {
                         'p',
                         null,
                         'Once you\'ve had your interview, you\'ll move on to the next steps!'
+                    ),
+                    React.createElement(
+                        'strong',
+                        null,
+                        React.createElement(
+                            'p',
+                            null,
+                            'Your interview date: ',
+                            interviewDate
+                        )
                     )
                 ),
-                this.state.hasScheduledChat && (!this.state.hasCompletedWaiver || !this.state.hasCompletedWorkbook) && React.createElement(
+                progress.hasScheduledChat && (!progress.hasCompletedWaiver || !progress.hasCompletedWorkbook) && React.createElement(
                     'div',
                     null,
                     React.createElement(
@@ -127,12 +135,12 @@ var FirstSteps = function (_React$Component) {
                     React.createElement(
                         'div',
                         { className: 'dashboard-required-items' },
-                        !this.state.hasCompletedWaiver && React.createElement(
+                        !progress.hasCompletedWaiver && React.createElement(
                             RequiredItem,
                             { link: links['waiver'], icon: React.createElement(SolutionOutlined, null), title: 'Tutor Waiver' },
                             'The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.'
                         ),
-                        !this.state.hasCompletedWorkbook && React.createElement(
+                        !progress.hasCompletedWorkbook && React.createElement(
                             RequiredItem,
                             { link: links['workbook'], icon: React.createElement(BookOutlined, null), title: 'The Workbook' },
                             'The workbook is our training course for new tutors. It will set you up for success with your student.'
@@ -159,19 +167,9 @@ var SecondSteps = function (_React$Component2) {
         var _this2 = _possibleConstructorReturn(this, (SecondSteps.__proto__ || Object.getPrototypeOf(SecondSteps)).call(this, props));
 
         _this2.state = {
-            hasCompletedWaiver: false,
-            hasCompletedWorkbook: false,
-            hasCompletedLiveScan: false,
-            hasCompletedLiveTraining: false,
             isLoading: false
-
-            //Set the tracked items
-            // if ('Waiver?' in this.props.userData['user']) this.state.hasCompletedWaiver = notNull(this.props.userData['user']['Waiver?'])
-            // if ('Section 2' in this.props.userData['user']) this.state.hasCompletedWorkbook = notNull(this.props.userData['user']['Section 2'])
-            // if ('Live Scan?' in this.props.userData['user']) this.state.hasCompletedLiveScan = notNull(this.props.userData['user']['Live Scan?'])
-            // if ('Live Training?' in this.props.userData['user']) this.state.hasCompletedLiveTraining = notNull(this.props.userData['user']['Live Training?'])
-
-        };return _this2;
+        };
+        return _this2;
     }
 
     _createClass(SecondSteps, [{
@@ -180,11 +178,12 @@ var SecondSteps = function (_React$Component2) {
     }, {
         key: 'render',
         value: function render() {
+            var progress = this.props.progress;
 
             //Show a skeleton when loading
             if (this.state.isLoading) return React.createElement(Skeleton, { active: true });
 
-            //Otherwise show the dashboard items
+            //Otherwise show the dashboard items --> Shows when interview has been passed but other items need to be completed
             return React.createElement(
                 'div',
                 { className: 'step' },
@@ -201,22 +200,22 @@ var SecondSteps = function (_React$Component2) {
                 React.createElement(
                     'div',
                     { className: 'dashboard-required-items' },
-                    !this.state.hasCompletedWaiver && React.createElement(
+                    !progress.hasCompletedWaiver && React.createElement(
                         RequiredItem,
                         { link: links['waiver'], icon: React.createElement(SolutionOutlined, null), title: 'Tutor Waiver' },
                         'The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.'
                     ),
-                    !this.state.hasCompletedWorkbook && React.createElement(
+                    !progress.hasCompletedWorkbook && React.createElement(
                         RequiredItem,
                         { link: links['workbook'], icon: React.createElement(BookOutlined, null), title: 'The Workbook' },
                         'The workbook is our training course for new tutors. It will set you up for success with your student.'
                     ),
-                    !this.state.hasCompletedLiveScan && React.createElement(
+                    !progress.hasCompletedLiveScan && React.createElement(
                         RequiredItem,
                         { link: links['livescan'], icon: React.createElement(SecurityScanOutlined, null), title: 'LiveScan' },
                         'LiveScan is a government requirement for working with children. This is completed outside of StepUp.'
                     ),
-                    !this.state.hasCompletedLiveTraining && React.createElement(
+                    !progress.hasCompletedLiveTraining && React.createElement(
                         RequiredItem,
                         { link: links['training'], icon: React.createElement(RocketOutlined, null), title: 'Live Training' },
                         'You will need to complete a live training session with one of our leaders before you can be matched with a student.'
@@ -274,7 +273,7 @@ var FinalSteps = function (_React$Component3) {
                 ),
                 React.createElement(
                     Button,
-                    { type: 'primary', size: 'large' },
+                    { type: 'primary', size: 'large', href: './tutor_portal.html', target: '_blank' },
                     'Sign In to Tutor Portal'
                 )
             );
@@ -297,78 +296,28 @@ var Home = function (_React$Component4) {
     function Home(props) {
         _classCallCheck(this, Home);
 
-        var _this4 = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
-
-        _this4.state = {
-            loading: true,
-            currentStep: 0,
-            error: false
-        };
-
-        _this4.onError = _this4.onError.bind(_this4);
-        return _this4;
+        return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
     }
 
     _createClass(Home, [{
-        key: 'receiveUser',
-        value: function receiveUser(user) {
-            console.log({ user: user });
-            var currentStep = 1; //changed from 0 to 1 for testing
-
-            // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') currentStep = 1
-            // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') currentStep = 2
-            // if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') currentStep = 4
-
-            //Update the state with the received data
-            this.setState({
-                loading: false,
-                userData: user.data,
-                currentStep: currentStep
-            });
-        }
-    }, {
-        key: 'setUserLocalStorage',
-        value: function setUserLocalStorage(user) {
-            var firstname = user.data.user['First Name'];
-            var lastname = user.data.user['Last Name'];
-            var email = user.data.user['Email'];
-            window.localStorage.setItem('userEmail', email);
-            window.localStorage.setItem('userFirstName', firstname);
-            window.localStorage.setItem('userLastName', lastname);
-        }
-    }, {
-        key: 'onError',
-        value: function onError(error) {
-            this.setState({ error: true, loading: false });
-        }
-    }, {
         key: 'componentDidMount',
-        value: function componentDidMount() {
-            var _this5 = this;
-
-            firebase.functions().httpsCallable('getTutorData')().then(function (result) {
-                _this5.receiveUser(result);
-                _this5.setUserLocalStorage(result);
-            }).catch(function (error) {
-                _this5.onError(error);
-            });
-        }
+        value: function componentDidMount() {}
     }, {
         key: 'render',
         value: function render() {
 
             //Get the current "step" screen
-            var StepItem = steps[this.state.currentStep];
+            var StepItem = steps[this.props.currentStep];
 
             //If it's still loading, show a skeleton
-            if (this.state.loading) return React.createElement(
+            if (this.props.loading) return React.createElement(
                 'div',
                 null,
                 React.createElement(Skeleton, { active: true })
             );
 
             //If there was an error (i.e. the record didn't exist) display "Applicant Record Not Found"
-            if (this.state.error) return React.createElement(
+            if (this.props.error) return React.createElement(
                 'div',
                 null,
                 React.createElement(
@@ -389,7 +338,7 @@ var Home = function (_React$Component4) {
                 )
             );
 
-            if (this.state.currentStep == 4) return React.createElement(
+            if (this.props.currentStep == 4) return React.createElement(
                 'div',
                 { style: { display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' } },
                 React.createElement(
@@ -404,7 +353,7 @@ var Home = function (_React$Component4) {
                 ),
                 React.createElement(
                     Button,
-                    { type: 'primary', size: 'large' },
+                    { type: 'primary', size: 'large', href: './tutor_portal.html', target: '_blank' },
                     'Go To Tutor Portal'
                 )
             );
@@ -428,13 +377,13 @@ var Home = function (_React$Component4) {
                     { 'class': 'steps-container' },
                     React.createElement(
                         Steps,
-                        { current: this.state.currentStep, className: 'steps', responsive: true },
+                        { current: this.props.currentStep, className: 'steps', responsive: true },
                         React.createElement(Step, { title: 'First Steps' }),
                         React.createElement(Step, { title: 'LiveScan & Info Session' }),
                         React.createElement(Step, { title: 'Student Match' })
                     )
                 ),
-                React.createElement(StepItem, { userData: this.state.userData })
+                React.createElement(StepItem, { tutorDetails: this.props.tutorDetails, progress: this.props.progress })
             );
         }
     }]);

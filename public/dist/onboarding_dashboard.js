@@ -31,28 +31,28 @@ ReactDOM.render(React.createElement(SidebarLayout, { pages: {
             icon: React.createElement(SolutionOutlined, null),
             title: 'Waiver',
             active: false,
-            disabled: false,
+            disabled: true, // changed to true
             complete: false
         }, {
             keyId: 'workbook',
             icon: React.createElement(BookOutlined, null),
             title: 'Workbook',
             active: false,
-            disabled: false,
+            disabled: true, // chagned to true
             complete: false
         }, {
             keyId: 'livescan',
             icon: React.createElement(SecurityScanOutlined, null),
             title: 'Background Check',
             active: false,
-            disabled: false, // make 'false' for testing
+            disabled: true, // make 'false' for testing
             complete: false
         }, {
             keyId: 'live-training',
             icon: React.createElement(RocketOutlined, null),
             title: 'Live Training',
             active: false,
-            disabled: false, // make 'false' for testing
+            disabled: true, // make 'false' for testing
             complete: false
         }]
     }, {
@@ -82,4 +82,4 @@ ReactDOM.render(React.createElement(SidebarLayout, { pages: {
             active: false,
             disabled: false
         }]
-    }], currentTab: 'home' }), mountNode); // changed to livescan for testing
+    }], currentTab: 'home' }), mountNode);
