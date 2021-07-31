@@ -1,6 +1,6 @@
 //Importing Ant components
-const { Typography, Steps, Card, Row, Col, Button, Skeleton } = antd;
-const { SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined } = icons;
+const { Typography, Steps, Badge, Card, Row, Col, Button, Skeleton } = antd;
+const { SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CheckOutlined } = icons;
 const { Title, Link } = Typography;
 const { Step } = Steps;
 
@@ -16,14 +16,33 @@ class RequiredOBItem extends React.Component {
     }
 
     render() {
-        return <Link className='requirement' onClick={() => this.props.linkTo(this.props.pageKey)}>
-            <div style={{ float: "left", width: "200px", height: "150px" }}>
-                {this.props.icon && this.props.icon} {this.props.title}
-                <p className='description'>
-                    {this.props.children}
-                </p>
+
+        // If item has been completed, show checkmark on requirement box
+        if (this.props.requirementCompleted) {
+        return (
+            <Badge.Ribbon text={<CheckOutlined />} color="green">
+                <div className='requirement inner-req-div completed-requirement' >
+                <div>
+                    {this.props.icon && this.props.icon} {this.props.title}
+                    <p className='description'>
+                        {this.props.children}
+                    </p>
+                </div>
             </div>
-        </Link>;
+            </Badge.Ribbon>
+        )
+        } else { // If item has not been completed, no checkmark
+            return (
+                <Link className='requirement inner-req-div' onClick={() => this.props.linkTo(this.props.pageKey)}>
+                    <div>
+                        {this.props.icon && this.props.icon} {this.props.title}
+                        <p className='description'>
+                            {this.props.children}
+                        </p>
+                    </div>
+                </Link>
+            )
+        }
     }
 }
 
@@ -84,12 +103,12 @@ class FirstSteps extends React.Component {
                     <p>While you're waiting, you can work on these items:</p>
 
                     <div className='dashboard-required-items'>
-                        {/* Fix to direct to sidebar page */}
-                        {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'waiver'} icon={<SolutionOutlined />} title='Tutor Waiver'>
+
+                        {<RequiredOBItem requirementCompleted={progress.hasCompletedWaiver} linkTo={this.props.onSideBarItemClicked} pageKey={'waiver'} icon={<SolutionOutlined />} title='Tutor Waiver'>
                             The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
                         </RequiredOBItem>}
 
-                        {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined />} title='The Workbook'>
+                        {<RequiredOBItem requirementCompleted={progress.hasCompletedWorkbook} linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined />} title='The Workbook'>
                             The workbook is our training course for new tutors. It will set you up for success with your student.
                         </RequiredOBItem>}
                     </div>
@@ -134,19 +153,19 @@ class SecondSteps extends React.Component {
 
             <p>You’re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match!</p>
             <div className='dashboard-required-items'>
-                {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'waiver'} icon={<SolutionOutlined/>} title='Tutor Waiver'>
+                {<RequiredOBItem requirementCompleted={progress.hasCompletedWaiver} linkTo={this.props.onSideBarItemClicked} pageKey={'waiver'} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                 The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
             </RequiredOBItem> }
 
-                {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined/>} title='The Workbook'>
+                {<RequiredOBItem requirementCompleted={progress.hasCompletedWorkbook} linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined/>} title='The Workbook'>
                 The workbook is our training course for new tutors. It will set you up for success with your student.
             </RequiredOBItem> }
 
-                {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'livescan'} icon={<SecurityScanOutlined/>} title='LiveScan'>
+                {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveScan} linkTo={this.props.onSideBarItemClicked} pageKey={'livescan'} icon={<SecurityScanOutlined/>} title='LiveScan'>
                 LiveScan is a government requirement for working with children. This is completed outside of StepUp.
             </RequiredOBItem> }
 
-                {<RequiredOBItem linkTo={this.props.onSideBarItemClicked} pageKey={'training'} icon={<RocketOutlined/>} title='Live Training'>
+                {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveTraining} linkTo={this.props.onSideBarItemClicked} pageKey={'training'} icon={<RocketOutlined/>} title='Live Training'>
                 You will need to complete a live training session with one of our leaders before you can be matched with a student.
             </RequiredOBItem> }
             </div>
