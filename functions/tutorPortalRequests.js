@@ -64,6 +64,27 @@ exports.getTutorData = functions.https.onCall((data, context) => {
 
 })
 
+exports.getOnboardingTutor = functions.https.onCall(async (data, context) => {
+
+    //Verify the user
+    const userData = await verifyOnboardingUser(context)
+
+    //Create a user object
+    let userObj = userData.data()
+
+    //Set the id
+    userObj['id'] = userData.id
+
+    //Remove phone number, students, and zoom links from information
+    delete userObj['phone']
+    delete userObj['students']
+    delete userObj['zoomLinks']
+    
+    //Return the data
+    return userObj
+
+})
+
 exports.getTutor = async (data, context) => {
 
     //Verify the user
@@ -362,6 +383,30 @@ exports.getZoomLinks = functions.https.onCall(async (data, context) => {
 
 })
 
+<<<<<<< Updated upstream
+=======
+exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) => {
+
+    const user = verifyUser(context)
+
+    //Get the airtable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Announcements').select({
+        filterByFormula: `{Status} = 'Ready (visable)'`,
+    }).firstPage()
+
+    return result.map(item => {
+        return item['_rawJson']['fields']
+    })
+
+})
+
+>>>>>>> Stashed changes
 function createZoomJWT() {
 
     //Create a payload
@@ -400,6 +445,25 @@ async function getZoomLinksForMeeting(meetingId) {
 }
 
 async function verifyUser(context) {
+
+    //Get the user's email
+    const email = context.auth.token.email
+
+    //Find the record with that email (if it exists)
+    const records = await admin.firestore().collection('people').where('email', '==', email).get()
+
+    //Make sure it exists
+    if (records.size < 1) throw new functions.https.HttpsError('permission-denied', 'You must be logged in to complete this action')
+
+    //Get the first record
+    const user = records.docs[0]
+
+    //Return it
+    return user
+
+}
+
+async function verifyOnboardingUser(context) {
 
     //Get the user's email
     const email = context.auth.token.email
