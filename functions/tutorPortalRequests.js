@@ -23,7 +23,7 @@ function notNull(value) {
 //For getting the tutor data from an email
 async function getTutorDataRaw(email) {
 
-    //Get the aritable API key
+    //Get the airtable API key
     const airtableAPIKey = functions.config().airtable.key
 
     //Set up the airtable base
@@ -360,6 +360,34 @@ exports.getZoomLinks = functions.https.onCall(async (data, context) => {
 
 })
 
+async function runIt() {
+
+    
+}
+ 
+runIt()
+
+exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) => {
+
+    const user = verifyUser(context)
+
+    //Get the airtable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Announcements').select({
+        filterByFormula: `{Status} = 'Ready (visable)'`,
+    }).firstPage()
+
+    return result.map(item => {
+        return item['_rawJson']['fields']
+    })
+
+})
+
 function createZoomJWT() {
 
     //Create a payload
@@ -403,7 +431,7 @@ async function verifyUser(context) {
     const email = context.auth.token.email
 
     //Find the record with that email (if it exists)
-    const records = await admin.firestore().collection('people').where('email', '==', email).get()
+    const records = await admin.firestore().collection('people').where('stepUpEmail', '==', email).get()
 
     //Make sure it exists
     if (records.size < 1) throw new functions.https.HttpsError('permission-denied', 'You must be logged in to complete this action')
