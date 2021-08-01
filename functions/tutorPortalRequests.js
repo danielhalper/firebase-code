@@ -383,30 +383,6 @@ exports.getZoomLinks = functions.https.onCall(async (data, context) => {
 
 })
 
-<<<<<<< Updated upstream
-=======
-exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) => {
-
-    const user = verifyUser(context)
-
-    //Get the airtable API key
-    const airtableAPIKey = functions.config().airtable.key
-
-    //Set up the airtable base
-    const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
-
-    //Get the relevant record from the Tutors table
-    const result = await base('Announcements').select({
-        filterByFormula: `{Status} = 'Ready (visable)'`,
-    }).firstPage()
-
-    return result.map(item => {
-        return item['_rawJson']['fields']
-    })
-
-})
-
->>>>>>> Stashed changes
 function createZoomJWT() {
 
     //Create a payload
