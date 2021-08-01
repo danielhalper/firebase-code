@@ -51,3 +51,4 @@ exports.getMessagesForStudent = functions.https.onCall(tutorPortalRequests.getMe
 exports.sendSMSMessage = functions.https.onCall(tutorPortalRequests.sendSMSMessage)
 exports.getTutorData = tutorPortalRequests.getTutorData
 exports.getZoomLinks = tutorPortalRequests.getZoomLinks
+exports.getOnboardingTutor = tutorPortalRequests.getOnboardingTutor

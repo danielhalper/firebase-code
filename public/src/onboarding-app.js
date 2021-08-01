@@ -277,6 +277,7 @@ componentDidMount() {
           'livescan': BackgroundCheck,
           'live-training': LiveTraining
         }}
+        onboarding
         sidebarItems={this.state.sidebarItems}
         currentTab='home'
         userData={this.state.userData}
