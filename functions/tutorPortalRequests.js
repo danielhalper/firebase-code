@@ -71,20 +71,9 @@ exports.getOnboardingTutor = functions.https.onCall(async (data, context) => {
 
     //Verify the user
     const userData = await verifyOnboardingUser(context)
-
-    //Create a user object
-    let userObj = userData.data()
-
-    //Set the id
-    userObj['id'] = userData.id
-
-    //Remove phone number, students, and zoom links from information
-    delete userObj['phone']
-    delete userObj['students']
-    delete userObj['zoomLinks']
     
     //Return the data
-    return userObj
+    return userData
 
 })
 
@@ -570,16 +559,29 @@ async function verifyOnboardingUser(context) {
     const email = context.auth.token.email
 
     //Find the record with that email (if it exists)
-    const records = await admin.firestore().collection('people').where('email', '==', email).get()
+    //Get the aritable API key
+    const airtableAPIKey = functions.config().airtable.key
 
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Initial Form').select({
+        maxRecords: 1,
+        filterByFormula: `TRIM(LOWER({Email})) = '${email.toLowerCase().trim()}'`,
+        fields: ['Email', 'First Name', 'Last Name']
+    }).firstPage()
+    
     //Make sure it exists
-    if (records.size < 1) throw new functions.https.HttpsError('permission-denied', 'You must be logged in to complete this action')
-
-    //Get the first record
-    const user = records.docs[0]
+    if (result.length == 0) throw new functions.https.HttpsError('permission-denied', 'You must be logged in to complete this action')
 
     //Return it
-    return user
+    return {
+        firstname: result[0].fields['First Name'],
+        lastname: result[0].fields['Last Name'],
+        email: email,
+        id: result[0].id
+    }
 
 }
 
