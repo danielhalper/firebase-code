@@ -25,11 +25,35 @@ let IS_LOGGING_OUT = false
 function setOnAuthChangedListener() {
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-            
-            for (let i = 0; i < FIREBASE_RUN_ON_READY.length; i++) {
-                FIREBASE_RUN_ON_READY[i](user)
-            }
-            
+
+            //Get the email
+            const email = user.email
+
+            if (email) {
+
+                //If they are a SAML user, sign them out because they're not allowed to access onboarding
+                firebase.auth().fetchSignInMethodsForEmail(email).then(methods => {
+
+                    if (methods.indexOf('saml.google.com') != -1) {
+                        firebase.auth().signOut().then(() => {
+                            SIGN_IN_REDIRECT()
+                        })
+                    } else {
+
+                        //Otherwise, run as usual
+                        for (let i = 0; i < FIREBASE_RUN_ON_READY.length; i++) {
+                            FIREBASE_RUN_ON_READY[i](user)
+                        }     
+
+                    }
+
+                }).catch(error => {
+                    firebase.auth().signOut().then(() => {
+                        SIGN_IN_REDIRECT()
+                    })
+                })
+
+            }   
 
         } else {
             if (firebase.auth().isSignInWithEmailLink(window.location.href) && !IS_LOGGING_OUT) {

@@ -70,9 +70,10 @@ class SignInPage extends React.Component {
 
                 //Now authenticate with it
                 firebase.auth().signInWithCustomToken(customToken).then(userCredential => {
-                    
-                    //They are signed in, so redirect to the portal
-                    window.location.replace('./onboarding_dashboard.html')
+
+                    //They are signed in, so redirect to the portal (or return url)
+                    if (urlParams.has('returnUrl')) window.location.replace(urlParams.get('returnUrl'))
+                    else window.location.replace('./onboarding_dashboard.html')
 
                 }).catch(error => {
 
@@ -118,25 +119,35 @@ class SignInPage extends React.Component {
             loadingButton: true
         })
 
-        firebase.auth().sendSignInLinkToEmail(values['email'], {
-            url: returnUrl,
-            handleCodeInApp: true
-        }).then(() => {
+        //Send the sign in email link - using our own custom email links rather than Firebase
+        firebase.functions().httpsCallable('sendEmailSignInLink')({
+            email: values['email'],
+            returnUrl: returnUrl
+        }).then(result => {
 
             //Stop loading
             this.setState({ loadingButton: false })
 
             message.success('Sign in Email Link Sent!')
 
-            window.localStorage.setItem('emailForSignIn', values['email'])
-
         }).catch(error => {
 
-            //Stop loading
-            this.setState({ loadingButton: false })
+            if (error.code == 'permission-denied') {
 
-            //Send an error message
-            message.error('Something went wrong. Please try again at another time.')
+                //Stop loading and send error message
+                this.setState({ loadingButton: false, errorMessage: `We couldn't find an account associated with that email address. You may have entered the wrong email, or you might need to start our application before signing in.` })
+
+            }
+
+            else {
+
+                //Stop loading
+                this.setState({ loadingButton: false })
+
+                //Send an error message
+                message.error('Something went wrong. Please try again at another time.')
+
+            }
 
         })
 
@@ -157,6 +168,7 @@ class SignInPage extends React.Component {
                     <Form.Item name='email' rules={[{ required: true, type: 'email' }]}><Input placeholder='example@example.com' size='large'/></Form.Item>
                     <Form.Item><Button style={{ width: '100%' }} type='primary' htmlType='submit' loading={this.state.loadingButton} size='large'>Send Me a Link!</Button></Form.Item>
                 </Form>
+                <p>Don't have an account?</p><p><Button ghost type='primary' style={{ width: '100%' }} href='https://stepuptutoring.org/tutor-application' size='large'>Start our Application!</Button></p>
             </div>}
             <div className='spacer' />
         </div>

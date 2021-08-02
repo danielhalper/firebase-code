@@ -6,6 +6,7 @@ const fetch = require('node-fetch')
 const twilio = require('twilio')
 const { Translate } = require('@google-cloud/translate').v2 //Google Translate
 const { HttpsError } = require('firebase-functions/lib/providers/https')
+const { firebaseConfig } = require('firebase-functions')
 
 const twilioAccountSid = functions.config().twilio.account_sid
 const twilioAuthToken = functions.config().twilio.auth_token
@@ -413,6 +414,59 @@ exports.onNewUserCreated = functions.auth.user().onCreate((user) => {
 
 })
 
+exports.sendEmailSignInLink = functions.https.onCall(async (data, context) => {
+
+    //Get the user's email
+    const email = data.email 
+
+    let user;
+
+    try {
+
+        //Verify the email belongs to a user
+        user = await admin.auth().getUserByEmail(email)
+
+    } catch(err) {
+        throw new HttpsError('permission-denied', 'No account exists for that email')
+    }
+
+    //If it's not a StepUp email, they're an onboarding user
+    if (user) {
+
+        if (!(/@stepuptutoring.org\s*$/.test(email))) {
+
+            //Create an email sign in link
+            const emailSignInLink = createPermanentSignInLink(email, data.returnUrl)
+
+            //If in emulator, just console.log the link
+            if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') {
+                console.log(`Your email sign in link is: ${emailSignInLink}`)
+                return {
+                    'status': 'success'
+                }
+            }
+
+            //Now send a request to Zapier to send the email
+            fetch('https://hooks.zapier.com/hooks/catch/7732277/bubhohh/', {
+                method: 'post',
+                body: JSON.stringify({
+                    email: email,
+                    signInLink: emailSignInLink
+                })
+            })
+
+            return {
+                'status': 'success'
+            }
+
+        } else {
+            throw new HttpsError('invalid-argument', 'You must provide a non-StepUp email')
+        }
+
+    }
+
+})
+
 exports.getCustomAuthToken = functions.https.onCall(async (data, context) => {
 
     //Get the step up token
@@ -420,8 +474,6 @@ exports.getCustomAuthToken = functions.https.onCall(async (data, context) => {
 
     //Make sure it exists
     if (!notNull(stepUpToken)) throw new HttpsError('unauthenticated', 'A valid token is required')
-
-    console.log(stepUpToken)
 
     //Validate the token
     try {
@@ -531,7 +583,7 @@ async function verifyOnboardingUser(context) {
 
 }
 
-function createPermanentSignInLink(email) {
+function createPermanentSignInLink(email, returnUrl) {
 
     const token = jwt.sign({
         iss: 'org.stepuptutoring',
@@ -540,8 +592,8 @@ function createPermanentSignInLink(email) {
         expiresIn: '300 days'
     })
 
-    if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') return `http://localhost:5000/signin.html?stepupToken=${encodeURIComponent(token)}`
+    if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') return `http://localhost:5000/signin.html?stepupToken=${encodeURIComponent(token)}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}`:'' }`
 
-    return `https://stepup-dashboard.web.app/signin.html?stepupToken=${encodeURIComponent(token)}`
+    return `https://stepup-dashboard.web.app/signin.html?stepupToken=${encodeURIComponent(token)}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}`:'' }`
 
 }

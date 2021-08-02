@@ -55,6 +55,7 @@ exports.getZoomLinks = tutorPortalRequests.getZoomLinks
 exports.getOnboardingTutor = tutorPortalRequests.getOnboardingTutor
 exports.onNewUserCreated = tutorPortalRequests.onNewUserCreated
 exports.getCustomAuthToken = tutorPortalRequests.getCustomAuthToken
+exports.sendEmailSignInLink = tutorPortalRequests.sendEmailSignInLink
  
 //Seed Firestore data
 if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') {
