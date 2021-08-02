@@ -161,6 +161,7 @@ class SignInPage extends React.Component {
             {!this.state.loading && <div className='signin-content'>
                 {this.state.errorMessage.length > 0 && <Alert className='signin-error' message={this.state.errorMessage} type='error'/>}
                 <Title level={1}>Sign In</Title>
+                <Title level={4}>To the Onboarding Dashboard</Title>
                 <p>
                     Enter your email address here, and we will send you an email with a link which you can use to sign in.
                 </p>
