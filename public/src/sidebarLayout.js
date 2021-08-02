@@ -123,7 +123,6 @@ class SidebarLayout extends React.Component {
     loadUser() {
         firebase.functions().httpsCallable(this.props.onboarding ? 'getOnboardingTutor':'getTutor')().then(tutorResult => {
             this.onUserFinishedLoading(tutorResult.data)
-            console.log(tutorResult.data)
         }).catch(error => {
             console.log(error)
             //TODO

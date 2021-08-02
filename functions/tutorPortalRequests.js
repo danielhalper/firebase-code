@@ -93,8 +93,6 @@ exports.getTutor = async (data, context) => {
     //Create a user object
     let userObj = userData.data()
 
-    console.log(userObj)
-
     if (notNull(userObj['students'])) {
 
         //Keep track of students
@@ -426,7 +424,7 @@ async function verifyUser(context) {
     const email = context.auth.token.email
 
     //Find the record with that email (if it exists)
-    const records = await admin.firestore().collection('people').where('email', '==', email).get()
+    const records = await admin.firestore().collection('people').where('stepUpEmail', '==', email).get()
 
     //Make sure it exists
     if (records.size < 1) throw new functions.https.HttpsError('permission-denied', 'You must be logged in to complete this action')
