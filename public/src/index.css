@@ -372,3 +372,44 @@ div.info-bar {
     background: rgb(200, 200, 200);
     cursor: pointer;
 }
+
+#signin-form {
+    height: 100%;
+}
+
+.signin-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.signin-content {
+    width: 25%;
+    text-align: center;
+}
+
+.signin-logo {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.signin-content p {
+    font-size: 18px;
+    color: #888;
+}
+
+.signin-error {
+    margin-bottom: 20px;
+}
+
+.spacer {
+    flex: 1;
+}

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const fetch = require('node-fetch')
 const twilio = require('twilio')
 const { Translate } = require('@google-cloud/translate').v2 //Google Translate
+const { HttpsError } = require('firebase-functions/lib/providers/https')
 
 const twilioAccountSid = functions.config().twilio.account_sid
 const twilioAuthToken = functions.config().twilio.auth_token
@@ -14,6 +15,9 @@ const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 //Zoom credentials
 const zoomAPIKey = functions.config().zoom.api_key
 const zoomAPISecret = functions.config().zoom.api_secret
+
+//Step Up custom credentials
+const stepUpTokenEncryptionKey = functions.config().stepup.token_encryption_key
 
 //Util function
 function notNull(value) {
@@ -48,8 +52,6 @@ async function getTutorDataRaw(email) {
     return user
 
 }
-
-
 
 //For getting tutor data
 exports.getTutorData = functions.https.onCall((data, context) => {
@@ -381,6 +383,79 @@ exports.getZoomLinks = functions.https.onCall(async (data, context) => {
 
 })
 
+exports.onNewUserCreated = functions.auth.user().onCreate((user) => {
+
+    //Get the user's email
+    const email = user.email
+
+    //If it's not a StepUp email, they're an onboarding user
+    if (email && !(/@stepuptutoring.org\s*$/.test(email))) {
+
+        //Create an email sign in link
+        const emailSignInLink = createPermanentSignInLink(email)
+
+        //If in emulator, just console.log the link
+        if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') {
+            console.log(`Your email sign in link is: ${emailSignInLink}`)
+            return
+        }
+
+        //Now send a request to Zapier to send the email
+        fetch('https://hooks.zapier.com/hooks/catch/7732277/buofpa4/', {
+            method: 'post',
+            body: JSON.stringify({
+                email: email,
+                signInLink: emailSignInLink
+            })
+        })
+
+    }
+
+})
+
+exports.getCustomAuthToken = functions.https.onCall(async (data, context) => {
+
+    //Get the step up token
+    const stepUpToken = data.stepUpToken
+
+    //Make sure it exists
+    if (!notNull(stepUpToken)) throw new HttpsError('unauthenticated', 'A valid token is required')
+
+    console.log(stepUpToken)
+
+    //Validate the token
+    try {
+
+        //Decode the token
+        const decoded = jwt.verify(stepUpToken, stepUpTokenEncryptionKey)
+
+        //Get the user's email
+        const email = decoded['sub']
+
+        //Make sure it exists
+        if (!notNull(email)) throw new HttpsError('invalid-argument', 'User email required')
+
+        //Get the user with that email
+        const user = await admin.auth().getUserByEmail(email)
+
+        //Get the uid
+        const uid = user.uid
+
+        //Create a custom token for the user
+        const customToken = await admin.auth().createCustomToken(uid)
+
+        return {
+            'customToken': customToken
+        }
+
+    } catch(err) {
+
+        throw new HttpsError('permission-denied', 'Your token was invalid')
+
+    }
+
+})
+
 function createZoomJWT() {
 
     //Create a payload
@@ -453,5 +528,20 @@ async function verifyOnboardingUser(context) {
 
     //Return it
     return user
+
+}
+
+function createPermanentSignInLink(email) {
+
+    const token = jwt.sign({
+        iss: 'org.stepuptutoring',
+        sub: email
+    }, stepUpTokenEncryptionKey, { 
+        expiresIn: '300 days'
+    })
+
+    if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') return `http://localhost:5000/signin.html?stepupToken=${encodeURIComponent(token)}`
+
+    return `https://stepup-dashboard.web.app/signin.html?stepupToken=${encodeURIComponent(token)}`
 
 }

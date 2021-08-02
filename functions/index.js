@@ -53,6 +53,8 @@ exports.sendSMSMessage = functions.https.onCall(tutorPortalRequests.sendSMSMessa
 exports.getTutorData = tutorPortalRequests.getTutorData
 exports.getZoomLinks = tutorPortalRequests.getZoomLinks
 exports.getOnboardingTutor = tutorPortalRequests.getOnboardingTutor
+exports.onNewUserCreated = tutorPortalRequests.onNewUserCreated
+exports.getCustomAuthToken = tutorPortalRequests.getCustomAuthToken
  
 //Seed Firestore data
 if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') {
