@@ -1,5 +1,5 @@
 const { message } = antd
-const { CloseOutlined } = icons
+const { CloseOutlined, CommentOutlined, VideoCameraOutlined, UnorderedListOutlined, FormOutlined, SoundOutlined, CalendarOutlined } = icons
 
 class Modal extends React.Component {
     constructor(props) {
@@ -138,30 +138,30 @@ class TutorHome extends React.Component {
                     <div style={{flex:1}}></div>
             </div>
             <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:20}}>
-                <RequiredItem link={"#messaging"} icon={<SolutionOutlined/>} title='Message Students'>
+                <RequiredItem link={"#messaging"} icon={<CommentOutlined/>} title='Message Students'>
                     Communicate with your student through our online messaging application.
                 </RequiredItem>
                 <RequiredItem onClick={() => {
                     firebase.analytics().logEvent('started_zoom_call')
                     this.displayModal('zoom')
-                }} icon={<SolutionOutlined/>} title='Start Zoom Meeting'>
+                }} icon={<VideoCameraOutlined/>} title='Start Zoom Meeting'>
                     Meet with your student face-to-face over Zoom.
                 </RequiredItem>
-                <RequiredItem link={"https://www.stepuptutoring.org/resources-extended"} newTab icon={<SolutionOutlined/>} title='Weekly Resources'>
+                <RequiredItem link={"https://www.stepuptutoring.org/resources-extended"} newTab icon={<UnorderedListOutlined/>} title='Weekly Resources'>
                     Your weekly session guide, customized to your student's needs
                 </RequiredItem>
             </div>
             <div style={{float:"left",color:"#5A5A5A",borderBottom: "solid #5A5A5A 3px", width: "800px", textAlign:"center", fontSize:"36px", marginBottom:20}}><strong>Weekly Action Items</strong></div>
             <div style={{display:"flex", flexDirection:"row", flex:1}}>
-                <RequiredItem onClick={() => this.displayModal('weekly-form')} icon={<SolutionOutlined/>} title='Weekly Form'>
+                <RequiredItem onClick={() => this.displayModal('weekly-form')} icon={<FormOutlined/>} title='Weekly Form'>
                     Fill this out each week... so the student's teacher and parent are up-to-date.
                 </RequiredItem>
-                <RequiredItem link={"undefined"} icon={<SolutionOutlined/>} title='Weekly Announcements' onClick={() => {
+                <RequiredItem link={"undefined"} icon={<SoundOutlined/>} title='Weekly Announcements' onClick={() => {
                     firebase.analytics().logEvent('check_announcements')
                 }}>
                     All the Step Up updates, program changes, and newsletters in one place!
                 </RequiredItem>
-                <RequiredItem link='https://www.stepuptutoring.org/tutor-events' newTab icon={<SolutionOutlined/>} title='Events & Gamification' onClick={() => {
+                <RequiredItem link='https://www.stepuptutoring.org/tutor-events' newTab icon={<CalendarOutlined/>} title='Events & Gamification' onClick={() => {
                     firebase.analytics().logEvent('check_events')
                 }}>
                     You should check this page at least once a week to update your student!
