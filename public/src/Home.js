@@ -17,20 +17,20 @@ class RequiredOBItem extends React.Component {
 
     render() {
 
-        // If item has been completed, show checkmark on requirement box
+        // If item has been completed, show checkmark on requirement box and disable onClick
         if (this.props.requirementCompleted) {
-        return (
-            <Badge.Ribbon text={<CheckOutlined />} color="green">
-                <div className='requirement inner-req-div completed-requirement' >
-                <div>
-                    {this.props.icon && this.props.icon} {this.props.title}
-                    <p className='description'>
-                        {this.props.children}
-                    </p>
+            return (
+                <Badge.Ribbon text={<CheckOutlined />} color="#1BCBD9">
+                    <div className='requirement inner-req-div completed-requirement' >
+                    <div>
+                        {this.props.icon && this.props.icon} {this.props.title}
+                        <p className='description'>
+                            {this.props.children}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            </Badge.Ribbon>
-        )
+                </Badge.Ribbon>
+            )
         } else { // If item has not been completed, no checkmark
             return (
                 <Link className='requirement inner-req-div' onClick={() => this.props.linkTo(this.props.pageKey)}>
@@ -85,8 +85,6 @@ class FirstSteps extends React.Component {
                     Schedule a chat
                 </Button>
 
-                {/* onClick={() => this.props.onSideBarItemClicked('chat-signup')} */}
-
             </div>) }
 
             {/* Show when interview has been scheduled but not yet passed */}
@@ -94,7 +92,9 @@ class FirstSteps extends React.Component {
 
                 <Title level={3} color='primary'>Thanks for scheduling a chat with us!</Title>
                 <p>Once you've had your interview, you'll move on to the next steps!</p>
-                <strong><p>Your interview date: {interviewDate}</p></strong>
+                <strong><p>Your interview date*: {interviewDate}</p></strong>
+
+                <h5>*Check email for confirmation or to reschedule date.</h5>
 
                 <div>
 
@@ -114,12 +114,7 @@ class FirstSteps extends React.Component {
                     </div>
                 </div>
 
-
-
             </div>}
-
-
-            {/* Show when interview scheduled but waiver or workbook not completed */}
 
         </div>;
     }
