@@ -48,7 +48,7 @@ h3.ant-typography {
 }
 
 .completed-requirement {
-    background-color: #238d95 !important;
+    background-color: #238d95;
     color: white;
 }
 
@@ -99,12 +99,9 @@ h3.ant-typography {
     margin-left: 15px;
 }
 
-.sidebar-options div:hover {
-    cursor: pointer;
-}
-
 .sidebar-options div:not(.disabled):hover {
     color: #1BCBD9;
+    cursor: pointer;
 }
 
 .sidebar-options div.active {
@@ -113,6 +110,7 @@ h3.ant-typography {
 
 .sidebar-options div.disabled {
     color: #C4C4C4;
+    cursor: text;
 }
 
 .sidebar-options div .anticon {
