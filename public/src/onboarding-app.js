@@ -142,7 +142,7 @@ class OnboardingApp extends React.Component {
     this.setState({
       loading: false,
       userData: user.data.user,
-      currentStep: 1
+      currentStep: currentStep
     })
   }
 
@@ -183,8 +183,8 @@ class OnboardingApp extends React.Component {
 
     this.setState({
       progress:{
-        hasScheduledChat: true,
-        hasCompletedWaiver: false,
+        hasScheduledChat: scheduledChat,
+        hasCompletedWaiver: completedWaiver,
         hasCompletedWorkbook: completedWorkbook,
         hasCompletedLiveScan: completedLiveScan,
         hasCompletedLiveTraining: completedLiveTraining
