@@ -91,7 +91,7 @@ class MessagesDisplay extends React.Component {
                     margin: 5
                 }
 
-                return <div className='message-bubble' style={{ display: 'flex', flexDirection: 'column' }}>
+                return <div className='message-bubble' style={{ display: 'flex', flexDirection: 'column' }} key={Math.random()*100}>
                     <div style={theStyle}>{item.body}</div>
                 </div>
 
@@ -221,7 +221,7 @@ class MessagingWidget extends React.Component {
 
             //Add the result to our messages
             let messages = this.state.messages
-            messages.push(result.data)
+            
             this.setState({ messages: messages, isSendingMessage: false })
             
 

@@ -322,8 +322,11 @@ exports.sendSMSMessage = async (data, context) => {
             //Now, translate the message
             const translation = await googleTranslate.translate(message, toLanguageCode)
 
+            //Format the translations
+            translation = Array.isArray(translation) ? translation : [translation]
+
             //Set the message to the translated version
-            message = translation
+            message = translation[0]
 
         } catch(err) {
             console.log(err) //Errors relating to translation aren't necessarily critical errors
@@ -490,7 +493,7 @@ exports.getCustomAuthToken = functions.https.onCall(async (data, context) => {
         }
 
     } catch(err) {
-        
+
         throw new HttpsError('permission-denied', 'Your token was invalid')
 
     }
