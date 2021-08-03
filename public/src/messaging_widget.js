@@ -118,6 +118,8 @@ class MessagingWidget extends React.Component {
         this.input = React.createRef()
 
         this.poll = undefined
+        this.pollTimeout = 2000
+        this.currentMessageLength = 0
 
         this.loadStudentMessages = this.loadStudentMessages.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
@@ -153,6 +155,12 @@ class MessagingWidget extends React.Component {
                         mostRecentDateSent = this.state.messages[this.state.messages.length - 1].dateSent
                     }
 
+                    //Reset the poll if the number of messages has changed
+                    if (this.currentMessageLength != result.data.messages.length) this.pollInterval = 2000
+
+                    //Now update the number of messages
+                    this.currentMessageLength = result.data.messages.length
+
                     this.setState({ messages: result.data.messages.map(message => {
                         return {...message, type: (message.to == studentObj.phone) ? 'to' : 'from'}
                     }), isLoadingMessages: false})
@@ -176,13 +184,16 @@ class MessagingWidget extends React.Component {
                         
                     }
 
+                    //Make it a little longer till the next poll
+                    this.pollInterval += 500
+
                     //Poll again
                     this.poll()
                 }).catch(err => {
                     this.poll()
                 })
 
-            }, 2000)
+            }, this.pollInterval)
 
         }
 
@@ -221,6 +232,12 @@ class MessagingWidget extends React.Component {
 
             //Add the result to our messages
             let messages = this.state.messages
+
+            //Reset the polling interval
+            this.pollInterval = 2000
+
+            //Update number of messages
+            this.currentMessageLength = messages.length
             
             this.setState({ messages: messages, isSendingMessage: false })
             
