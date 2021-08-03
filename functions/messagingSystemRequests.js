@@ -443,7 +443,7 @@ exports.findInactiveTutors = functions.pubsub.schedule('every 24 hours').onRun(f
 
 exports.onNewStudentRow = functions.https.onRequest(async (req, res) => {
 
-    return updatePersonRecord(req, res, role)
+    return updatePersonRecord(req, res, 'student')
 
 })
 

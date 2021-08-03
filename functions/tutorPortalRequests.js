@@ -490,7 +490,7 @@ exports.getCustomAuthToken = functions.https.onCall(async (data, context) => {
         }
 
     } catch(err) {
-
+        
         throw new HttpsError('permission-denied', 'Your token was invalid')
 
     }
@@ -566,7 +566,7 @@ async function verifyOnboardingUser(context) {
     const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
 
     //Get the relevant record from the Tutors table
-    const result = await base('Initial Form').select({
+    const result = await base('Tutors').select({
         maxRecords: 1,
         filterByFormula: `TRIM(LOWER({Email})) = '${email.toLowerCase().trim()}'`,
         fields: ['Email', 'First Name', 'Last Name']
