@@ -16,7 +16,7 @@ class TutorMessaging extends React.Component {
 
     render() {
         return <div>
-            <Title level={1}>Student Messaging</Title>
+            <Title level={1}>Family Messaging</Title>
             <p>You can send SMS messages to your student's guardian on this page or by texting their number from your phone.</p>
             <p>Your messages are automatically translated to the guardian's preferred language (and vice versa), so you don't have to worry about the language barrier.</p>
             <MessagingWidget height={400} tutor={this.props.tutor}/>
