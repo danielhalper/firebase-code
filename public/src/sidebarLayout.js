@@ -201,7 +201,7 @@ class SidebarLayout extends React.Component {
                             {this.props.loading && <Skeleton active/>}
 
                             {/* Will render this view for Tutor Portal */}
-                            {!this.props.loading && !this.props.progress && <CurrentPage tutor={this.state.tutor} />}
+                            {!this.props.loading && !this.props.progress && <CurrentPage tutor={this.props.userData} />}
 
                             {/* Will render this view for Onboarding Portal */}
                             {!this.props.loading && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}

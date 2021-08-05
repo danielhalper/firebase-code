@@ -91,7 +91,7 @@ class FirstSteps extends React.Component {
 
                 <Title level={3} color='primary'>Thanks for scheduling a chat with us!</Title>
                 <p>Once you've had your interview, you'll move on to the next steps!</p>
-                <strong><p>Your interview date*: {interviewDate}</p></strong>
+                <strong><Title level={4}>Your interview date*: {new Date(interviewDate).toLocaleString()}</Title></strong>
 
                 <h5>*Check email for confirmation or to reschedule date.</h5>
 

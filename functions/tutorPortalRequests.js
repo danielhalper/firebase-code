@@ -442,7 +442,7 @@ async function verifyOnboardingUser(context) {
     const result = await base('Tutors').select({
         maxRecords: 1,
         filterByFormula: `TRIM(LOWER({Email})) = '${email.toLowerCase().trim()}'`,
-        fields: ['Email', 'First Name', 'Last Name']
+        fields: ['Waiver?', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date', 'Live Scan?', 'Live Training?']
     }).firstPage()
     
     //Make sure it exists
@@ -453,7 +453,13 @@ async function verifyOnboardingUser(context) {
         firstname: result[0].fields['First Name'],
         lastname: result[0].fields['Last Name'],
         email: email,
-        id: result[0].id
+        id: result[0].id,
+        status: result[0].fields['Status'] || '',
+        interviewDate: result[0].fields['Interview Date'] || null,
+        waiverCompleted: result[0].fields['Waiver?'] || false,
+        workbookCompleted: result[0].fields['Section 2'] || false,
+        liveScanCompleted: result[0].fields['Live Scan?'] || false,
+        liveTrainingCompleted: result[0].fields['Live Training'] || false
     }
 
 }

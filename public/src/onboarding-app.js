@@ -185,8 +185,6 @@ class OnboardingApp extends React.Component {
 
         const tutorDetailedResult = result.data
 
-        console.log(tutorDetailedResult)
-
         this.receiveUser(tutorDetailedResult)
         this.setUserLocalStorage(tutorDetailedResult)
         this.setUserProgress(tutorDetailedResult)
@@ -226,7 +224,7 @@ class OnboardingApp extends React.Component {
     }
 
     // if has passed interview, check if live scan & training have been completed, enable pages when not, otherwise disabled
-    if (user.status == 'Application Accepted') {
+    if (this.state.userData.status == 'Application Accepted') {
       if (this.state.progress.hasCompletedLiveScan) {
         const livescanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
         sidebarItems[0].subItems[livescanIndex].disabled = true
