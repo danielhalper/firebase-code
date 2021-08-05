@@ -17,7 +17,7 @@ class SidebarItem extends React.Component {
         if (!this.props.disabled && !this.props.complete) {
 
             if (!this.props.active) {
-                window.location.hash = '#' + this.props.keyId 
+                window.location.hash = '#' + this.props.keyId
             }
 
             this.props.onClick(this.props.keyId)
@@ -84,7 +84,6 @@ class SidebarLayout extends React.Component {
         this.onSideBarItemClicked = this.onSideBarItemClicked.bind(this)
         this.onUserFinishedLoading = this.onUserFinishedLoading.bind(this)
         this.loadUser = this.loadUser.bind(this)
-        this.onSideBarLogoClicked = this.onSideBarLogoClicked.bind(this)
 
     }
 
@@ -123,14 +122,11 @@ class SidebarLayout extends React.Component {
     loadUser() {
         firebase.functions().httpsCallable(this.props.onboarding ? 'getOnboardingTutor':'getTutor')().then(tutorResult => {
             this.onUserFinishedLoading(tutorResult.data)
+            console.log(tutorResult.data)
         }).catch(error => {
             console.log(error)
             //TODO
         })
-    }
-
-    onSideBarLogoClicked() {
-        this.setState({ currentTab: 'home' }) //make active to change font color & add pointer
     }
 
     componentDidMount() {
@@ -139,7 +135,7 @@ class SidebarLayout extends React.Component {
             const element = document.querySelector(window.location.hash)
             if (element) element.click()
         } catch(err) {
-            
+
         }
 
         this.listenForAnchorChanges()
@@ -169,7 +165,7 @@ class SidebarLayout extends React.Component {
             <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' width='240'>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
 
-                    <div className='sidebar-header' onClick={this.onSideBarLogoClicked} >
+                    <div className='sidebar-header hoverable' onClick={() => this.onSideBarItemClicked('home')} >
                         <img width={180} src='https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng'/>
                     </div>
 
@@ -230,7 +226,7 @@ class SidebarLayout extends React.Component {
 
                             {/* Will render this view for Onboarding Portal */}
                             {!this.state.loadingUser && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
-                                currentStep={this.props.currentStep} isLoadingUser={this.state.loadingUser} error={this.props.error} progress={this.props.progress}/>}
+                                currentStep={this.props.currentStep} isLoadingUser={this.state.loadingUser} error={this.props.error} progress={this.props.progress} onSideBarItemClicked={this.onSideBarItemClicked} />}
                         </div>
                     </Content>
                 </Layout>
