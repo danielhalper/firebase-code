@@ -36,7 +36,7 @@ class OnboardingApp extends React.Component {
               icon: <SolutionOutlined />,
               title: 'Waiver',
               active: false,
-              disabled: true,
+              disabled: false,
               complete: false
             },
             {
@@ -44,7 +44,7 @@ class OnboardingApp extends React.Component {
               icon: <BookOutlined />,
               title: 'Workbook',
               active: false,
-              disabled: true,
+              disabled: false,
               complete: false
             },
             {
@@ -52,7 +52,7 @@ class OnboardingApp extends React.Component {
               icon: <SecurityScanOutlined />,
               title: 'Background Check',
               active: false,
-              disabled: true,
+              disabled: false,
               complete: false
             },
             {
@@ -60,7 +60,7 @@ class OnboardingApp extends React.Component {
               icon: <RocketOutlined />,
               title: 'Live Training',
               active: false,
-              disabled: true,
+              disabled: false,
               complete: false
             }
           ]
@@ -121,6 +121,19 @@ class OnboardingApp extends React.Component {
     return currentStep
   }
 
+  disableCompletedSidebarItems() {
+    const sidebarItems = this.state.sidebarItems
+
+    if(this.state.progress.hasCompletedWaiver) {
+      const waiverIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId = 'waiver')
+      sidebarItems[0].subItems[waiverIndex].disabled = true
+    }
+
+    this.setState({
+      sidebarItems: sidebarItems
+    })
+  }
+
   // takes user data and sets currentStep
   receiveUser(user) {
     let currentStep = this.calculateCurrentStep(user)
@@ -132,6 +145,7 @@ class OnboardingApp extends React.Component {
       currentStep: currentStep
     })
   }
+
 
   // takes user data and sets info to localstorage for use in prefilling forms
   setUserLocalStorage(user) {
@@ -176,6 +190,8 @@ class OnboardingApp extends React.Component {
         hasCompletedLiveTraining: completedLiveTraining
       }
     })
+
+    console.log('user stuff', user);
   }
 
   loadTutorData() {
@@ -190,7 +206,7 @@ class OnboardingApp extends React.Component {
       })
   }
 
-  // if interview has not been scheduled, disable all other subitems on sidebar
+  // Depending on what step in process user is, sidebar items will be enabled and clickable
   disableSideItems() {
     const sidebarItems = this.state.sidebarItems
     const userData = this.state.userData
@@ -200,16 +216,42 @@ class OnboardingApp extends React.Component {
       for (let i = 1; i < sidebarItems[0].subItems.length; i++) {
         sidebarItems[0].subItems[i]['disabled'] = true;
       }
+
+      this.setState({ sidebarItems: sidebarItems})
+      return
     }
 
-    if (hasScheduledChat) {
-      sidebarItems[0].subItems[1]['disabled'] = false;
-      sidebarItems[0].subItems[2]['disabled'] = false;
+    // at this point chat has been scheduled and becomes disabled
+      sidebarItems[0].subItems[0]['disabled'] = true;
+
+    //if waiver has been completed, disable waiver page
+    if (this.state.progress.hasCompletedWaiver) {
+      const waiverIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'waiver')
+      sidebarItems[0].subItems[waiverIndex].disabled = true
     }
 
-    // if has passed interview enable all sidebar items
+    // if workbook has been completed, disable workbook page
+    if (this.state.progress.hasCompletedWorkbook) {
+      const workbookIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'workbook')
+      sidebarItems[0].subItems[workbookIndex].disabled = true
+    }
+
+    // if has passed interview, check if live scan & training have been completed, enable pages when not, otherwise disabled
     if ('Status' in userData && userData['Status'] == 'Application Accepted') {
-      sidebarItems[0].subItems.map(item => item.disabled = false)
+      if (this.state.progress.hasCompletedLiveScan) {
+        const livescanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
+        sidebarItems[0].subItems[livescanIndex].disabled = true
+      }
+      if (this.state.progress.hasCompletedLiveTraining) {
+        const liveTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
+        sidebarItems[0].subItems[liveTrainingIndex].disabled = true
+      }
+    } else {
+      const lScanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
+      sidebarItems[0].subItems[lScanIndex].disabled = true
+
+      const lTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
+      sidebarItems[0].subItems[lTrainingIndex].disabled = true
     }
 
     this.setState({
