@@ -196,7 +196,7 @@ class FinalSteps extends React.Component {
 
             <p>While you're waiting for us to match you with a student, try going to your new tutor portal:</p>
 
-            <Button type='primary' size='large'>Sign In to Tutor Portal</Button>
+            <Button type='primary' size='large' href='./tutor_portal.html'>Sign In to Tutor Portal</Button>
 
 
         </div>;
