@@ -459,7 +459,7 @@ async function verifyOnboardingUser(context) {
         waiverCompleted: result[0].fields['Waiver?'] || false,
         workbookCompleted: result[0].fields['Section 2'] || false,
         liveScanCompleted: result[0].fields['Live Scan?'] || false,
-        liveTrainingCompleted: result[0].fields['Live Training'] || false
+        liveTrainingCompleted: result[0].fields['Live Training?'] || false
     }
 
 }
