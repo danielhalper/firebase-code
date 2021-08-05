@@ -83,8 +83,6 @@ class SidebarLayout extends React.Component {
         this.state.currentTab = this.props.currentTab
 
         this.onSideBarItemClicked = this.onSideBarItemClicked.bind(this)
-        this.onUserFinishedLoading = this.onUserFinishedLoading.bind(this)
-        this.loadUser = this.loadUser.bind(this)
 
     }
 
@@ -113,23 +111,6 @@ class SidebarLayout extends React.Component {
 
     }
 
-    onUserFinishedLoading(user) {
-        this.setState({
-            loadingUser: false,
-            tutor: user
-        })
-    }
-
-    loadUser() {
-        firebase.functions().httpsCallable(this.props.onboarding ? 'getOnboardingTutor':'getTutor')().then(tutorResult => {
-            this.onUserFinishedLoading(tutorResult.data)
-            console.log(tutorResult.data)
-        }).catch(error => {
-            console.log(error)
-            //TODO
-        })
-    }
-
     componentDidMount() {
 
         try {
@@ -141,9 +122,6 @@ class SidebarLayout extends React.Component {
 
         this.listenForAnchorChanges()
 
-        FIREBASE_RUN_ON_READY.push((user) => {
-            this.loadUser()
-        })
     }
 
     listenForAnchorChanges() {
@@ -206,7 +184,7 @@ class SidebarLayout extends React.Component {
 
                     <div className='sidebar-footer' style={{ marginBottom: 50 }}>
 
-                        {!this.state.loadingUser && <Popover content={<UserItem />} title='User Options' trigger='click'><span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}} className='hoverable'><Avatar size='large' icon={<UserOutlined />}/>{this.state.tutor.firstname + ' ' + this.state.tutor.lastname}</span></Popover>}
+                        {!this.props.loading && <Popover content={<UserItem />} title='User Options' trigger='click'><span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}} className='hoverable'><Avatar size='large' icon={<UserOutlined />}/>{this.props.userData.firstname + ' ' + this.props.userData.lastname}</span></Popover>}
 
                     </div>
 
@@ -220,14 +198,14 @@ class SidebarLayout extends React.Component {
                         <div className='main-content'>
 
                             {/* Will render this view when page is loading */}
-                            {this.state.loadingUser && <Skeleton active/>}
+                            {this.props.loading && <Skeleton active/>}
 
                             {/* Will render this view for Tutor Portal */}
-                            {!this.state.loadingUser && !this.props.progress && <CurrentPage tutor={this.state.tutor} />}
+                            {!this.props.loading && !this.props.progress && <CurrentPage tutor={this.state.tutor} />}
 
                             {/* Will render this view for Onboarding Portal */}
-                            {!this.state.loadingUser && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
-                                currentStep={this.props.currentStep} isLoadingUser={this.state.loadingUser} error={this.props.error} progress={this.props.progress} onSideBarItemClicked={this.onSideBarItemClicked} />}
+                            {!this.props.loading && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
+                                currentStep={this.props.currentStep} isLoadingUser={this.props.loading} error={this.props.error} progress={this.props.progress} onSideBarItemClicked={this.onSideBarItemClicked} />}
                         </div>
                     </Content>
                 </Layout>

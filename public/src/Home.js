@@ -64,9 +64,8 @@ class FirstSteps extends React.Component {
         let progress = this.props.progress
         let tutorDetails = this.props.tutorDetails
         let interviewDate = '';
-        if ('Interview Date' in tutorDetails && tutorDetails['Interview Date']) {
-            interviewDate = tutorDetails['Interview Date']
-        }
+        
+        if (notNull(interviewDate)) interviewDate = tutorDetails.interviewDate
 
         //Show a skeleton when loading
         if (this.state.isLoading) return <Skeleton active />
@@ -111,6 +110,7 @@ class FirstSteps extends React.Component {
                         {<RequiredOBItem requirementCompleted={progress.hasCompletedWorkbook} linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined />} title='The Workbook'>
                             The workbook is our training course for new tutors. It will set you up for success with your student.
                         </RequiredOBItem>}
+
                     </div>
                 </div>
 
@@ -241,7 +241,7 @@ class Home extends React.Component {
         return <div>
             <Title>Your Onboarding Dashboard</Title>
             <p>There's just a few things we'll need you to complete before proceeding.</p>
-            <div class='steps-container'>
+            <div className='steps-container'>
                 <Steps current={this.props.currentStep}  className='steps' responsive={true}>
                     <Step title='First Steps'/>
                     <Step title='LiveScan & Info Session'/>
