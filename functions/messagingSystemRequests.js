@@ -450,7 +450,6 @@ exports.onNewStudentRow = functions.https.onRequest(async (req, res) => {
 
 })
 
-//Could probably be consolidated with `onNewStudentRow`
 exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
 
     return updatePersonRecord(req, res, 'tutor')
@@ -898,7 +897,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
 
             //If they're a tutor, create a zoom link
             if (role == 'tutor') {
-                newItem = await createZoomLinkForTutor((record.fields['StepUp Email'] || '').toLowerCase().trim())
+                newItem = await createZoomLinkForTutor((record.fields['StepUp Email'] || '').toLowerCase().trim(), record.id, zoomMissingItems[i])
             }
 
             if (notNull(newItem)) {
@@ -962,7 +961,7 @@ function createZoomJWT() {
 
 }
 
-async function createZoomLinkForTutor(email) {
+async function createZoomLinkForTutor(email, tutorId, studentId) {
 
     //Get a JWT for Zoom
     const token = createZoomJWT()
@@ -985,11 +984,24 @@ async function createZoomLinkForTutor(email) {
         })
     })
 
-    const zoomTrackingWebhook = 'https://hooks.zapier.com/hooks/catch/7732277/b2u4fkr/'
-
-    //Send zoom meeting id, student and tutor record ids 
-
     const resultData = await response.json()
+
+    if (notNull(resultData['id'])) {
+
+        const zoomTrackingWebhook = 'https://hooks.zapier.com/hooks/catch/7732277/b2u4fkr/'
+
+        //Send zoom meeting id, student and tutor record ids
+        fetch(zoomTrackingWebhook, {
+            method: 'post',
+            body: JSON.stringify({
+                'authToken': zapierAuthToken,
+                'meetingId': resultData['id'],
+                'tutorId': tutorId,
+                'studentId': studentId
+            })
+        })
+
+    }
 
     return resultData['id']
 
