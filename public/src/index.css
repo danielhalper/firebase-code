@@ -282,22 +282,29 @@ div.info-bar {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 25px;
+    padding: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 .info-label {
     color: white;
-    font-size: 15px;
+    font-size: 13px;
     margin: 0px;
 }
 .info-value {
     color: white;
-    font-size: 36px;
+    font-size: 25px;
     margin: 0px;
 }
 .title {
     color: #327D83;
     font-family: "Chelsea Market";
-    font-size: 50px;
+    font-size: 45px;
+    margin-bottom: 0px;
+}
+
+.student-tabs {
+    margin-top: 0px;
 }
 
 .overlay {
