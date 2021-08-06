@@ -107,12 +107,12 @@ class TutorHome extends React.Component {
     render() {
         return <div style={{display:"flex", width:"100%", flexDirection:"column", justifyContent: "center", alignItems:"center"}}>
             <h1 className="title">Tutor Dashboard</h1>
-            <div style={{ marginBottom: 20 }}>
+            <div style={{ marginBottom: 0 }}>
             <StudentWidget students = {this.props.tutor.students} onTabChange={(activeKey) => {
                 this.setState( { student:this.students[activeKey], zoomLinks: undefined } )
             }}/>
             </div>
-            <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:20}}>
+            <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:10}}>
                 <div style={{flex:1}}></div>
                 <InformationBar info={
                     [
@@ -137,7 +137,7 @@ class TutorHome extends React.Component {
                     ]}/>
                     <div style={{flex:1}}></div>
             </div>
-            <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:20}}>
+            <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:10}}>
                 <RequiredItem link={"#messaging"} icon={<CommentOutlined/>} title='Message Students'>
                     Communicate with your student through our online messaging application.
                 </RequiredItem>
@@ -151,7 +151,7 @@ class TutorHome extends React.Component {
                     Your weekly session guide, customized to your student's needs
                 </RequiredItem>
             </div>
-            <div style={{float:"left",color:"#5A5A5A",borderBottom: "solid #5A5A5A 3px", width: "800px", textAlign:"center", fontSize:"36px", marginBottom:20}}><strong>Weekly Action Items</strong></div>
+            <div style={{float:"left",color:"#5A5A5A",borderBottom: "solid #5A5A5A 3px", width: "800px", textAlign:"center", fontSize:"20px", marginBottom:10}}><strong>Weekly Action Items</strong></div>
             <div style={{display:"flex", flexDirection:"row", flex:1}}>
                 <RequiredItem onClick={() => this.displayModal('weekly-form')} icon={<FormOutlined/>} title='Weekly Form'>
                     Fill this out each week... so the student's teacher and parent are up-to-date.

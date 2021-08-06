@@ -45,7 +45,7 @@ class StudentWidget extends React.Component {
             <TabPane key={student.id} tab={student.firstname+" "+student.lastname}></TabPane>
         )
 
-        return <Tabs onChange={this.props.onTabChange}>
+        return <Tabs className='student-tabs' onChange={this.props.onTabChange}>
             {students}
         </Tabs>
     }
