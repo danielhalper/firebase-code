@@ -378,7 +378,7 @@ exports.getZoomLinks = functions.https.onCall(async (data, context) => {
 
 exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) => {
 
-    const user = verifyUser(context)
+    const user = await verifyUser(context)
 
     //Get the airtable API key
     const airtableAPIKey = functions.config().airtable.key
@@ -388,12 +388,34 @@ exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) =>
 
     //Get the relevant record from the Tutors table
     const result = await base('Announcements').select({
-        filterByFormula: `{Status} = 'Ready (visable)'`,
+        filterByFormula: `{Status} = 'Ready (visible on tutor portal)'`,
     }).firstPage()
 
     return result.map(item => {
         return item['_rawJson']['fields']
     })
+})
+
+exports.getOnboardingAnnouncements = functions.https.onCall(async (data, context) => {
+
+    //Verify the onboarding user
+    const onboardingUser = await verifyOnboardingUser(context)
+
+    //Get the airtable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Announcements').select({
+        filterByFormula: `{Status} = 'Ready (visible on onboarding portal)'`,
+    }).firstPage()
+
+    return result.map(item => {
+        return item['_rawJson']['fields']
+    })
+
 })
 
 exports.onNewUserCreated = functions.auth.user().onCreate((user) => {
