@@ -1,4 +1,4 @@
-const { Select, Layout, Input, Spin, Form } = antd
+const { Select, Layout, Input, Spin, Form, message } = antd
 const { Option } = Select
 const { Sider, Content, Header } = Layout
 const { Search } = Input
@@ -91,7 +91,7 @@ class MessagesDisplay extends React.Component {
                     margin: 5
                 }
 
-                return <div className='message-bubble' style={{ display: 'flex', flexDirection: 'column' }}>
+                return <div className='message-bubble' style={{ display: 'flex', flexDirection: 'column' }} key={Math.random()*100}>
                     <div style={theStyle}>{item.body}</div>
                 </div>
 
@@ -118,6 +118,8 @@ class MessagingWidget extends React.Component {
         this.input = React.createRef()
 
         this.poll = undefined
+        this.pollTimeout = 2000
+        this.currentMessageLength = 0
 
         this.loadStudentMessages = this.loadStudentMessages.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
@@ -153,6 +155,12 @@ class MessagingWidget extends React.Component {
                         mostRecentDateSent = this.state.messages[this.state.messages.length - 1].dateSent
                     }
 
+                    //Reset the poll if the number of messages has changed
+                    if (this.currentMessageLength != result.data.messages.length) this.pollInterval = 2000
+
+                    //Now update the number of messages
+                    this.currentMessageLength = result.data.messages.length
+
                     this.setState({ messages: result.data.messages.map(message => {
                         return {...message, type: (message.to == studentObj.phone) ? 'to' : 'from'}
                     }), isLoadingMessages: false})
@@ -176,13 +184,16 @@ class MessagingWidget extends React.Component {
                         
                     }
 
+                    //Make it a little longer till the next poll
+                    this.pollInterval += 500
+
                     //Poll again
                     this.poll()
                 }).catch(err => {
                     this.poll()
                 })
 
-            }, 2000)
+            }, this.pollInterval)
 
         }
 
@@ -203,6 +214,12 @@ class MessagingWidget extends React.Component {
 
     sendMessage(value, e) {
 
+        if (this.state.student == null) {
+            message.error('Please select a student before sending a message')
+            this.setState({ isSendingMessage: false })
+            return
+        }
+
         this.setState({ isSendingMessage: true })
 
         this.messagesDisplay.current.scrollToBottom()
@@ -215,7 +232,13 @@ class MessagingWidget extends React.Component {
 
             //Add the result to our messages
             let messages = this.state.messages
-            messages.push(result.data)
+
+            //Reset the polling interval
+            this.pollInterval = 2000
+
+            //Update number of messages
+            this.currentMessageLength = messages.length
+            
             this.setState({ messages: messages, isSendingMessage: false })
             
 
@@ -237,9 +260,16 @@ class MessagingWidget extends React.Component {
 
         return <div>
 
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
             <Select placeholder='Choose a student' loading={this.state.isLoadingStudents} style={{width: 200}} onChange={this.loadStudentMessages}>
                 {this.getStudentOptions()}
             </Select>
+
+            {this.state.student != null && <h3 style={{ marginLeft: 15 }}>Phone Number: {(() => {
+                const number = libphonenumber.parsePhoneNumber(this.state.student.proxyNumber)
+                return number.formatNational()
+            })()}</h3>}
+            </div>
 
             <Layout style={{borderRadius: 10, marginTop: 5, padding: 20}}>
 

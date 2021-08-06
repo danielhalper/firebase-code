@@ -59,7 +59,6 @@ class UserItem extends React.Component {
 
         return <div>
 
-            <p><Link>Change Email</Link></p>
             <p><Link onClick={this.onSignOut}>Log Out</Link></p>
 
         </div>
@@ -121,7 +120,7 @@ class SidebarLayout extends React.Component {
     }
 
     loadUser() {
-        firebase.functions().httpsCallable('getTutor')().then(tutorResult => {
+        firebase.functions().httpsCallable(this.props.onboarding ? 'getOnboardingTutor':'getTutor')().then(tutorResult => {
             this.onUserFinishedLoading(tutorResult.data)
             console.log(tutorResult.data)
         }).catch(error => {

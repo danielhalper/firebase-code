@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken')
 const fetch = require('node-fetch')
 const twilio = require('twilio')
 const { Translate } = require('@google-cloud/translate').v2 //Google Translate
+const { HttpsError } = require('firebase-functions/lib/providers/https')
+const { firebaseConfig } = require('firebase-functions')
 
 const twilioAccountSid = functions.config().twilio.account_sid
 const twilioAuthToken = functions.config().twilio.auth_token
@@ -14,6 +16,9 @@ const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 //Zoom credentials
 const zoomAPIKey = functions.config().zoom.api_key
 const zoomAPISecret = functions.config().zoom.api_secret
+
+//Step Up custom credentials
+const stepUpTokenEncryptionKey = functions.config().stepup.token_encryption_key
 
 //Util function
 function notNull(value) {
@@ -49,8 +54,6 @@ async function getTutorDataRaw(email) {
 
 }
 
-
-
 //For getting tutor data
 exports.getTutorData = functions.https.onCall((data, context) => {
 
@@ -61,6 +64,16 @@ exports.getTutorData = functions.https.onCall((data, context) => {
     }).catch(error => {
         throw new functions.https.HttpsError('not-found', 'The tutor data for your account was not found.')
     })
+
+})
+
+exports.getOnboardingTutor = functions.https.onCall(async (data, context) => {
+
+    //Verify the user
+    const userData = await verifyOnboardingUser(context)
+    
+    //Return the data
+    return userData
 
 })
 
@@ -309,8 +322,11 @@ exports.sendSMSMessage = async (data, context) => {
             //Now, translate the message
             const translation = await googleTranslate.translate(message, toLanguageCode)
 
+            //Format the translations
+            translation = Array.isArray(translation) ? translation : [translation]
+
             //Set the message to the translated version
-            message = translation
+            message = translation[0]
 
         } catch(err) {
             console.log(err) //Errors relating to translation aren't necessarily critical errors
@@ -360,6 +376,130 @@ exports.getZoomLinks = functions.https.onCall(async (data, context) => {
 
 })
 
+exports.onNewUserCreated = functions.auth.user().onCreate((user) => {
+
+    //Get the user's email
+    const email = user.email
+
+    //If it's not a StepUp email, they're an onboarding user
+    if (email && !(/@stepuptutoring.org\s*$/.test(email))) {
+
+        //Create an email sign in link
+        const emailSignInLink = createPermanentSignInLink(email)
+
+        //If in emulator, just console.log the link
+        if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') {
+            console.log(`Your email sign in link is: ${emailSignInLink}`)
+            return
+        }
+
+        //Now send a request to Zapier to send the email
+        fetch('https://hooks.zapier.com/hooks/catch/7732277/buofpa4/', {
+            method: 'post',
+            body: JSON.stringify({
+                email: email,
+                signInLink: emailSignInLink
+            })
+        })
+
+    }
+
+})
+
+exports.sendEmailSignInLink = functions.https.onCall(async (data, context) => {
+
+    //Get the user's email
+    const email = data.email 
+
+    let user;
+
+    try {
+
+        //Verify the email belongs to a user
+        user = await admin.auth().getUserByEmail(email)
+
+    } catch(err) {
+        throw new HttpsError('permission-denied', 'No account exists for that email')
+    }
+
+    //If it's not a StepUp email, they're an onboarding user
+    if (user) {
+
+        if (!(/@stepuptutoring.org\s*$/.test(email))) {
+
+            //Create an email sign in link
+            const emailSignInLink = createPermanentSignInLink(email, data.returnUrl)
+
+            //If in emulator, just console.log the link
+            if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') {
+                console.log(`Your email sign in link is: ${emailSignInLink}`)
+                return {
+                    'status': 'success'
+                }
+            }
+
+            //Now send a request to Zapier to send the email
+            fetch('https://hooks.zapier.com/hooks/catch/7732277/bubhohh/', {
+                method: 'post',
+                body: JSON.stringify({
+                    email: email,
+                    signInLink: emailSignInLink
+                })
+            })
+
+            return {
+                'status': 'success'
+            }
+
+        } else {
+            throw new HttpsError('invalid-argument', 'You must provide a non-StepUp email')
+        }
+
+    }
+
+})
+
+exports.getCustomAuthToken = functions.https.onCall(async (data, context) => {
+
+    //Get the step up token
+    const stepUpToken = data.stepUpToken
+
+    //Make sure it exists
+    if (!notNull(stepUpToken)) throw new HttpsError('unauthenticated', 'A valid token is required')
+
+    //Validate the token
+    try {
+
+        //Decode the token
+        const decoded = jwt.verify(stepUpToken, stepUpTokenEncryptionKey)
+
+        //Get the user's email
+        const email = decoded['sub']
+
+        //Make sure it exists
+        if (!notNull(email)) throw new HttpsError('invalid-argument', 'User email required')
+
+        //Get the user with that email
+        const user = await admin.auth().getUserByEmail(email)
+
+        //Get the uid
+        const uid = user.uid
+
+        //Create a custom token for the user
+        const customToken = await admin.auth().createCustomToken(uid)
+
+        return {
+            'customToken': customToken
+        }
+
+    } catch(err) {
+
+        throw new HttpsError('permission-denied', 'Your token was invalid')
+
+    }
+
+})
+
 function createZoomJWT() {
 
     //Create a payload
@@ -403,7 +543,7 @@ async function verifyUser(context) {
     const email = context.auth.token.email
 
     //Find the record with that email (if it exists)
-    const records = await admin.firestore().collection('people').where('email', '==', email).get()
+    const records = await admin.firestore().collection('people').where('stepUpEmail', '==', email).get()
 
     //Make sure it exists
     if (records.size < 1) throw new functions.https.HttpsError('permission-denied', 'You must be logged in to complete this action')
@@ -413,5 +553,52 @@ async function verifyUser(context) {
 
     //Return it
     return user
+
+}
+
+async function verifyOnboardingUser(context) {
+
+    //Get the user's email
+    const email = context.auth.token.email
+
+    //Find the record with that email (if it exists)
+    //Get the aritable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Tutors').select({
+        maxRecords: 1,
+        filterByFormula: `TRIM(LOWER({Email})) = '${email.toLowerCase().trim()}'`,
+        fields: ['Email', 'First Name', 'Last Name']
+    }).firstPage()
+    
+    //Make sure it exists
+    if (result.length == 0) throw new functions.https.HttpsError('permission-denied', 'You must be logged in to complete this action')
+
+    //Return it
+    return {
+        firstname: result[0].fields['First Name'],
+        lastname: result[0].fields['Last Name'],
+        email: email,
+        id: result[0].id
+    }
+
+}
+
+function createPermanentSignInLink(email, returnUrl) {
+
+    const token = jwt.sign({
+        iss: 'org.stepuptutoring',
+        sub: email
+    }, stepUpTokenEncryptionKey, { 
+        expiresIn: '300 days'
+    })
+
+    if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') return `http://localhost:5000/signin.html?stepupToken=${encodeURIComponent(token)}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}`:'' }`
+
+    return `https://stepup-dashboard.web.app/signin.html?stepupToken=${encodeURIComponent(token)}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}`:'' }`
 
 }

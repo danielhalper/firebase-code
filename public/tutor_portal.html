@@ -3,7 +3,7 @@
 
     <head>
         <link rel="stylesheet" href="https://stepup-tutoring.github.io/website-code-snippets/dist/theme.css" crossorigin="anonymous" />
-        <link rel="stylesheet" href="./dist/index.css" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="./src/index.css" crossorigin="anonymous"/>
 
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script> 
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
@@ -15,6 +15,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="https://images.squarespace-cdn.com/content/v1/5ed9fce13f6c795edcfd9773/1599939380112-UHZL3QOZ75MI2P07MHJ3/favicon.ico?format=100w">
 
         <title>Tutor Portal</title>
     </head>
@@ -23,10 +24,12 @@
         <div id='portal' style='height: 100%'></div>
 
         <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-analytics.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-functions.js"></script>
-        <script src="./dist/firebase_injection_script.js" crossorigin="anonymous"></script>
+        <script src="./src/tutor_portal_injection_script.js" crossorigin="anonymous"></script>
         <script src='./dist/sidebarLayout.js'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.22/libphonenumber-js.min.js" integrity="sha512-VvBGEkvexGt7bDY2Y/AN887qJfHavONvQ+MGV4o15nStNeuFUxv8HynV71nfcnD57s0kUQ1Lml7ALhbBAPjbtQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src='./dist/messaging_widget.js'></script>
         <script src='./dist/resources.js'></script>
         <script src='./dist/TutorHome.js'></script>
