@@ -22,20 +22,47 @@ let FIREBASE_RUN_ON_READY = []
 
 let IS_LOGGING_OUT = false
 
+function handleUserResult(user) {
+    //Get the email
+    const email = user.email
+
+    if (email) {
+
+        //If they aren't a SAML user, sign them out because they're not allowed to access tutor portal
+        firebase.auth().fetchSignInMethodsForEmail(email).then(methods => {
+
+            if (methods.indexOf('saml.google.com') == -1) {
+                firebase.auth().signOut().then(() => {
+                    SIGN_IN_REDIRECT()
+                })
+            } else {
+
+                //Otherwise, run as usual
+                for (let i = 0; i < FIREBASE_RUN_ON_READY.length; i++) {
+                    FIREBASE_RUN_ON_READY[i](user)
+                }     
+
+            }
+
+        }).catch(error => {
+            firebase.auth().signOut().then(() => {
+                SIGN_IN_REDIRECT()
+            })
+        })
+
+    }   
+}
+
 function setOnAuthChangedListener() {
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-            
-            for (let i = 0; i < FIREBASE_RUN_ON_READY.length; i++) {
-                FIREBASE_RUN_ON_READY[i](user)
-            }            
+
+            handleUserResult(user)
 
         } else {
             
-            const provider = new firebase.auth.SAMLAuthProvider('saml.google.com')
-            
-            firebase.auth().signInWithRedirect(provider)
-
+            SIGN_IN_REDIRECT()
+          
         }
     });
 }
@@ -63,19 +90,14 @@ setOnAuthChangedListener()
 firebase.auth().getRedirectResult().then(result => {
     const user = result.user
     if (user) {
-            
-        for (let i = 0; i < FIREBASE_RUN_ON_READY.length; i++) {
-            FIREBASE_RUN_ON_READY[i](user)
-        }
         
-
+        handleUserResult(user)
+        
     }
 
 }).catch(error => {
 
-    console.log('redirect_result')
-    const provider = new firebase.auth.SAMLAuthProvider('saml.google.com')
-            
-    firebase.auth().signInWithRedirect(provider)
+    SIGN_IN_REDIRECT()
+
 })
 

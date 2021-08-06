@@ -8,14 +8,14 @@ class RequiredItem extends React.Component {
     }
 
     render() {
-        return <Link className='requirement' href={this.props.link} target='_blank'>
+        return <Link className='requirement' href={this.props.link} onClick={this.props.onClick} target={this.props.newTab ? '_blank': '_self'}>
             <div style={{float:"left",width:"200px", height:"150px"}}>
             {this.props.icon && this.props.icon} {this.props.title}
                 <p className='description'>
                     {this.props.children}
                 </p>
             </div>
-        </Link>;
+        </Link>
     }
 }
 // Information Bar Component

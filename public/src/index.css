@@ -36,6 +36,22 @@ h3.ant-typography {
     margin-top: 5px;
 }
 
+.inner-req-div {
+    float: left;
+    width: 220px;
+    height: 180px;
+    margin-right: 0px;
+}
+
+.ant-ribbon-wrapper {
+    margin-right: 10px;
+}
+
+.completed-requirement {
+    background-color: #238d95;
+    color: white;
+}
+
 .btn {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -76,19 +92,17 @@ h3.ant-typography {
 .sidebar-options div.main-item:not(.step) {
     font-size: 17px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    margin-top: 20px;
 }
 
 .sidebar-options div.subitem {
     margin-left: 15px;
 }
 
-.sidebar-options div:hover {
-    cursor: pointer;
-}
-
 .sidebar-options div:not(.disabled):hover {
     color: #1BCBD9;
+    cursor: pointer;
 }
 
 .sidebar-options div.active {
@@ -97,6 +111,7 @@ h3.ant-typography {
 
 .sidebar-options div.disabled {
     color: #C4C4C4;
+    cursor: text;
 }
 
 .sidebar-options div .anticon {
@@ -110,7 +125,7 @@ h3.ant-typography {
 }
 
 .main-content {
-    height: 90%;
+    height: 95%;
     margin: 30px;
     padding: 20px;
     padding-top: 25px;
@@ -283,4 +298,132 @@ div.info-bar {
     color: #327D83;
     font-family: "Chelsea Market";
     font-size: 50px;
+}
+
+.overlay {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal {
+    background: white;
+    padding:20px;
+    border-radius: 10px;
+    width: 500px;
+    display: flex;
+    flex-direction:column;
+}
+.modal-title {
+    font-size: 25px;
+}
+.modal-submit {
+    background: #327D83;
+    border:none;
+    padding:10px;
+    border-radius: 5px;
+    color: white;
+    transition: 0.5s;
+}
+.modal-submit:hover {
+    background: #2a6a6e;
+    cursor: pointer;
+}
+.modal-content {
+    margin: 10px;
+    text-align: center;
+}
+.modal-exit {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: rgb(0, 0, 0, 0);
+    transition: 0.3s;
+    color: #888;
+}
+.modal-exit:hover {
+    background: rgb(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+.zoom-invite-link {
+    background: rgb(230, 230, 230);
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 300px;
+    height:40px;
+    font-size: 16px;
+    padding: 8px;
+    padding-left: 10px;
+    color: #888;
+}
+.copy-link {
+    background: none;
+    height:40px;
+    border:none;
+    transition: 0.5s;
+    border-radius: 0px 5px 5px 0px;
+    padding: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 16px;
+    color: #888;
+}
+
+.copy-link-gradient {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 60%, rgb(230, 230, 230) 80%);
+    border-radius: 5px;
+}
+
+.copy-link:hover {
+    background: rgb(200, 200, 200);
+    cursor: pointer;
+}
+
+#signin-form {
+    height: 100%;
+}
+
+.signin-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.signin-content {
+    width: 25%;
+    text-align: center;
+}
+
+.signin-logo {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.signin-content p {
+    font-size: 18px;
+    color: #888;
+}
+
+.signin-error {
+    margin-bottom: 20px;
+}
+
+.spacer {
+    flex: 1;
 }
