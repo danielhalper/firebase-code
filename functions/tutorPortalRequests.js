@@ -28,7 +28,7 @@ function notNull(value) {
 //For getting the tutor data from an email
 async function getTutorDataRaw(email) {
 
-    //Get the aritable API key
+    //Get the airtable API key
     const airtableAPIKey = functions.config().airtable.key
 
     //Set up the airtable base
@@ -373,6 +373,48 @@ exports.getZoomLinks = functions.https.onCall(async (data, context) => {
 
     //Return the links
     return studentLinks
+
+})
+
+exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) => {
+
+    const user = await verifyUser(context)
+
+    //Get the airtable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Announcements').select({
+        filterByFormula: `{Status} = 'Ready (visible on tutor portal)'`,
+    }).firstPage()
+
+    return result.map(item => {
+        return item['_rawJson']['fields']
+    })
+})
+
+exports.getOnboardingAnnouncements = functions.https.onCall(async (data, context) => {
+
+    //Verify the onboarding user
+    const onboardingUser = await verifyOnboardingUser(context)
+
+    //Get the airtable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Announcements').select({
+        filterByFormula: `{Status} = 'Ready (visible on onboarding portal)'`,
+    }).firstPage()
+
+    return result.map(item => {
+        return item['_rawJson']['fields']
+    })
 
 })
 

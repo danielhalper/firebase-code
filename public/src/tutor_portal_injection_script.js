@@ -62,7 +62,7 @@ function setOnAuthChangedListener() {
         } else {
             
             SIGN_IN_REDIRECT()
-
+          
         }
     });
 }
