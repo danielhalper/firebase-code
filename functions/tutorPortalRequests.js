@@ -618,7 +618,7 @@ async function verifyOnboardingUser(context) {
     }).firstPage()
     
     //Make sure it exists
-    if (result.length == 0) throw new functions.https.HttpsError('permission-denied', 'You must be logged in to complete this action')
+    if (result.length == 0) throw new functions.https.HttpsError('permission-denied', 'You must be signed in with the email you used in your application')
 
     //Return it
     return {
