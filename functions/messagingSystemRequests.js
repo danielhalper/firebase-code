@@ -71,9 +71,12 @@ exports.handleMessageToTutorNumber = functions.https.onRequest(async (req, res) 
 
                 //Now, translate the message
                 const translation = await googleTranslate.translate(message, toLanguageCode)
+                
+                //Format the translations
+                translation = Array.isArray(translation) ? translation : [translation]
 
                 //Set the message to the translated version
-                message = translation
+                message = translation[0]
 
             } catch(err) {
                 console.log(err) //Errors relating to translation aren't necessarily critical errors
@@ -492,7 +495,7 @@ async function updatePeopleData() {
 
     //Get the tutor data from AirTable
     await base('Tutors').select({
-        fields: ['First Name', 'Last Name', 'Email', 'Phone', 'Students', 'Tutor ID', 'Match date', 'StepUp Email'],
+        fields: ['First Name', 'Last Name', 'Email', 'StepUp Email', 'Phone', 'Students', 'Tutor ID', 'Match date', 'StepUp Email'],
         offset: 0
     }).eachPage((records, fetchNextPage) => {
         let _records = records
@@ -641,6 +644,7 @@ function recordsAreEqual(airtableRecord, firestoreDoc, role='tutor') {
         'firstname': 'First Name',
         'lastname': 'Last Name',
         'email': role == 'tutor' ? 'Email' : "Guardian's Email",
+        'stepUpEmail': 'StepUp Email',
         'phone': role == 'tutor' ? 'Phone' : "Guardian's Phone",
         'preferredLanguage': 'Language',
         'matched': 'Match date'
@@ -653,6 +657,9 @@ function recordsAreEqual(airtableRecord, firestoreDoc, role='tutor') {
 
     //If the document doesn't exist, return false
     if (!firestoreDoc.exists) return false
+
+    //If it's a tutor without a stepup email, update them
+    if (fields['role'] == 'tutor' && !('stepUpEmail' in fields)) return false
 
     //For each field
     for (let item in fields) {
@@ -725,7 +732,7 @@ function recordsAreEqual(airtableRecord, firestoreDoc, role='tutor') {
         }
 
         //For emails...
-        else if (item == 'email') {
+        else if (item == 'email' || item == 'stepUpEmail') {
 
             //Get the value
             const fieldValue = airtableRecord.fields[ nameMappings[ item ] ] || ''
@@ -785,6 +792,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
 
     if (role == 'tutor') {
         newData['matched'] = matched
+        newData['stepUpEmail'] = (record.fields['StepUp Email'] || '').toLowerCase().trim()
     }
     //**
 
@@ -991,7 +999,3 @@ async function createZoomLinkForTutor(email) {
     return resultData['id']
 
 }
-
-
-//If we're in an emulator, run updatePeopleData
-if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') updatePeopleData().then(result => console.log('Populated Firestore with data'))

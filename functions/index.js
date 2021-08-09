@@ -3,6 +3,7 @@ const admin = require('firebase-admin') //Firebase Admin SDK
 const adminRequests = require('./adminRequests') //Request callbacks for admin-related tasks
 const tutorPortalRequests = require('./tutorPortalRequests') //Request callbacks for tutor portal tasks
 const messaging = require('./messagingSystemRequests') //Request callbacks for messaging system tasks
+const fs = require('fs')
 
 //Start firebase admin
 admin.initializeApp()
@@ -52,3 +53,23 @@ exports.sendSMSMessage = functions.https.onCall(tutorPortalRequests.sendSMSMessa
 exports.getTutorData = tutorPortalRequests.getTutorData
 exports.getZoomLinks = tutorPortalRequests.getZoomLinks
 exports.getOnboardingTutor = tutorPortalRequests.getOnboardingTutor
+exports.onNewUserCreated = tutorPortalRequests.onNewUserCreated
+exports.getCustomAuthToken = tutorPortalRequests.getCustomAuthToken
+exports.sendEmailSignInLink = tutorPortalRequests.sendEmailSignInLink
+ 
+//Seed Firestore data
+if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') {
+
+    const peopleData = JSON.parse(fs.readFileSync('./firestoreSeed.json', 'utf8'))
+
+    let promises = []
+
+    for (let personId in peopleData) {
+
+        promises.push(admin.firestore().collection('people').doc(personId).set(peopleData[personId]))
+
+    }
+
+    Promise.allSettled(promises).then(result => console.log('Finished seeding'))
+
+}

@@ -196,8 +196,7 @@ class FinalSteps extends React.Component {
 
             <p>While you're waiting for us to match you with a student, try going to your new tutor portal:</p>
 
-            <Button type='primary' size='large' href='./tutor_portal.html'>Sign In to Tutor Portal</Button>
-
+            <Button type='primary' size='large' href='./tutor_portal.html' target='_blank'>Sign In to Tutor Portal</Button>
 
         </div>;
     }
@@ -233,7 +232,7 @@ class Home extends React.Component {
 
             <Title level={1}>🎉 You've Been Matched! 🎉</Title>
             <p>From now on, you'll be using your tutor portal. We'll see you there!</p>
-            <Button type='primary' size='large'>Go To Tutor Portal</Button>
+            <Button type='primary' size='large' href='./tutor_portal.html' target='_blank'>Go To Tutor Portal</Button>
 
         </div>
 

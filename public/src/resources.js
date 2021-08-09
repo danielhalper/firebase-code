@@ -8,14 +8,14 @@ class RequiredItem extends React.Component {
     }
 
     render() {
-        return <Link className='requirement' href={this.props.link} onClick={this.props.onClick} target='_blank'>
+        return <Link className='requirement' href={this.props.link} onClick={this.props.onClick} target={this.props.newTab ? '_blank': '_self'}>
             <div style={{float:"left",width:"200px", height:"150px"}}>
             {this.props.icon && this.props.icon} {this.props.title}
                 <p className='description'>
                     {this.props.children}
                 </p>
             </div>
-        </Link>;
+        </Link>
     }
 }
 // Information Bar Component
@@ -45,7 +45,7 @@ class StudentWidget extends React.Component {
             <TabPane key={student.id} tab={student.firstname+" "+student.lastname}></TabPane>
         )
 
-        return <Tabs onChange={this.props.onTabChange}>
+        return <Tabs className='student-tabs' onChange={this.props.onTabChange}>
             {students}
         </Tabs>
     }

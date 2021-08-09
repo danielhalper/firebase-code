@@ -1,0 +1,47 @@
+{
+    "reco3BZaMlYV7oewU": {
+        "firstname": "Caleb",
+        "lastname": "Hester",
+        "email": "caleb.hester@pepperdine.edu",
+        "stepUpEmail": "caleb@stepuptutoring.org",
+        "phone": "+18057982238",
+        "preferredLanguage": "English",
+        "role": "tutor",
+        "students": {
+            "recM4eCC4BAzx983j": "+12133751458",
+            "recxb6oNgj5rdQtqa": "+12133750936"
+        },
+        "zoomLinks": {
+            "recM4eCC4BAzx983j": 92728907072,
+            "recxb6oNgj5rdQtqa": 92060153472
+        }
+    },
+    "recM4eCC4BAzx983j": {
+        "firstname": "Daniel",
+        "lastname": "Halper",
+        "email": "dhalper@stanford.edu",
+        "phone": "+13107468078",
+        "preferredLanguage": "English",
+        "role": "student",
+        "tutors": {
+            "reco3BZaMlYV7oewU": "null"
+        },
+        "zoomLinks": {
+            "reco3BZaMlYV7oewU": "null"
+        }
+    },
+    "recxb6oNgj5rdQtqa": {
+        "firstname": "Julia",
+        "lastname": "Axelrod",
+        "email": "julia@stepuptutoring.org",
+        "phone": "+16508048848",
+        "preferredLanguage": "English",
+        "role": "student",
+        "tutors": {
+            "reco3BZaMlYV7oewU": "null"
+        },
+        "zoomLinks": {
+            "reco3BZaMlYV7oewU": "null"
+        }
+    }
+}
