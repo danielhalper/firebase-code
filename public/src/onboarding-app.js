@@ -109,15 +109,18 @@ class OnboardingApp extends React.Component {
   calculateCurrentStep(user) {
     let currentStep = 0;
 
-    if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Application Accepted') {
-      currentStep = 1
+    switch(user.status) {
+      case 'Application Accepted':
+        currentStep = 1
+        break
+      case 'Ready to Tutor':
+        currentStep = 2
+        break 
+      case 'Status':
+        currentStep = 4
+        break
     }
-    if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Ready to Tutor') {
-      currentStep = 2
-    }
-    if ('Status' in user.data['user'] && user.data['user']['Status'] == 'Matched') {
-      currentStep = 4
-    }
+    
     return currentStep
   }
 
@@ -141,7 +144,7 @@ class OnboardingApp extends React.Component {
     //Update the state with the received data
     this.setState({
       loading: false,
-      userData: user.data.user,
+      userData: user,
       currentStep: currentStep
     })
   }
@@ -149,9 +152,9 @@ class OnboardingApp extends React.Component {
 
   // takes user data and sets info to localstorage for use in prefilling forms
   setUserLocalStorage(user) {
-    let firstname = user.data.user['First Name'];
-    let lastname = user.data.user['Last Name'];
-    let email = user.data.user['Email'];
+    let firstname = user.firstname;
+    let lastname = user.lastname;
+    let email = user.email;
     window.localStorage.setItem('userEmail', email);
     window.localStorage.setItem('userFirstName', firstname);
     window.localStorage.setItem('userLastName', lastname);
@@ -159,27 +162,11 @@ class OnboardingApp extends React.Component {
 
   // takes user data and sets completed tracked items in state
   setUserProgress(user) {
-    let scheduledChat = false;
-    let completedWaiver = false;
-    let completedWorkbook = false;
-    let completedLiveScan = false;
-    let completedLiveTraining = false;
-
-    if ('Interview Date' in user.data['user']) {
-      scheduledChat = notNull(user.data['user']['Interview Date'])
-    }
-    if ('Waiver?' in user.data['user']) {
-      completedWaiver = notNull(user.data['user']['Waiver?'])
-    }
-    if ('Section 2' in user.data['user']) {
-      completedWorkbook = notNull(user.data['user']['Section 2'])
-    }
-    if ('Live Scan?' in user.data['user']) {
-      completedLiveScan = notNull(user.data['user']['Live Scan?'])
-    }
-    if ('Live Training?' in user.data['user']) {
-      completedLiveTraining = notNull(user.data['user']['Live Training?'])
-    }
+    let scheduledChat = notNull(user.interviewDate);
+    let completedWaiver = user.waiverCompleted;
+    let completedWorkbook = user.workbookCompleted;
+    let completedLiveScan = user.liveScanCompleted;
+    let completedLiveTraining = user.liveTrainingCompleted;
 
     this.setState({
       progress:{
@@ -190,13 +177,14 @@ class OnboardingApp extends React.Component {
         hasCompletedLiveTraining: completedLiveTraining
       }
     })
-
-    console.log('user stuff', user);
   }
 
   loadTutorData() {
-    firebase.functions().httpsCallable('getTutorData')()
-      .then(tutorDetailedResult => {
+    firebase.functions().httpsCallable('getOnboardingTutor')()
+      .then(result => {
+
+        const tutorDetailedResult = result.data
+
         this.receiveUser(tutorDetailedResult)
         this.setUserLocalStorage(tutorDetailedResult)
         this.setUserProgress(tutorDetailedResult)
@@ -209,7 +197,6 @@ class OnboardingApp extends React.Component {
   // Depending on what step in process user is, sidebar items will be enabled and clickable
   disableSideItems() {
     const sidebarItems = this.state.sidebarItems
-    const userData = this.state.userData
     const hasScheduledChat = this.state.progress.hasScheduledChat
 
     if (!hasScheduledChat) {
@@ -237,7 +224,7 @@ class OnboardingApp extends React.Component {
     }
 
     // if has passed interview, check if live scan & training have been completed, enable pages when not, otherwise disabled
-    if ('Status' in userData && userData['Status'] == 'Application Accepted') {
+    if (this.state.userData.status == 'Application Accepted') {
       if (this.state.progress.hasCompletedLiveScan) {
         const livescanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
         sidebarItems[0].subItems[livescanIndex].disabled = true

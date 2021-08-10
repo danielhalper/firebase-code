@@ -31,7 +31,7 @@ function handleUserResult(user) {
         //If they aren't a SAML user, sign them out because they're not allowed to access tutor portal
         firebase.auth().fetchSignInMethodsForEmail(email).then(methods => {
 
-            if (methods.indexOf('saml.google.com') == -1) {
+            if (methods.indexOf(firebase.auth.GoogleAuthProvider.GOOGLE_SIGN_IN_METHOD) == -1) {
                 firebase.auth().signOut().then(() => {
                     SIGN_IN_REDIRECT()
                 })
@@ -62,15 +62,19 @@ function setOnAuthChangedListener() {
         } else {
             
             SIGN_IN_REDIRECT()
-
+          
         }
     });
 }
 
 function SIGN_IN_REDIRECT() {
-    const provider = new firebase.auth.SAMLAuthProvider('saml.google.com')
-            
+    
+    const provider = new firebase.auth.GoogleAuthProvider()
+    provider.setCustomParameters({
+        'hd': 'stepuptutoring.org'
+    })
     firebase.auth().signInWithRedirect(provider)
+    
 }
 
 async function SIGN_OUT_FIREBASE() {

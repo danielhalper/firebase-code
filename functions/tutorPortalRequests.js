@@ -28,7 +28,7 @@ function notNull(value) {
 //For getting the tutor data from an email
 async function getTutorDataRaw(email) {
 
-    //Get the aritable API key
+    //Get the airtable API key
     const airtableAPIKey = functions.config().airtable.key
 
     //Set up the airtable base
@@ -376,6 +376,48 @@ exports.getZoomLinks = functions.https.onCall(async (data, context) => {
 
 })
 
+exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) => {
+
+    const user = await verifyUser(context)
+
+    //Get the airtable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Announcements').select({
+        filterByFormula: `{Status} = 'Ready (visible on tutor portal)'`,
+    }).firstPage()
+
+    return result.map(item => {
+        return item['_rawJson']['fields']
+    })
+})
+
+exports.getOnboardingAnnouncements = functions.https.onCall(async (data, context) => {
+
+    //Verify the onboarding user
+    const onboardingUser = await verifyOnboardingUser(context)
+
+    //Get the airtable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
+
+    //Get the relevant record from the Tutors table
+    const result = await base('Announcements').select({
+        filterByFormula: `{Status} = 'Ready (visible on onboarding portal)'`,
+    }).firstPage()
+
+    return result.map(item => {
+        return item['_rawJson']['fields']
+    })
+
+})
+
 exports.onNewUserCreated = functions.auth.user().onCreate((user) => {
 
     //Get the user's email
@@ -572,18 +614,24 @@ async function verifyOnboardingUser(context) {
     const result = await base('Tutors').select({
         maxRecords: 1,
         filterByFormula: `TRIM(LOWER({Email})) = '${email.toLowerCase().trim()}'`,
-        fields: ['Email', 'First Name', 'Last Name']
+        fields: ['Waiver?', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date', 'Live Scan?', 'Live Training?']
     }).firstPage()
     
     //Make sure it exists
-    if (result.length == 0) throw new functions.https.HttpsError('permission-denied', 'You must be logged in to complete this action')
+    if (result.length == 0) throw new functions.https.HttpsError('permission-denied', 'You must be signed in with the email you used in your application')
 
     //Return it
     return {
         firstname: result[0].fields['First Name'],
         lastname: result[0].fields['Last Name'],
         email: email,
-        id: result[0].id
+        id: result[0].id,
+        status: result[0].fields['Status'] || '',
+        interviewDate: result[0].fields['Interview Date'] || null,
+        waiverCompleted: result[0].fields['Waiver?'] || false,
+        workbookCompleted: result[0].fields['Section 2'] || false,
+        liveScanCompleted: result[0].fields['Live Scan?'] || false,
+        liveTrainingCompleted: result[0].fields['Live Training?'] || false
     }
 
 }
