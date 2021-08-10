@@ -897,7 +897,25 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
 
             //If they're a tutor, create a zoom link
             if (role == 'tutor') {
-                newItem = await createZoomLinkForTutor((record.fields['StepUp Email'] || '').toLowerCase().trim(), record.id, zoomMissingItems[i])
+
+                //Get their step up email
+                const stepUpEmail = (record.fields['StepUp Email'] || '').toLowerCase().trim()
+
+                //Get the tutor name
+                const tutorName = `${record.fields['First Name'] || ''} ${record.fields['Last Name'] || ''}`
+
+                //AirTable setup (to get student record)
+                const airtableAPIKey = functions.config().airtable.key
+                const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
+
+                //Get the student record from AirTable
+                const studentRecord = await base('Students').find(zoomMissingItems[i])
+                
+                //Get the student's name
+                const studentName = `${studentRecord.fields['First Name'] || ''} ${studentRecord.fields['Last Name'] || ''}`
+
+
+                newItem = await createZoomLinkForTutor((record.fields['StepUp Email'] || '').toLowerCase().trim(), record.id, zoomMissingItems[i], tutorName, studentName)
             }
 
             if (notNull(newItem)) {
@@ -961,7 +979,7 @@ function createZoomJWT() {
 
 }
 
-async function createZoomLinkForTutor(email, tutorId, studentId) {
+async function createZoomLinkForTutor(email, tutorId, studentId, tutorName, studentName) {
 
     //Get a JWT for Zoom
     const token = createZoomJWT()
@@ -973,7 +991,7 @@ async function createZoomLinkForTutor(email, tutorId, studentId) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            'topic': 'Step Up Tutoring Session',
+            'topic': `${tutorName} and ${studentName}'s tutoring session`,
             'type': 3,
             'settings': {
                 'auto_recording': 'none',
