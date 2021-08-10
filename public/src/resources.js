@@ -26,7 +26,7 @@ class InformationBar extends React.Component {
         super(props)
     }
     render(){
-        const info = this.props.info.map((info) => 
+        const info = this.props.info.map((info) =>
                 <div className = "info-item" key={info.id}>
                     <p className="info-label">{info.label}</p>
                     <h1 className="info-value">{info.value}</h1>
@@ -43,7 +43,7 @@ class StudentWidget extends React.Component {
         super(props)
     }
     render(){
-        const students = this.props.students.map((student) => 
+        const students = this.props.students.map((student) =>
             <TabPane key={student.id} tab={student.firstname+" "+student.lastname}></TabPane>
         )
 
@@ -61,10 +61,10 @@ class LoadingScreen extends React.Component {
 
     render() {
 
-        return <div class='loading-screen'>
+        return <div className='loading-screen'>
             <Spin indicator={<LoadingOutlined style={{ fontSize: 30 }}/>}/>
             <p>Loading, please wait</p>
         </div>
-        
+
     }
 }
