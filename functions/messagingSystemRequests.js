@@ -1015,7 +1015,8 @@ async function createZoomLinkForTutor(email, tutorId, studentId, tutorName, stud
                 'authToken': zapierAuthToken,
                 'meetingId': resultData['id'],
                 'tutorId': tutorId,
-                'studentId': studentId
+                'studentId': studentId,
+                'meetingTopic': `${tutorName} and ${studentName}'s tutoring session`
             })
         })
 
