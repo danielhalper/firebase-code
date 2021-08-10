@@ -1,5 +1,7 @@
-const { Tabs } = antd
+const { Tabs, Spin, Typography } = antd
+const { LoadingOutlined } = icons
 const { TabPane } = Tabs
+const { Title } = Typography
 
 //Required item component
 class RequiredItem extends React.Component {
@@ -48,5 +50,21 @@ class StudentWidget extends React.Component {
         return <Tabs className='student-tabs' onChange={this.props.onTabChange}>
             {students}
         </Tabs>
+    }
+}
+
+//Loading Screen
+class LoadingScreen extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+
+        return <div class='loading-screen'>
+            <Spin indicator={<LoadingOutlined style={{ fontSize: 30 }}/>}/>
+            <p>Loading, please wait</p>
+        </div>
+        
     }
 }

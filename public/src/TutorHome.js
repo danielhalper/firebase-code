@@ -169,7 +169,7 @@ class TutorHome extends React.Component {
             </div>
             <div className="modal-container">
                 <Modal title="Start Zoom Meeting" display = {this.state.modals.zoom} options={{submit:false}} onClose = {() => this.onModalClose('zoom')}>
-                    { !this.state.zoomLinks && <Skeleton active/> }
+                    { !this.state.zoomLinks && <LoadingScreen /> }
                     
                     { this.state.zoomLinks && <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
                         <div style={{width: '70%'}}>
