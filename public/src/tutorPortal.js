@@ -29,7 +29,7 @@ class TutorApp extends React.Component {
                         {
                             keyId: 'messaging',
                             icon: <CommentOutlined />,
-                            title: 'Message Students',
+                            title: 'Message Family',
                             active: false,
                             disabled: false,
                             complete: false
