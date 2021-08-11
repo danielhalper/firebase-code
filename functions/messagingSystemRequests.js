@@ -474,7 +474,7 @@ async function updatePersonRecord(req, res, role) {
     const newRecordData = await getUpdatedRecordData({ fields: req.body }, firestoreDoc, role)
 
     //Set the new data
-    await firestoreDoc.ref.set(newRecordData, { merge: true })
+    await firestoreDoc.ref.set(newRecordData)
 
     res.send({
         status: 'success'
@@ -793,6 +793,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
     //Keep track of the person's tutors/students and the phone numbers that are available to assign
     let correspondents = {}
     let zoomLinks = {}
+    let currentZoomLinks = {}
     let restrictedTutorNumbers = []
 
     let airtableItems = record.fields[role == 'tutor' ? 'Students': 'Tutors']
@@ -819,7 +820,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
         const firestoreItems = firestoreDoc.get(role == 'tutor' ? 'students': 'tutors') || []
 
         //Get potential zoom links
-        zoomLinks = firestoreDoc.get('zoomLinks') || {}
+        currentZoomLinks = firestoreDoc.get('zoomLinks') || {}
 
         if (notNull(airtableItems)) {
 
@@ -845,7 +846,9 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
                 }
 
                 //Collect missing zoom items
-                if (!notNull( zoomLinks[ airtableItems[i] ] )) { zoomMissingItems.push(airtableItems[i]) }
+                const oldZoomItem = currentZoomLinks[ airtableItems[i] ]
+                if ( notNull( oldZoomItem ) ) { zoomLinks[ airtableItems[i] ] = oldZoomItem }
+                else { zoomMissingItems.push(airtableItems[i]) }
 
             }
 
