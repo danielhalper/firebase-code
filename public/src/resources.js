@@ -61,7 +61,7 @@ class LoadingScreen extends React.Component {
 
     render() {
 
-        return <div class='loading-screen'>
+        return <div className='loading-screen'>
             <Spin indicator={<LoadingOutlined style={{ fontSize: 30 }}/>}/>
             <p>Loading, please wait</p>
         </div>
