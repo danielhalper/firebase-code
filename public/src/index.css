@@ -89,6 +89,12 @@ h3.ant-typography {
     margin-bottom: 10px;
 }
 
+li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step div.ant-timeline-item-content {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+
+}
+
 .sidebar-options div.main-item:not(.step) {
     font-size: 17px;
     font-weight: bold;
@@ -98,6 +104,11 @@ h3.ant-typography {
 
 .sidebar-options div.subitem {
     margin-left: 15px;
+
+}
+
+.sidebar-options ul.ant-timeline {
+    padding: 10px 0 0 15px;
 }
 
 .sidebar-options div:not(.disabled):hover {
@@ -204,6 +215,21 @@ h3.ant-typography {
 
 .tab-content-style .ant-tabs-content-holder {
     align-self: center;
+}
+
+/* .wb-form-done {
+    color: green;
+} */
+
+.wb-check-style {
+color: white;
+background-color: #0fca0f;
+border-radius: 15px;
+padding: 4px;
+}
+
+#workbook-tabs .ant-tabs-tab .anticon {
+    margin-right: 8px;
 }
 
 .dashboard-required-items {

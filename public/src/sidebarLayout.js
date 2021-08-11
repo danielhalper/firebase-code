@@ -1,8 +1,8 @@
-const { Layout, Avatar, Typography, Tabs, Steps, Popover, Skeleton } = antd
+const { Layout, Avatar, Typography, Tabs, Steps, Popover, Skeleton, Timeline } = antd
 const { Step } = Steps
 const { Title, Link } = Typography
 const { TabPane } = Tabs
-const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined } = icons;
+const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined, CheckCircleFilled } = icons;
 const { Sider, Content, Footer } = Layout
 
 class SidebarItem extends React.Component {
@@ -27,7 +27,10 @@ class SidebarItem extends React.Component {
     }
 
     render() {
-        return <div id={this.props.keyId} onFocus={this.handleOnClick} onClick={this.handleOnClick} className={`${this.props.active ? 'active ':''}${this.props.disabled || this.props.complete ? 'disabled ':''}${this.props.isStep ? 'step ':''}${this.props.isSubItem ? 'subitem ':''}${this.props.isMainItem ? 'main-item ':''}${this.props.complete ? 'complete ':''}`}>{this.props.icon && this.props.icon} {this.props.children}</div>
+        return ( <div id={this.props.keyId} onFocus={this.handleOnClick} onClick={this.handleOnClick}
+        className={`${this.props.active ? 'active ':''}${this.props.disabled || this.props.complete ? 'disabled ':''}
+        ${this.props.isStep ? 'step ':''}${this.props.isSubItem ? 'subitem ':''}${this.props.isMainItem ? 'main-item ':''}
+        ${this.props.complete ? 'complete ':''}`}>{this.props.icon && this.props.icon} {this.props.children}</div>)
     }
 }
 
@@ -154,21 +157,19 @@ class SidebarLayout extends React.Component {
 
                             <SidebarItem isMainItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
 
-                            {item.isSteps && <Steps direction='vertical' className='subitem'>
+                                {/* For Onboarding Portal */}
+                                {item.isSteps && <Timeline className='subitem'>
+                                    {item.subItems && item.subItems.map(subItem => {
+                                        return <Timeline.Item className="step" color={subItem.disabled ? 'gray' : '#1BCBD9'} dot={subItem.complete ? <CheckCircleFilled /> : '' }> <SidebarItem complete={subItem.complete} isStep keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem> </Timeline.Item>
+                                    })}
+                                </Timeline>}
 
-                                {item.subItems && item.subItems.map(subItem => {
-
-                                    return <Step status={subItem.complete ? 'finish':undefined} title={<SidebarItem complete={subItem.complete} isStep keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem>}/>
-
+                                {/* For Tutor Portal */}
+                                {!item.isSteps && <div>
+                                    {item.subItems && item.subItems.map(subItem => {
+                                        return <SidebarItem isSubItem keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem>
                                 })}
-
-                            </Steps>}
-
-                            {!item.isSteps && <div>
-                                {item.subItems && item.subItems.map(subItem => {
-                                    return <SidebarItem isSubItem keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem>
-                                })}
-                            </div>}
+                                </div>}
 
                             </div>
 
@@ -203,7 +204,8 @@ class SidebarLayout extends React.Component {
 
                             {/* Will render this view for Onboarding Portal */}
                             {!this.props.loading && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
-                                currentStep={this.props.currentStep} isLoadingUser={this.props.loading} error={this.props.error} progress={this.props.progress} onSideBarItemClicked={this.onSideBarItemClicked} />}
+                                currentStep={this.props.currentStep} isLoadingUser={this.props.loading} error={this.props.error}
+                                progress={this.props.progress} onSideBarItemClicked={this.onSideBarItemClicked} workbookForms={this.props.workbookForms} />}
                         </div>
                     </Content>
                 </Layout>

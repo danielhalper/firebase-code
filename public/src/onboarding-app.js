@@ -10,9 +10,15 @@ class OnboardingApp extends React.Component {
       progress: {
         hasScheduledChat: false,
         hasCompletedWaiver: false,
-        hasCompletedWorkbook: false,
+        hasCompletedAllWorkbook: false,
         hasCompletedLiveScan: false,
         hasCompletedLiveTraining: false
+      },
+      workbookForms: {
+        hasCompletedWbForm1: false,
+        hasCompletedWbForm2: false,
+        hasCompletedWbForm3: false,
+        hasCompletedWbForm4: false
       },
       sidebarItems: [
         {
@@ -115,12 +121,12 @@ class OnboardingApp extends React.Component {
         break
       case 'Ready to Tutor':
         currentStep = 2
-        break 
+        break
       case 'Status':
         currentStep = 4
         break
     }
-    
+
     return currentStep
   }
 
@@ -164,17 +170,34 @@ class OnboardingApp extends React.Component {
   setUserProgress(user) {
     let scheduledChat = notNull(user.interviewDate);
     let completedWaiver = user.waiverCompleted;
-    let completedWorkbook = user.workbookCompleted;
     let completedLiveScan = user.liveScanCompleted;
     let completedLiveTraining = user.liveTrainingCompleted;
+    let completedAllWorkbook;
+    let completedForm1 = user.workbookForm1Completed;
+    let completedForm2 = user.workbookForm2Completed;
+    let completedForm3 = user.workbookForm3Completed;
+    let completedForm4 = user.workbookForm4Completed;
+
+
+    if (completedForm1 && completedForm2 && completedForm3 && completedForm4) {
+      completedAllWorkbook = true
+    } else {
+      completedAllWorkbook = false
+    }
 
     this.setState({
       progress:{
         hasScheduledChat: scheduledChat,
         hasCompletedWaiver: completedWaiver,
-        hasCompletedWorkbook: completedWorkbook,
+        hasCompletedAllWorkbook: completedAllWorkbook,
         hasCompletedLiveScan: completedLiveScan,
         hasCompletedLiveTraining: completedLiveTraining
+      },
+      workbookForms: {
+        hasCompletedWbForm1: completedForm1,
+        hasCompletedWbForm2: completedForm2,
+        hasCompletedWbForm3: completedForm3,
+        hasCompletedWbForm4: completedForm4
       }
     })
   }
@@ -184,7 +207,7 @@ class OnboardingApp extends React.Component {
       .then(result => {
 
         const tutorDetailedResult = result.data
-
+        console.log(tutorDetailedResult)
         this.receiveUser(tutorDetailedResult)
         this.setUserLocalStorage(tutorDetailedResult)
         this.setUserProgress(tutorDetailedResult)
@@ -210,17 +233,21 @@ class OnboardingApp extends React.Component {
 
     // at this point chat has been scheduled and becomes disabled
       sidebarItems[0].subItems[0]['disabled'] = true;
+      sidebarItems[0].subItems[0]['complete'] = true;
 
     //if waiver has been completed, disable waiver page
     if (this.state.progress.hasCompletedWaiver) {
       const waiverIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'waiver')
       sidebarItems[0].subItems[waiverIndex].disabled = true
+      sidebarItems[0].subItems[waiverIndex].complete = true
+
     }
 
     // if workbook has been completed, disable workbook page
-    if (this.state.progress.hasCompletedWorkbook) {
+    if (this.state.progress.hasCompletedAllWorkbook) {
       const workbookIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'workbook')
       sidebarItems[0].subItems[workbookIndex].disabled = true
+      sidebarItems[0].subItems[workbookIndex].complete = true
     }
 
     // if has passed interview, check if live scan & training have been completed, enable pages when not, otherwise disabled
@@ -228,10 +255,14 @@ class OnboardingApp extends React.Component {
       if (this.state.progress.hasCompletedLiveScan) {
         const livescanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
         sidebarItems[0].subItems[livescanIndex].disabled = true
+        sidebarItems[0].subItems[livescanIndex].complete = true
+
       }
       if (this.state.progress.hasCompletedLiveTraining) {
         const liveTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
         sidebarItems[0].subItems[liveTrainingIndex].disabled = true
+        sidebarItems[0].subItems[liveTrainingIndex].complete = true
+
       }
     } else {
       const lScanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
@@ -266,6 +297,7 @@ componentDidMount() {
         }}
         onboarding
         sidebarItems={this.state.sidebarItems}
+        workbookForms={this.state.workbookForms}
         currentTab='home'
         userData={this.state.userData}
         currentStep={this.state.currentStep}
