@@ -197,7 +197,7 @@ class SidebarLayout extends React.Component {
                         <div className='main-content'>
 
                             {/* Will render this view when page is loading */}
-                            {this.state.loadingUser && <LoadingScreen/>}
+                            {this.props.loading && <LoadingScreen/>}
 
                             {/* Will render this view for Tutor Portal */}
                             {!this.props.loading && !this.props.progress && <CurrentPage tutor={this.props.userData} />}
