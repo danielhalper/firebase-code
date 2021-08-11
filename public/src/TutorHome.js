@@ -138,8 +138,8 @@ class TutorHome extends React.Component {
                     <div style={{flex:1}}></div>
             </div>
             <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:10}}>
-                <RequiredItem link={"#messaging"} icon={<CommentOutlined/>} title='Message Students'>
-                    Communicate with your student through our online messaging application.
+                <RequiredItem link={"#messaging"} icon={<CommentOutlined/>} title='Message Family'>
+                    Communicate with your student's guardian through our online messaging application.
                 </RequiredItem>
                 <RequiredItem onClick={() => {
                     firebase.analytics().logEvent('started_zoom_call')
