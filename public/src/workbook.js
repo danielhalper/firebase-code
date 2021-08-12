@@ -1,4 +1,16 @@
-const { CheckCircleFilled, MinusCircleOutlined } = icons;
+const { CheckCircleFilled, MinusCircleOutlined, CheckCircleTwoTone } = icons;
+
+function CompletedFormMsg(props) {
+
+    return (
+      <div className="completed-form-outer-div">
+        <div className="completed-form-icon"><CheckCircleTwoTone twoToneColor="#1BCBD9" /></div>
+        <h2 className="completed-form-thank-you">Thank You!</h2>
+        <p>Your submission for {props.workbookForm} has been saved.</p>
+      </div>
+    )
+}
+
 
 class Workbook extends React.Component {
   constructor(props) {
@@ -20,56 +32,40 @@ class Workbook extends React.Component {
           <Tabs defaultActiveKey="1" centered className="tab-content-style">
 
             <TabPane
-              tab={ <span>
-                {wbForms.hasCompletedWbForm1 ?
-                  <CheckCircleFilled className="wb-check-style" />  :
-                  <div className="wb-form-incomplete"></div>
-                }
-                General Expectations
-              </span> }
+              tab={ <span> { wbForms.hasCompletedWbForm1 ? <CheckCircleFilled className="wb-check-style" />  : <div className="wb-form-incomplete"></div> } General Expectations </span> }
               key="1"
               forceRender="true"  >
-              <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLScN2qPXuWx7PcG4rAPzFUx06M-V5Ahtx0o-ge1L3ifc-9VVFQ/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.147453066=${userLocalEmail}`} width="640" height="3300" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
+              {wbForms.hasCompletedWbForm1 ? <CompletedFormMsg workbookForm={"General Expectations"} /> :
+                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLScN2qPXuWx7PcG4rAPzFUx06M-V5Ahtx0o-ge1L3ifc-9VVFQ/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.147453066=${userLocalEmail}`} width="640" height="3300" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
+              }
             </TabPane>
 
             <TabPane
-              tab={ <span>
-                {wbForms.hasCompletedWbForm2 ?
-                  <CheckCircleFilled className="wb-check-style" /> :
-                  <div className="wb-form-incomplete"></div>
-                }
-                Sexual Harassment and Boundaries
-              </span> }
+              tab={ <span> { wbForms.hasCompletedWbForm2 ? <CheckCircleFilled className="wb-check-style" /> : <div className="wb-form-incomplete"></div> } Sexual Harassment and Boundaries </span> }
               key="2"
               forceRender="true" >
-              <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLSdx3uxtfVJEf8jSs4bXwKUFZp0a5teFBxxs-vwod3koxJ1gbA/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.147453066=${userLocalEmail}`} width="640" height="2150" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
-            </TabPane>
+              {wbForms.hasCompletedWbForm2 ? <CompletedFormMsg workbookForm={"Sexual Harassment and Boundaries"} /> :
+                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLSdx3uxtfVJEf8jSs4bXwKUFZp0a5teFBxxs-vwod3koxJ1gbA/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.147453066=${userLocalEmail}`} width="640" height="2150" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
+              }
+              </TabPane>
 
             <TabPane
-              tab={ <span>
-                {wbForms.hasCompletedWbForm3 ?
-                  <CheckCircleFilled className="wb-check-style" /> :
-                  <div className="wb-form-incomplete"></div>
-                }
-                Teaching Math
-              </span> }
+              tab={ <span> { wbForms.hasCompletedWbForm3 ? <CheckCircleFilled className="wb-check-style" /> : <div className="wb-form-incomplete"></div> } Teaching Math </span> }
               key="3"
               forceRender="true" >
-              <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLSeG5hnnpsDSCjelPD31tm3q8jIxd_AqiphhUpicC_DPvJSZCA/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.144716208=${userLocalEmail}`} width="640" height="2400" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
-            </TabPane>
+              {wbForms.hasCompletedWbForm3 ? <CompletedFormMsg workbookForm={"Teaching Math & Common Core"} /> :
+                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLSeG5hnnpsDSCjelPD31tm3q8jIxd_AqiphhUpicC_DPvJSZCA/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.144716208=${userLocalEmail}`} width="640" height="2400" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
+              }
+              </TabPane>
 
             <TabPane
-              tab={ <span>
-                {wbForms.hasCompletedWbForm4 ?
-                  <CheckCircleFilled className="wb-check-style" />  :
-                  <div className="wb-form-incomplete"></div>
-                }
-                  Teaching Reading
-              </span> }
+              tab={ <span> { wbForms.hasCompletedWbForm4 ? <CheckCircleFilled className="wb-check-style" />  : <div className="wb-form-incomplete"></div> } Teaching Reading </span> }
               key="4"
               forceRender="true" >
-              <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLScewxx296TOYqKFJEPDKKzPi56A-bvKdBoZG3OtDhzAnkMNZQ/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.689630015=${userLocalEmail}`} width="640" height="1550" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
-            </TabPane>
+              {wbForms.hasCompletedWbForm4 ? <CompletedFormMsg workbookForm={"Teaching Reading Comprehension"} /> :
+                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLScewxx296TOYqKFJEPDKKzPi56A-bvKdBoZG3OtDhzAnkMNZQ/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.689630015=${userLocalEmail}`} width="640" height="1550" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
+              }
+              </TabPane>
 
           </Tabs>
         </div>

@@ -235,6 +235,28 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
     margin-bottom: -2px;
 }
 
+.completed-form-outer-div {
+    height: 350px;
+    margin: 30px 0 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 5px;
+    padding: 0 50px;
+}
+
+.completed-form-icon {
+    font-size: 100px;
+}
+
+.completed-form-thank-you {
+    color:  #327D83;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
 #workbook-tabs .ant-tabs-tab .anticon {
     margin-right: 7px;
 }
@@ -357,7 +379,7 @@ div.info-bar {
     border-radius: 10px;
     width: 500px;
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
 }
 .modal-title {
     font-size: 25px;
