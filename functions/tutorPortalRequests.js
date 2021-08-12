@@ -629,10 +629,10 @@ async function verifyOnboardingUser(context) {
         status: result[0].fields['Status'] || '',
         interviewDate: result[0].fields['Interview Date'] || null,
         waiverCompleted: result[0].fields['Waiver?'] || false,
-        workbook1Completed: result[0].fields['Section 1'] || false,
-        workbook2Completed: result[0].fields['Creating Boundaries section'] || false,
-        workbook3Completed: result[0].fields['Math section'] || false,
-        workbook4Completed: result[0].fields['Section 2'] || false,
+        workbookForm1Completed: result[0].fields['Section 1'] || false,
+        workbookForm2Completed: result[0].fields['Creating Boundaries section'] || false,
+        workbookForm3Completed: result[0].fields['Math section'] || false,
+        workbookForm4Completed: result[0].fields['Section 2'] || false,
         liveScanCompleted: result[0].fields['Live Scan?'] || false,
         liveTrainingCompleted: result[0].fields['Live Training?'] || false
     }
