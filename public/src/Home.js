@@ -64,7 +64,7 @@ class FirstSteps extends React.Component {
         let progress = this.props.progress
         let tutorDetails = this.props.tutorDetails
         let interviewDate = '';
-        
+
         if (notNull(interviewDate)) interviewDate = tutorDetails.interviewDate
 
         //Show a skeleton when loading
@@ -107,7 +107,7 @@ class FirstSteps extends React.Component {
                             The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
                         </RequiredOBItem>}
 
-                        {<RequiredOBItem requirementCompleted={progress.hasCompletedWorkbook} linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined />} title='The Workbook'>
+                        {<RequiredOBItem requirementCompleted={progress.hasCompletedAllWorkbook} linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined />} title='The Workbook'>
                             The workbook is our training course for new tutors. It will set you up for success with your student.
                         </RequiredOBItem>}
 
@@ -152,7 +152,7 @@ class SecondSteps extends React.Component {
                 The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
             </RequiredOBItem> }
 
-                {<RequiredOBItem requirementCompleted={progress.hasCompletedWorkbook} linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined/>} title='The Workbook'>
+                {<RequiredOBItem requirementCompleted={progress.hasCompletedAllWorkbook} linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined/>} title='The Workbook'>
                 The workbook is our training course for new tutors. It will set you up for success with your student.
             </RequiredOBItem> }
 
