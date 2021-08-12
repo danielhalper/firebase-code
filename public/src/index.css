@@ -13,7 +13,6 @@ h3.ant-typography {
 }
 
 .requirement {
-    /*border: solid #238d95 1px;*/
     background-color: white;
     border-radius: 10px;
     padding-top: 15px;
@@ -156,14 +155,12 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
 }
 
 .steps-container {
-
     background-color: white;
     border-radius: 15px;
     padding: 25px;
     margin-top: 30px;
     display: flex;
     align-items: center;
-
 }
 
 .sidebar-options div .ant-steps-icon .anticon {
@@ -228,10 +225,10 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
 }
 
 .wb-form-incomplete {
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
     background-color: #fff;
-    border: 2px solid rgb(119, 125, 125);
+    border: 2px solid rgb(0 0 0 / 27%);
     border-radius: 100px;
     display: inline-block;
     margin-right: 7px;
