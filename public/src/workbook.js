@@ -1,10 +1,10 @@
-const { CheckCircleFilled, MinusCircleOutlined, CheckCircleTwoTone } = icons;
+const { CheckCircleFilled, MinusCircleOutlined, SmileTwoTone } = icons;
 
 function CompletedFormMsg(props) {
 
     return (
       <div className="completed-form-outer-div">
-        <div className="completed-form-icon"><CheckCircleTwoTone twoToneColor="#1BCBD9" /></div>
+        <div className="completed-form-icon"><SmileTwoTone twoToneColor="#1BCBD9" /></div>
         <h2 className="completed-form-thank-you">Thank You!</h2>
         <p>Your submission for {props.workbookForm} has been saved.</p>
       </div>
