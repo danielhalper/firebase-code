@@ -89,9 +89,11 @@ h3.ant-typography {
     margin-bottom: 10px;
 }
 
+/* sidebar items spacing, override rule above */
 li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step div.ant-timeline-item-content {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
+    color: #1BCBD9;
 
 }
 
@@ -125,9 +127,9 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
     cursor: text;
 }
 
-.sidebar-options div .anticon {
+/* .sidebar-options div .anticon {
     margin-right: 5px;
-}
+} */
 
 .content-container {
     background-color: rgba(207, 245, 248, 0.67);
