@@ -71,7 +71,7 @@ exports.getOnboardingTutor = functions.https.onCall(async (data, context) => {
 
     //Verify the user
     const userData = await verifyOnboardingUser(context)
-    
+
     //Return the data
     return userData
 
@@ -451,7 +451,7 @@ exports.onNewUserCreated = functions.auth.user().onCreate((user) => {
 exports.sendEmailSignInLink = functions.https.onCall(async (data, context) => {
 
     //Get the user's email
-    const email = data.email 
+    const email = data.email
 
     let user;
 
@@ -614,9 +614,9 @@ async function verifyOnboardingUser(context) {
     const result = await base('Tutors').select({
         maxRecords: 1,
         filterByFormula: `TRIM(LOWER({Email})) = '${email.toLowerCase().trim()}'`,
-        fields: ['Waiver?', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date', 'Live Scan?', 'Live Training?']
+        fields: ['Waiver?', 'Creating Boundaries section', 'Math section', 'Section 1', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date', 'Live Scan?', 'Live Training?']
     }).firstPage()
-    
+
     //Make sure it exists
     if (result.length == 0) throw new functions.https.HttpsError('permission-denied', 'You must be signed in with the email you used in your application')
 
@@ -629,7 +629,10 @@ async function verifyOnboardingUser(context) {
         status: result[0].fields['Status'] || '',
         interviewDate: result[0].fields['Interview Date'] || null,
         waiverCompleted: result[0].fields['Waiver?'] || false,
-        workbookCompleted: result[0].fields['Section 2'] || false,
+        workbookForm1Completed: result[0].fields['Section 1'] || false,
+        workbookForm2Completed: result[0].fields['Creating Boundaries section'] || false,
+        workbookForm3Completed: result[0].fields['Math section'] || false,
+        workbookForm4Completed: result[0].fields['Section 2'] || false,
         liveScanCompleted: result[0].fields['Live Scan?'] || false,
         liveTrainingCompleted: result[0].fields['Live Training?'] || false
     }
@@ -641,7 +644,7 @@ function createPermanentSignInLink(email, returnUrl) {
     const token = jwt.sign({
         iss: 'org.stepuptutoring',
         sub: email
-    }, stepUpTokenEncryptionKey, { 
+    }, stepUpTokenEncryptionKey, {
         expiresIn: '300 days'
     })
 

@@ -13,7 +13,6 @@ h3.ant-typography {
 }
 
 .requirement {
-    /*border: solid #238d95 1px;*/
     background-color: white;
     border-radius: 10px;
     padding-top: 15px;
@@ -89,6 +88,14 @@ h3.ant-typography {
     margin-bottom: 10px;
 }
 
+/* sidebar items spacing, override rule above */
+li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step div.ant-timeline-item-content {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    color: #1BCBD9;
+
+}
+
 .sidebar-options div.main-item:not(.step) {
     font-size: 17px;
     font-weight: bold;
@@ -98,6 +105,11 @@ h3.ant-typography {
 
 .sidebar-options div.subitem {
     margin-left: 15px;
+
+}
+
+.sidebar-options ul.ant-timeline {
+    padding: 10px 0 0 15px;
 }
 
 .sidebar-options div:not(.disabled):hover {
@@ -114,9 +126,9 @@ h3.ant-typography {
     cursor: text;
 }
 
-.sidebar-options div .anticon {
+/* .sidebar-options div .anticon {
     margin-right: 5px;
-}
+} */
 
 .content-container {
     background-color: rgba(207, 245, 248, 0.67);
@@ -143,14 +155,12 @@ h3.ant-typography {
 }
 
 .steps-container {
-
     background-color: white;
     border-radius: 15px;
     padding: 25px;
     margin-top: 30px;
     display: flex;
     align-items: center;
-
 }
 
 .sidebar-options div .ant-steps-icon .anticon {
@@ -204,6 +214,51 @@ h3.ant-typography {
 
 .tab-content-style .ant-tabs-content-holder {
     align-self: center;
+}
+
+.wb-form-not-done {
+    color: grey;
+}
+
+.wb-check-style {
+    color:#1BCBD9;
+}
+
+.wb-form-incomplete {
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    border: 2px solid rgb(0 0 0 / 27%);
+    border-radius: 100px;
+    display: inline-block;
+    margin-right: 7px;
+    margin-bottom: -2px;
+}
+
+.completed-form-outer-div {
+    height: 350px;
+    margin: 30px 0 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 5px;
+    padding: 0 50px;
+}
+
+.completed-form-icon {
+    font-size: 100px;
+}
+
+.completed-form-thank-you {
+    color:  #327D83;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+#workbook-tabs .ant-tabs-tab .anticon {
+    margin-right: 7px;
 }
 
 .dashboard-required-items {
@@ -324,7 +379,7 @@ div.info-bar {
     border-radius: 10px;
     width: 500px;
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
 }
 .modal-title {
     font-size: 25px;
