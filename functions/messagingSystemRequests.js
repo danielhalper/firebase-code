@@ -450,7 +450,6 @@ exports.onNewStudentRow = functions.https.onRequest(async (req, res) => {
 
 })
 
-//Could probably be consolidated with `onNewStudentRow`
 exports.onNewTutorRow = functions.https.onRequest(async (req, res) => {
 
     return updatePersonRecord(req, res, 'tutor')
@@ -475,7 +474,7 @@ async function updatePersonRecord(req, res, role) {
     const newRecordData = await getUpdatedRecordData({ fields: req.body }, firestoreDoc, role)
 
     //Set the new data
-    await firestoreDoc.ref.set(newRecordData, { merge: true })
+    await firestoreDoc.ref.set(newRecordData)
 
     res.send({
         status: 'success'
@@ -799,6 +798,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
     //Keep track of the person's tutors/students and the phone numbers that are available to assign
     let correspondents = {}
     let zoomLinks = {}
+    let currentZoomLinks = {}
     let restrictedTutorNumbers = []
 
     let airtableItems = record.fields[role == 'tutor' ? 'Students': 'Tutors']
@@ -825,7 +825,7 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
         const firestoreItems = firestoreDoc.get(role == 'tutor' ? 'students': 'tutors') || []
 
         //Get potential zoom links
-        zoomLinks = firestoreDoc.get('zoomLinks') || {}
+        currentZoomLinks = firestoreDoc.get('zoomLinks') || {}
 
         if (notNull(airtableItems)) {
 
@@ -851,7 +851,9 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
                 }
 
                 //Collect missing zoom items
-                if (!notNull( zoomLinks[ airtableItems[i] ] )) { zoomMissingItems.push(airtableItems[i]) }
+                const oldZoomItem = currentZoomLinks[ airtableItems[i] ]
+                if ( notNull( oldZoomItem ) ) { zoomLinks[ airtableItems[i] ] = oldZoomItem }
+                else { zoomMissingItems.push(airtableItems[i]) }
 
             }
 
@@ -903,7 +905,25 @@ async function getUpdatedRecordData(record, firestoreDoc, role) {
 
             //If they're a tutor, create a zoom link
             if (role == 'tutor') {
-                newItem = await createZoomLinkForTutor((record.fields['StepUp Email'] || '').toLowerCase().trim())
+
+                //Get their step up email
+                const stepUpEmail = (record.fields['StepUp Email'] || '').toLowerCase().trim()
+
+                //Get the tutor name
+                const tutorName = `${record.fields['First Name'] || ''} ${record.fields['Last Name'] || ''}`
+
+                //AirTable setup (to get student record)
+                const airtableAPIKey = functions.config().airtable.key
+                const base = new airtable({ apiKey: airtableAPIKey}).base('appk1SzoRcgno7XQT')
+
+                //Get the student record from AirTable
+                const studentRecord = await base('Students').find(zoomMissingItems[i])
+                
+                //Get the student's name
+                const studentName = `${studentRecord.fields['First Name'] || ''} ${studentRecord.fields['Last Name'] || ''}`
+
+
+                newItem = await createZoomLinkForTutor((record.fields['StepUp Email'] || '').toLowerCase().trim(), record.id, zoomMissingItems[i], tutorName, studentName)
             }
 
             if (notNull(newItem)) {
@@ -967,7 +987,7 @@ function createZoomJWT() {
 
 }
 
-async function createZoomLinkForTutor(email) {
+async function createZoomLinkForTutor(email, tutorId, studentId, tutorName, studentName) {
 
     //Get a JWT for Zoom
     const token = createZoomJWT()
@@ -979,7 +999,7 @@ async function createZoomLinkForTutor(email) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            'topic': 'Step Up Tutoring Session',
+            'topic': `${tutorName} and ${studentName}'s tutoring session`,
             'type': 3,
             'settings': {
                 'auto_recording': 'none',
@@ -990,11 +1010,25 @@ async function createZoomLinkForTutor(email) {
         })
     })
 
-    const zoomTrackingWebhook = 'https://hooks.zapier.com/hooks/catch/7732277/b2u4fkr/'
-
-    //Send zoom meeting id, student and tutor record ids 
-
     const resultData = await response.json()
+
+    if (notNull(resultData['id'])) {
+
+        const zoomTrackingWebhook = 'https://hooks.zapier.com/hooks/catch/7732277/b2u4fkr/'
+
+        //Send zoom meeting id, student and tutor record ids
+        fetch(zoomTrackingWebhook, {
+            method: 'post',
+            body: JSON.stringify({
+                'authToken': zapierAuthToken,
+                'meetingId': resultData['id'],
+                'tutorId': tutorId,
+                'studentId': studentId,
+                'meetingTopic': `${tutorName} and ${studentName}'s tutoring session`
+            })
+        })
+
+    }
 
     return resultData['id']
 
