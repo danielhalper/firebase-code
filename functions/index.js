@@ -56,6 +56,8 @@ exports.getOnboardingTutor = tutorPortalRequests.getOnboardingTutor
 exports.onNewUserCreated = tutorPortalRequests.onNewUserCreated
 exports.getCustomAuthToken = tutorPortalRequests.getCustomAuthToken
 exports.sendEmailSignInLink = tutorPortalRequests.sendEmailSignInLink
+exports.getWeeklyAnnouncements = tutorPortalRequests.getWeeklyAnnouncements
+exports.getOnboardingAnnouncements = tutorPortalRequests.getOnboardingAnnouncements
  
 //Seed Firestore data
 if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') {
