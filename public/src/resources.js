@@ -1,4 +1,4 @@
-const { Tabs, Spin, Typography } = antd
+const { Tabs, Spin, Typography, Timeline } = antd
 const { LoadingOutlined } = icons
 const { TabPane } = Tabs
 const { Title } = Typography
@@ -66,5 +66,35 @@ class LoadingScreen extends React.Component {
             <p>Loading, please wait</p>
         </div>
 
+    }
+}
+
+class AnnouncementView extends React.Component {
+    constructor(props){
+        super(props)
+    }
+
+    render() {
+
+        const elements = this.props.data.map(item => {
+
+            //Get the date
+            const dateParts = item['Date'].split('-')
+            const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2] - 1)
+            const dateString = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+
+            return <Timeline.Item key={item['Title']}>
+                <div style={{display:"flex"}}>
+                    <Title level={4} style = {{margin:0}}>{item['Title']}</Title>
+                    <div style={{flex:1}}></div>
+                    <p style={{color:'rgb(150, 150, 150)'}}>{dateString}</p>
+                </div>
+                <p style={{textAlign:"left"}}>{item['Content']}</p>
+            </Timeline.Item>
+        })
+
+        return <Timeline style={{width: '100%', height:533, overflowY:'auto', paddingTop: 10}}>
+            {elements}
+        </Timeline>
     }
 }
