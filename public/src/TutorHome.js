@@ -1,5 +1,8 @@
 const { message } = antd
 const { CloseOutlined, CommentOutlined, VideoCameraOutlined, UnorderedListOutlined, FormOutlined, SoundOutlined, CalendarOutlined } = icons
+const { Timeline, Typography } = antd
+const { Title } = Typography
+
 
 class Modal extends React.Component {
     constructor(props) {
@@ -47,8 +50,12 @@ class TutorHome extends React.Component {
             zoomLinks: undefined,
             modals: {
                 'zoom': false,
-                'weekly-form': false
-            }
+                'weekly-form': false,
+                'announcements': false
+            },
+            announcements: [
+                {'Title':"Test Announcement", 'Date':"7/31/2021", 'Content':"this is a test"},
+            ]
         }
 
         for (let i = 0;i < this.props.tutor.students.length;i++) {
@@ -56,6 +63,8 @@ class TutorHome extends React.Component {
             this.students[ this.props.tutor.students[i].id ] = this.props.tutor.students[i]
 
         }
+
+        this.retrieveAnnouncements = this.retrieveAnnouncements.bind(this)
     }
 
     retrieveZoomLinks() {
@@ -67,6 +76,35 @@ class TutorHome extends React.Component {
             })
             
         }).catch(console.log)
+    }
+
+    retrieveAnnouncements(){
+        this.setState({announcements: [
+            {title:"Test Announcement", date:"7/31/2021", content:"this is a test"},
+            {title:"Test Announcement2", date:"7/31/2021", content:"this is a test with more content than the last one, because it's better and everything"},
+            {title:"Test Announcement3", date:"7/31/2021", content:"this is a test"},
+            {title:"Test Announcement4", date:"7/31/2021", content:"this is a test"},
+            {title:"Test Announcement5", date:"7/31/2021", content:"this is a test with more content than the last one, because it's better and everything"},
+            {title:"Test Announcement6", date:"7/31/2021", content:"this is a test"},
+            {title:"Test Announcement7", date:"7/31/2021", content:"this is a test"},
+            {title:"Test Announcement8", date:"7/31/2021", content:"this is a test with more content than the last one, because it's better and everything"},
+            {title:"Test Announcement9", date:"7/31/2021", content:"this is a test"},
+            {title:"Test Announcement10", date:"7/31/2021", content:"this is a test"},
+            {title:"Test Announcement11", date:"7/31/2021", content:"this is a test with more content than the last one, because it's better and everything"},
+            {title:"Test Announcement12", date:"7/31/2021", content:"this is a test"},
+        ]})
+        var elements = this.state.announcements.map((data) => 
+            <Timeline.Item key={data['Title']}>
+                <div style={{display:"flex"}}>
+                    <Title level={5} style = {{margin:0}}>{data['Title']}</Title>
+                    <div style={{flex:1}}></div>
+                    <p>{data['Date']}</p>
+                </div>
+                <p style={{textAlign:"left"}}>{data['Content']}</p>
+            </Timeline.Item>
+        )
+        this.setState({announcements:elements})
+        this.displayModal('announcements')
     }
 
     displayModal(id) {
@@ -156,10 +194,8 @@ class TutorHome extends React.Component {
                 <RequiredItem onClick={() => this.displayModal('weekly-form')} icon={<FormOutlined/>} title='Weekly Form'>
                     Fill this out each week... so the student's teacher and parent are up-to-date.
                 </RequiredItem>
-                <RequiredItem link={"undefined"} icon={<SoundOutlined/>} title='Weekly Announcements' onClick={() => {
-                    firebase.analytics().logEvent('check_announcements')
-                }}>
-                    All the Step Up updates, program changes, and newsletters in one place!
+
+                <RequiredItem onClick={this.retrieveAnnouncements} icon={<SoundOutlined/>} title='Weekly Announcements'>
                 </RequiredItem>
                 <RequiredItem link='https://www.stepuptutoring.org/tutor-events' newTab icon={<CalendarOutlined/>} title='Events & Gamification' onClick={() => {
                     firebase.analytics().logEvent('check_events')
@@ -193,6 +229,11 @@ class TutorHome extends React.Component {
 
                 <Modal title='Weekly Form' display={this.state.modals['weekly-form']} options={{ submit: false }} onClose={() => this.onModalClose('weekly-form')}>
                     <iframe className="airtable-embed" src="https://airtable.com/embed/shrHFVAQ4wbWOEt7Z?backgroundColor=cyanLight" frameborder="0" onmousewheel="" width="100%" height="533" style={{ background: 'transparent', border: '0px solid #ccc' }}></iframe>
+                </Modal>
+                <Modal title="Weekly Announcements" display = {this.state.modals.announcements} options={{submit:false}} onClose = {() => this.onModalClose('announcements')}>
+                    <Timeline style={{width: '100%', height:533, overflowY:'auto', paddingTop: 10}}>
+                        {this.state.announcements}
+                    </Timeline> 
                 </Modal>
             </div>
         </div>
