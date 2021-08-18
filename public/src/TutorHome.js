@@ -104,9 +104,14 @@ class TutorHome extends React.Component {
 
         modalsCopy[id] = false
 
-        this.setState({
+        let stateObject = {
             modals: modalsCopy
-        })
+        }
+
+        if (id == 'announcements') stateObject['announcements'] = undefined
+        if (id == 'zoom') stateObject['zoomLinks'] = undefined
+
+        this.setState(stateObject)
     }
 
     copyLink(link){
