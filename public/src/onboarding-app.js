@@ -77,30 +77,35 @@ class OnboardingApp extends React.Component {
           title: 'Support',
           active: false,
           disabled: false,
+          isSupport: true,
           subItems: [
             {
               keyId: 'faq',
               title: 'FAQ',
               active: false,
-              disabled: false
+              disabled: false,
+              link: 'https://docs.google.com/document/d/1Wc2ztcXHTxDC2uZar6RkoayDRr5itrcv05thvoSs1cs/edit'
             },
             {
               keyId: 'tutor-resources',
               title: 'Tutor Resources',
               active: false,
-              disabled: false
+              disabled: false,
+              link: 'https://www.stepuptutoring.org/resources'
             },
             {
               keyId: 'office-hours',
               title: 'Sign up for office hours',
               active: false,
-              disabled: false
+              disabled: false,
+              link: 'https://www.stepuptutoring.org/tutor-events'
             },
             {
               keyId: 'contact',
               title: 'Contact Laura',
               active: false,
-              disabled: false
+              disabled: false,
+              link: 'https://www.stepuptutoring.org/contact'
             },
           ]
         }
