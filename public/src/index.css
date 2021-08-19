@@ -373,7 +373,6 @@ h3.bg-check-step-title:after {
     height: 190px;
     border-radius: 5px;
     margin: 0 16px;
-
 }
 
 .support-page-link {
@@ -382,10 +381,6 @@ h3.bg-check-step-title:after {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.support-item-col:hover {
-    cursor: pointer;
 }
 
 .support-col-outer-div {
