@@ -95,14 +95,14 @@ class OnboardingApp extends React.Component {
             },
             {
               keyId: 'office-hours',
-              title: 'Sign up for office hours',
+              title: 'Sign Up for Office Hours',
               active: false,
               disabled: false,
               link: 'https://www.stepuptutoring.org/tutor-events'
             },
             {
               keyId: 'contact',
-              title: 'Contact Laura',
+              title: 'Contact Us',
               active: false,
               disabled: false,
               link: 'https://www.stepuptutoring.org/contact'
@@ -298,7 +298,8 @@ componentDidMount() {
           'chat-signup': ChatSignup,
           'workbook': Workbook,
           'livescan': BackgroundCheck,
-          'live-training': LiveTraining
+          'live-training': LiveTraining,
+          'support': SupportPage
         }}
         onboarding
         sidebarItems={this.state.sidebarItems}

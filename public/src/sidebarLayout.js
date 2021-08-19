@@ -104,12 +104,12 @@ class SidebarLayout extends React.Component {
         const sidebarItems = this.state.sidebarItems
 
         // highlights side navigation item that is the current tab
-        // for (let i = 0; i < sidebarItems.length; i++) {
-            if (sidebarItems[0]['keyId'] == key) {
-                sidebarItems[0]['active'] = true
-                if (sidebarItems[0].subItems) {
-                    sidebarItems[0].subItems.map(item => item.active = false)}
-            } else sidebarItems[0]['active'] = false
+        for (let i = 0; i < sidebarItems.length; i++) {
+            if (sidebarItems[i]['keyId'] == key) {
+                sidebarItems[i]['active'] = true
+                if (sidebarItems[i].subItems) {
+                    sidebarItems[i].subItems.map(item => item.active = false)}
+            } else sidebarItems[i]['active'] = false
 
             if (sidebarItems[0].subItems && sidebarItems[0]['active'] === false) {
                 for (let x = 0; x < sidebarItems[0].subItems.length; x++) {
@@ -118,7 +118,7 @@ class SidebarLayout extends React.Component {
                         sidebarItems[0]['active'] = false
                     } else sidebarItems[0].subItems[x]['active'] = false
                 }
-            // }
+            }
         }
 
         this.setState({ currentTab: key, sidebarItems: sidebarItems })
@@ -213,8 +213,8 @@ class SidebarLayout extends React.Component {
             <Layout>
 
                 <Layout style={{backgroundColor: 'white'}}>
-                    <Content className='content-container'>
-                        <div className='main-content'>
+                    <Content className={this.state.currentTab === 'support' ? 'support-content-container' : 'content-container'}>
+                        <div className={this.state.currentTab === 'support' ? 'support-main-content' : 'main-content'}>
 
                             {/* Will render this view when page is loading */}
                             {this.props.loading && <LoadingScreen/>}
