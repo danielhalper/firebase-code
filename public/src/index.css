@@ -383,6 +383,10 @@ h3.bg-check-step-title:after {
     justify-content: center;
 }
 
+.support-item-col:hover {
+    box-shadow: rgb(0 0 0 / 10%) 0px 3px 5px;
+}
+
 .support-col-outer-div {
     display: flex;
     flex-direction: column;
