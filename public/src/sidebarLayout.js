@@ -2,7 +2,7 @@ const { Layout, Avatar, Typography, Tabs, Steps, Popover, Skeleton, Timeline } =
 const { Step } = Steps
 const { Title, Link } = Typography
 const { TabPane } = Tabs
-const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined, CheckCircleFilled } = icons;
+const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined, CheckCircleFilled, LoadingOutlined } = icons;
 const { Sider, Content, Footer } = Layout
 
 class SidebarItem extends React.Component {
@@ -170,22 +170,25 @@ class SidebarLayout extends React.Component {
 
                             <SidebarItem isMainItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
 
+                                {/* Will render this on sidebar when user info loading */}
+                                {this.props.loading && <LoadingScreen />}
+
                                 {/* Sidebar For Onboarding Portal (checklist pages) */}
-                                {item.isSteps && <Timeline className='subitem'>
+                                {!this.props.loading && item.isSteps && <Timeline className='subitem'>
                                     {item.subItems && item.subItems.map(subItem => {
                                         return <Timeline.Item className="step" color={subItem.disabled ? 'gray' : '#1BCBD9'} dot={subItem.complete ? <CheckCircleFilled /> : ''}> <SidebarItem complete={subItem.complete} isStep keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem> </Timeline.Item>
                                     })}
                                 </Timeline>}
 
                                 {/* Sidebar For Tutor Portal */}
-                                {!item.isSteps && !item.isSupport && <div>
+                                {!this.props.loading && !item.isSteps && !item.isSupport && <div>
                                     {item.subItems && item.subItems.map(subItem => {
                                         return <SidebarItem isSubItem keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem>
                                 })}
                                 </div>}
 
                                 {/* Sidebar for Support Items */}
-                                {item.isSupport && <div>
+                                {!this.props.loading && item.isSupport && <div>
                                     {item.subItems && item.subItems.map(subItem => {
                                         return <SupportItem isSubItem icon={subItem.icon} link={subItem.link} >{subItem.title}</SupportItem>
                                     })}
