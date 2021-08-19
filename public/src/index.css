@@ -347,7 +347,7 @@ h3.bg-check-step-title:after {
 .support-header {
     width: 100%;
     background-color: #65c8d0;
-    padding: 60px 40px;
+    padding: 40px 40px 20px;
     border-radius: 10px 10px 0 0;
     color: white;
 }
@@ -370,7 +370,7 @@ h3.bg-check-step-title:after {
 
 .support-item-col {
     background-color: #fff;
-    height: 190px;
+    height: 180px;
     border-radius: 5px;
     margin: 0 16px;
 }

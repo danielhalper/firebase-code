@@ -1,7 +1,25 @@
 const { Row, Col, Button } = antd;
 const { QuestionOutlined, SnippetsOutlined, ScheduleOutlined, MailOutlined, CalendarOutlined } = icons;
-
 const { Link } = Typography
+
+class SupportPageItem extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    return (
+      <Col span={11} className="support-item-col">
+        <Button type="link" className="support-page-link" href={this.props.link} target="_blank">
+          <div className="support-col-outer-div">
+            <div className="support-item-icon" >{this.props.icon}</div>
+            <div className="support-item-inner-div">{this.props.title.toUpperCase()}</div>
+          </div>
+        </Button>
+      </Col>
+    )
+  }
+}
 
 class SupportPage extends React.Component {
   constructor(props) {
@@ -18,38 +36,9 @@ class SupportPage extends React.Component {
 
         <div className="support-container">
           <Row className="support-gutter" gutter={[12, 24]}>
-            <Col span={11} className="support-item-col" >
-              <Button type="link" className="support-page-link" href="https://docs.google.com/document/d/1Wc2ztcXHTxDC2uZar6RkoayDRr5itrcv05thvoSs1cs/edit" target="_blank">
-                <div className="support-col-outer-div">
-                  <QuestionOutlined className="support-item-icon" />
-                  <div className="support-item-inner-div">FAQ</div>
-                </div>
-              </Button>
-              </Col>
-            <Col span={11} className="support-item-col">
-              <Button type="link" className="support-page-link" href="https://www.stepuptutoring.org/resources" target="_blank">
-                <div className="support-col-outer-div">
-                  <SnippetsOutlined className="support-item-icon" />
-                  <div className="support-item-inner-div">TUTOR RESOURCES</div>
-                </div>
-              </Button>
-            </Col>
-            <Col span={11} className="support-item-col">
-              <Button type="link" className="support-page-link" href="https://www.stepuptutoring.org/contact" target="_blank">
-                <div className="support-col-outer-div">
-                  <MailOutlined className="support-item-icon" />
-                  <div className="support-item-inner-div">CONTACT US</div>
-                </div>
-              </Button>
-            </Col>
-            <Col span={11} className="support-item-col">
-              <Button type="link" className="support-page-link" href="https://www.stepuptutoring.org/tutor-events" target="_blank">
-                <div className="support-col-outer-div">
-                  <ScheduleOutlined className="support-item-icon" />
-                  <div className="support-item-inner-div">SIGN UP FOR OFFICE HOURS</div>
-                </div>
-              </Button>
-            </Col>
+            {this.props.sidebarItems[1].subItems.map((subItem, key) => {
+              return <SupportPageItem link={subItem.link} icon={subItem.icon} title={subItem.title} key={key} />})
+            }
           </Row>
         </div>
       </div>
