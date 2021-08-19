@@ -43,7 +43,7 @@ class SupportItem extends React.Component {
         return (<Link href={this.props.link} target='_blank'>
             <div className={`${this.props.isStep ? 'step ' : ''}${this.props.isSubItem ? 'subitem ' : ''}
                 ${this.props.isMainItem ? 'main-item ' : ''}`} >
-                {this.props.icon && this.props.icon} {this.props.children}</div> </Link> )
+                {this.props.children}</div> </Link> )
     }
 }
 
@@ -190,7 +190,7 @@ class SidebarLayout extends React.Component {
                                 {/* Sidebar for Support Items */}
                                 {!this.props.loading && item.isSupport && <div>
                                     {item.subItems && item.subItems.map(subItem => {
-                                        return <SupportItem isSubItem icon={subItem.icon} link={subItem.link} >{subItem.title}</SupportItem>
+                                        return <SupportItem isSubItem link={subItem.link} >{subItem.title}</SupportItem>
                                     })}
                                 </div>}
 
