@@ -34,7 +34,7 @@ class SidebarItem extends React.Component {
     }
 }
 
-class SupportItem extends React.Component {
+class SidebarSupportItem extends React.Component {
     constructor(props) {
         super(props)
     }
@@ -190,7 +190,7 @@ class SidebarLayout extends React.Component {
                                 {/* Sidebar for Support Items */}
                                 {!this.props.loading && item.isSupport && <div>
                                     {item.subItems && item.subItems.map(subItem => {
-                                        return <SupportItem isSubItem link={subItem.link} >{subItem.title}</SupportItem>
+                                        return <SidebarSupportItem isSubItem link={subItem.link} >{subItem.title}</SidebarSupportItem>
                                     })}
                                 </div>}
 
