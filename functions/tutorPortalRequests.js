@@ -85,6 +85,12 @@ exports.getTutor = async (data, context) => {
     //Create a user object
     let userObj = userData.data()
 
+    //Get the airtable API key
+    const airtableAPIKey = functions.config().airtable.key
+
+    //Set up the airtable base
+    const base = new airtable({ apiKey: airtableAPIKey}).base('appmQ8Do0E1egGZs6')
+
     if (notNull(userObj['students'])) {
 
         //Keep track of students
@@ -99,7 +105,27 @@ exports.getTutor = async (data, context) => {
             //Turn it into an object
             let studentObj = studentRecord.data()
 
-            //TODO: Exclude phone number and email
+            try {
+
+                //Also get their Zoom Tracking data
+                const studentZoomDataResult = await base('tracking').select({
+                    maxRecords: 1,
+                    filterByFormula: `{record_id} = '${studentId}'`,
+                    fields: ['Student ID', 'number of total meetings (from Session count) copy (from Zoom information)', 'Total meeting time (from Session count) copy (from Zoom information)', 'Last meeting date (from Weekly) (from Session count) copy (from Zoom information)']
+                }).firstPage()
+
+                if (studentZoomDataResult && studentZoomDataResult[0]) {
+                    const zoomData = studentZoomDataResult[0]['_rawJson']['fields']
+                    studentObj['totalSessions'] = zoomData['number of total meetings (from Session count) copy (from Zoom information)'][0] || 0
+                    studentObj['minutesTutored'] = zoomData['Total meeting time (from Session count) copy (from Zoom information)'][0]
+                    studentObj['lastSession'] = zoomData['Last meeting date (from Weekly) (from Session count) copy (from Zoom information)'][0] || null
+                }
+
+            } catch(err) { console.log(err) }
+
+            //Exclude phone number and email
+            delete studentObj['email']
+            delete studentObj['phone']
 
             //Add the proxy number
             studentObj['proxyNumber'] = userObj['students'][studentId]

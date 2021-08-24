@@ -128,6 +128,29 @@ class TutorHome extends React.Component {
     }
 
     render() {
+
+        let infoBarItems = [
+            {
+                label:"Total Sessions",
+                id:"total_sessions",
+                type: "number",
+                value: this.state.student.totalSessions || 0,
+            },
+            {
+                label:"Minutes Tutored",
+                id:"minutes_tutored",
+                type: "number",
+                value: this.state.student.minutesTutored || 0,
+            }
+        ]
+
+        if (this.state.student.lastSession) infoBarItems.push({
+            label:"Last Session",
+            id:"last_session",
+            type: "string",
+            value: new Date(this.state.student.lastSession).toLocaleDateString(),
+        })
+
         return <div style={{display:"flex", width:"100%", flexDirection:"column", justifyContent: "center", alignItems:"center"}}>
             <h1 className="title">Tutor Dashboard</h1>
             <div style={{ marginBottom: 0 }}>
@@ -135,31 +158,12 @@ class TutorHome extends React.Component {
                 this.setState( { student:this.students[activeKey], zoomLinks: undefined } )
             }}/>
             </div>
+            { this.state.student && 
             <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:10}}>
                 <div style={{flex:1}}></div>
-                <InformationBar info={
-                    [
-                        {
-                            label:"Total Sessions",
-                            id:"total_sessions",
-                            type: "number",
-                            value:7,
-                        },
-                        {
-                            label:"Minutes Tutored",
-                            id:"minutes_tutored",
-                            type: "number",
-                            value:323,
-                        },
-                        {
-                            label:"Last Session",
-                            id:"last_session",
-                            type: "string",
-                            value:"7/1/21",
-                        },
-                    ]}/>
+                <InformationBar info={infoBarItems}/>
                     <div style={{flex:1}}></div>
-            </div>
+            </div> }
             <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:10}}>
                 <RequiredItem link={"#messaging"} icon={<CommentOutlined/>} title='Message Family'>
                     Communicate with your student's guardian through our online messaging application.
