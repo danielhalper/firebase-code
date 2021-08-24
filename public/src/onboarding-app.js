@@ -77,30 +77,39 @@ class OnboardingApp extends React.Component {
           title: 'Support',
           active: false,
           disabled: false,
+          isSupport: true,
           subItems: [
             {
               keyId: 'faq',
               title: 'FAQ',
               active: false,
-              disabled: false
+              disabled: false,
+              link: 'https://docs.google.com/document/d/1Wc2ztcXHTxDC2uZar6RkoayDRr5itrcv05thvoSs1cs/edit',
+              icon: <QuestionOutlined/>
             },
             {
               keyId: 'tutor-resources',
               title: 'Tutor Resources',
               active: false,
-              disabled: false
+              disabled: false,
+              link: 'https://www.stepuptutoring.org/resources',
+              icon: <SnippetsOutlined/>
             },
             {
               keyId: 'office-hours',
-              title: 'Sign up for office hours',
+              title: 'Sign Up for Office Hours',
               active: false,
-              disabled: false
+              disabled: false,
+              link: 'https://www.stepuptutoring.org/tutor-events',
+              icon: <ScheduleOutlined/>
             },
             {
               keyId: 'contact',
-              title: 'Contact Laura',
+              title: 'Contact Us',
               active: false,
-              disabled: false
+              disabled: false,
+              link: 'https://www.stepuptutoring.org/contact',
+              icon: <MailOutlined/>
             },
           ]
         }
@@ -293,7 +302,8 @@ componentDidMount() {
           'chat-signup': ChatSignup,
           'workbook': Workbook,
           'livescan': BackgroundCheck,
-          'live-training': LiveTraining
+          'live-training': LiveTraining,
+          'support': SupportPage
         }}
         onboarding
         sidebarItems={this.state.sidebarItems}

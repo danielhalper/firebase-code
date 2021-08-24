@@ -2,7 +2,7 @@ const { Layout, Avatar, Typography, Tabs, Steps, Popover, Skeleton, Timeline } =
 const { Step } = Steps
 const { Title, Link } = Typography
 const { TabPane } = Tabs
-const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined, CheckCircleFilled } = icons;
+const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined, CheckCircleFilled, LoadingOutlined } = icons;
 const { Sider, Content, Footer } = Layout
 
 class SidebarItem extends React.Component {
@@ -31,6 +31,19 @@ class SidebarItem extends React.Component {
         className={`${this.props.active ? 'active ':''}${this.props.disabled || this.props.complete ? 'disabled ':''}
         ${this.props.isStep ? 'step ':''}${this.props.isSubItem ? 'subitem ':''}${this.props.isMainItem ? 'main-item ':''}
         ${this.props.complete ? 'complete ':''}`}>{this.props.icon && this.props.icon} {this.props.children}</div>)
+    }
+}
+
+class SidebarSupportItem extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (<Link href={this.props.link} target='_blank'>
+            <div className={`${this.props.isStep ? 'step ' : ''}${this.props.isSubItem ? 'subitem ' : ''}
+                ${this.props.isMainItem ? 'main-item ' : ''}`} >
+                {this.props.children}</div> </Link> )
     }
 }
 
@@ -98,12 +111,12 @@ class SidebarLayout extends React.Component {
                     sidebarItems[i].subItems.map(item => item.active = false)}
             } else sidebarItems[i]['active'] = false
 
-            if (sidebarItems[i].subItems && sidebarItems[i]['active'] === false) {
-                for (let x = 0; x < sidebarItems[i].subItems.length; x++) {
-                    if (sidebarItems[i].subItems[x]['keyId'] == key) {
-                        sidebarItems[i].subItems[x]['active'] = true
-                        sidebarItems[i]['active'] = false
-                    } else sidebarItems[i].subItems[x]['active'] = false
+            if (sidebarItems[0].subItems && sidebarItems[0]['active'] === false) {
+                for (let x = 0; x < sidebarItems[0].subItems.length; x++) {
+                    if (sidebarItems[0].subItems[x]['keyId'] == key) {
+                        sidebarItems[0].subItems[x]['active'] = true
+                        sidebarItems[0]['active'] = false
+                    } else sidebarItems[0].subItems[x]['active'] = false
                 }
             }
         }
@@ -157,18 +170,28 @@ class SidebarLayout extends React.Component {
 
                             <SidebarItem isMainItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
 
-                                {/* Sidebar For Onboarding Portal */}
-                                {item.isSteps && <Timeline className='subitem'>
+                                {/* Will render this on sidebar when user info loading */}
+                                {this.props.loading && <LoadingScreen />}
+
+                                {/* Sidebar For Onboarding Portal (checklist pages) */}
+                                {!this.props.loading && item.isSteps && <Timeline className='subitem'>
                                     {item.subItems && item.subItems.map(subItem => {
                                         return <Timeline.Item className="step" color={subItem.disabled ? 'gray' : '#1BCBD9'} dot={subItem.complete ? <CheckCircleFilled /> : ''}> <SidebarItem complete={subItem.complete} isStep keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem> </Timeline.Item>
                                     })}
                                 </Timeline>}
 
                                 {/* Sidebar For Tutor Portal */}
-                                {!item.isSteps && <div>
+                                {!this.props.loading && !item.isSteps && !item.isSupport && <div>
                                     {item.subItems && item.subItems.map(subItem => {
                                         return <SidebarItem isSubItem keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem>
                                 })}
+                                </div>}
+
+                                {/* Sidebar for Support Items */}
+                                {!this.props.loading && item.isSupport && <div>
+                                    {item.subItems && item.subItems.map(subItem => {
+                                        return <SidebarSupportItem isSubItem link={subItem.link} >{subItem.title}</SidebarSupportItem>
+                                    })}
                                 </div>}
 
                             </div>
@@ -193,8 +216,8 @@ class SidebarLayout extends React.Component {
             <Layout>
 
                 <Layout style={{backgroundColor: 'white'}}>
-                    <Content className='content-container'>
-                        <div className='main-content'>
+                    <Content className={this.state.currentTab === 'support' ? 'support-content-container' : 'content-container'}>
+                        <div className={this.state.currentTab === 'support' ? 'support-main-content' : 'main-content'}>
 
                             {/* Will render this view when page is loading */}
                             {this.props.loading && <LoadingScreen/>}
@@ -205,7 +228,8 @@ class SidebarLayout extends React.Component {
                             {/* Will render this view for Onboarding Portal */}
                             {!this.props.loading && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
                                 currentStep={this.props.currentStep} isLoadingUser={this.props.loading} error={this.props.error}
-                                progress={this.props.progress} onSideBarItemClicked={this.onSideBarItemClicked} workbookForms={this.props.workbookForms} />}
+                                progress={this.props.progress} onSideBarItemClicked={this.onSideBarItemClicked} workbookForms={this.props.workbookForms}
+                                sidebarItems={this.props.sidebarItems} />}
                         </div>
                     </Content>
                 </Layout>
