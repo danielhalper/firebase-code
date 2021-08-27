@@ -205,9 +205,7 @@ class OnboardingApp extends React.Component {
   loadTutorData() {
     firebase.functions().httpsCallable('getOnboardingTutor')()
       .then(result => {
-
         const tutorDetailedResult = result.data
-        console.log(tutorDetailedResult)
         this.receiveUser(tutorDetailedResult)
         this.setUserLocalStorage(tutorDetailedResult)
         this.setUserProgress(tutorDetailedResult)
