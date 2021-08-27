@@ -84,7 +84,7 @@ class OnboardingApp extends React.Component {
               title: 'FAQ',
               active: false,
               disabled: false,
-              link: 'https://docs.google.com/document/d/1Wc2ztcXHTxDC2uZar6RkoayDRr5itrcv05thvoSs1cs/edit',
+              link: 'https://docs.google.com/document/d/1Wc2ztcXHTxDC2uZar6RkoayDRr5itrcv05thvoSs1cs/',
               icon: <QuestionOutlined/>
             },
             {
@@ -92,7 +92,7 @@ class OnboardingApp extends React.Component {
               title: 'Tutor Resources',
               active: false,
               disabled: false,
-              link: 'https://www.stepuptutoring.org/resources',
+              link: 'https://docs.google.com/document/d/18wWsqnV59P6a47u4i0IeXQIt2POdjAiPHol3r4i-054/edit#heading=h.6esndmj9ohuf',
               icon: <SnippetsOutlined/>
             },
             {
@@ -100,7 +100,7 @@ class OnboardingApp extends React.Component {
               title: 'Sign Up for Office Hours',
               active: false,
               disabled: false,
-              link: 'https://www.stepuptutoring.org/tutor-events',
+              link: 'https://stepuptutoring.as.me/officehours',
               icon: <ScheduleOutlined/>
             },
             {
@@ -125,15 +125,20 @@ class OnboardingApp extends React.Component {
     let currentStep = 0;
 
     switch(user.status) {
+      case '':
+        currentStep = 0
+        break
       case 'Application Accepted':
         currentStep = 1
         break
       case 'Ready to Tutor':
         currentStep = 2
         break
-      case 'Status':
+      case 'Matched':
         currentStep = 4
         break
+      default:
+      currentStep = 5
     }
 
     return currentStep
@@ -231,14 +236,22 @@ class OnboardingApp extends React.Component {
     const sidebarItems = this.state.sidebarItems
     const hasScheduledChat = this.state.progress.hasScheduledChat
 
-    if (!hasScheduledChat) {
-      for (let i = 1; i < sidebarItems[0].subItems.length; i++) {
-        sidebarItems[0].subItems[i]['disabled'] = true;
-      }
+  //   // Only enable sidebar if user status is empty (hasnt passed intv yet) or application accepted
+  //   if (this.state.userData.status != 'Application Accepted' || this.state.userData.status != '') {
+  //     sidebarItems[0].subItems['disabled'] = true
 
-      this.setState({ sidebarItems: sidebarItems})
-      return
-    }
+  //     this.setState({ sidebarItems: sidebarItems })
+  //     return
+  //   } else if {
+  //   if (!hasScheduledChat) {
+  //     for (let i = 1; i < sidebarItems[0].subItems.length; i++) {
+  //       sidebarItems[0].subItems[i]['disabled'] = true;
+  //     }
+
+  //     this.setState({ sidebarItems: sidebarItems})
+  //     return
+  //   }
+  // } else if {}
 
     // at this point chat has been scheduled and becomes disabled
       sidebarItems[0].subItems[0]['disabled'] = true;
