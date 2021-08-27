@@ -144,19 +144,6 @@ class OnboardingApp extends React.Component {
     return currentStep
   }
 
-  disableCompletedSidebarItems() {
-    const sidebarItems = this.state.sidebarItems
-
-    if(this.state.progress.hasCompletedWaiver) {
-      const waiverIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId = 'waiver')
-      sidebarItems[0].subItems[waiverIndex].disabled = true
-    }
-
-    this.setState({
-      sidebarItems: sidebarItems
-    })
-  }
-
   // takes user data and sets currentStep
   receiveUser(user) {
     let currentStep = this.calculateCurrentStep(user)
@@ -168,7 +155,6 @@ class OnboardingApp extends React.Component {
       currentStep: currentStep
     })
   }
-
 
   // takes user data and sets info to localstorage for use in prefilling forms
   setUserLocalStorage(user) {
@@ -225,44 +211,47 @@ class OnboardingApp extends React.Component {
         this.receiveUser(tutorDetailedResult)
         this.setUserLocalStorage(tutorDetailedResult)
         this.setUserProgress(tutorDetailedResult)
-        this.disableSideItems()})
+        this.disableSideItems(tutorDetailedResult)})
       .catch(error => {
         console.log(error)
       })
   }
 
   // Depending on what step in process user is, sidebar items will be enabled and clickable
-  disableSideItems() {
+  disableSideItems(user) {
     const sidebarItems = this.state.sidebarItems
     const hasScheduledChat = this.state.progress.hasScheduledChat
 
-  //   // Only enable sidebar if user status is empty (hasnt passed intv yet) or application accepted
-  //   if (this.state.userData.status != 'Application Accepted' || this.state.userData.status != '') {
-  //     sidebarItems[0].subItems['disabled'] = true
+  // Only enable sidebar if user status is empty (hasnt passed intv yet) or 'application accepted' (passed interview, needs to complete next steps)
+    if ((user.status !== 'Application Accepted') && (user.status !== '')) {
+      for (let i = 0; i < sidebarItems[0].subItems.length; i++) {
+        sidebarItems[0].subItems[i]['disabled'] = true;
+      }
 
-  //     this.setState({ sidebarItems: sidebarItems })
-  //     return
-  //   } else if {
-  //   if (!hasScheduledChat) {
-  //     for (let i = 1; i < sidebarItems[0].subItems.length; i++) {
-  //       sidebarItems[0].subItems[i]['disabled'] = true;
-  //     }
+      this.setState({ sidebarItems: sidebarItems })
+      return
+    }
 
-  //     this.setState({ sidebarItems: sidebarItems})
-  //     return
-  //   }
-  // } else if {}
+    // if user has not scheduled interview, only enable chat sign up page
+    if (!hasScheduledChat) {
+      for (let i = 1; i < sidebarItems[0].subItems.length; i++) {
+        sidebarItems[0].subItems[i]['disabled'] = true;
+      }
+
+      this.setState({ sidebarItems: sidebarItems})
+      return
+    }
 
     // at this point chat has been scheduled and becomes disabled
-      sidebarItems[0].subItems[0]['disabled'] = true;
-      sidebarItems[0].subItems[0]['complete'] = true;
+    const chatIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'chat-signup')
+      sidebarItems[0].subItems[chatIndex]['disabled'] = true;
+      sidebarItems[0].subItems[chatIndex]['complete'] = true;
 
     //if waiver has been completed, disable waiver page
     if (this.state.progress.hasCompletedWaiver) {
       const waiverIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'waiver')
       sidebarItems[0].subItems[waiverIndex].disabled = true
       sidebarItems[0].subItems[waiverIndex].complete = true
-
     }
 
     // if workbook has been completed, disable workbook page
@@ -278,13 +267,12 @@ class OnboardingApp extends React.Component {
         const livescanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
         sidebarItems[0].subItems[livescanIndex].disabled = true
         sidebarItems[0].subItems[livescanIndex].complete = true
-
       }
+
       if (this.state.progress.hasCompletedLiveTraining) {
         const liveTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
         sidebarItems[0].subItems[liveTrainingIndex].disabled = true
         sidebarItems[0].subItems[liveTrainingIndex].complete = true
-
       }
     } else {
       const lScanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')

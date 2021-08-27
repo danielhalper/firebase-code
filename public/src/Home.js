@@ -238,8 +238,8 @@ class Home extends React.Component {
 
         if (this.props.currentStep == 5) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
 
-            <Title level={1}>Thank you for your interest</Title>
-            <p>If you would like to be a tutor, please contact us <strong><a href="https://oag.ca.gov/fingerprints/locations" target='_blank'>here</a></strong>.</p>
+            <Title level={1}>Thank you for your interest!</Title>
+            <p>If you would like to be a tutor, please contact us <strong><a href="https://www.stepuptutoring.org/contact" target='_blank'>here</a></strong>.</p>
 
         </div>
 
