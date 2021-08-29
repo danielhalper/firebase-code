@@ -171,7 +171,7 @@ class SidebarLayout extends React.Component {
                             <SidebarItem isMainItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
 
                                 {/* Will render this on sidebar when user info loading */}
-                                {this.props.loading && <LoadingScreen />}
+                                {this.props.loading && <LoadingOutlined style={{ display: 'flex', justifyContent: 'center', margin: '20% 0'}} />}
 
                                 {/* Sidebar For Onboarding Portal (checklist pages) */}
                                 {!this.props.loading && item.isSteps && <Timeline className='subitem'>

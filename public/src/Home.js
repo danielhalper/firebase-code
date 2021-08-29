@@ -236,6 +236,13 @@ class Home extends React.Component {
 
         </div>
 
+        if (this.props.currentStep == 5) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+
+            <Title level={1} style={ color: '#327D83'}>Thank you for your interest!</Title>
+            <p>If you would like to be a tutor or need to continue onboarding, please contact us <strong><a href="https://www.stepuptutoring.org/contact" target='_blank'>here</a></strong>.</p>
+
+        </div>
+
         //Otherwise, show the regular dashboard
         return <div>
             <Title>Your Onboarding Dashboard</Title>
