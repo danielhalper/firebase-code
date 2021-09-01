@@ -52,7 +52,13 @@ class TutorApp extends React.Component {
                 loading: false
             })
 
-        }).catch(error => console.log)
+        }).catch(error => {
+            firebase.analytics.logEvent('error', {
+                type: 'tutorPortal',
+                message: `Could not get tutor`,
+                rawError: error.message
+            })
+        })
 
     }
 

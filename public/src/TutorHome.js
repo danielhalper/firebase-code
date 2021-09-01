@@ -72,7 +72,15 @@ class TutorHome extends React.Component {
                 zoomLinks: currentStudentZoomLinks
             })
             
-        }).catch(console.log)
+        }).catch(error => {
+
+            message.error('Something went wrong. Please try again.')
+            firebase.analytics.logEvent('error', {
+                type: 'tutorPortal',
+                message: `Couldn't fetch zoom links`,
+                rawError: error.message
+            })
+        })
     }
 
     retrieveAnnouncements(){
@@ -82,7 +90,14 @@ class TutorHome extends React.Component {
         firebase.functions().httpsCallable('getWeeklyAnnouncements')().then(result => {
             this.setState( { announcements: result.data } )
             
-        }).catch( console.log )
+        }).catch( error => {
+            message.error('Something went wrong. Please try again.')
+            firebase.analytics.logEvent('error', {
+                type: 'tutorPortal',
+                message: `Couldn't fetch announcements`,
+                rawError: error.message
+            })
+        })
         
         this.displayModal('announcements')
     }
