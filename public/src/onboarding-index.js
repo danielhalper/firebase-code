@@ -1,4 +1,4 @@
-const { default: ErrorBoundary } = require("antd/lib/alert/ErrorBoundary")
+const ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
 
 //The node to mount on
 const mountNode = document.getElementById('content')

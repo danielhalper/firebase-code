@@ -4,6 +4,8 @@ const mountNode = document.getElementById('signin-form');
 const { Form, Input, Button, Typography, message, Alert, Skeleton } = antd;
 const { Title } = Typography;
 
+const ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
+
 const EMULATOR = window.location.href.includes('localhost')
 if (EMULATOR) firebase.functions().useEmulator("localhost", 5001)
 
