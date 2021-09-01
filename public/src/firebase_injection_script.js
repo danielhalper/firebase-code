@@ -34,7 +34,7 @@ function setOnAuthChangedListener() {
                 //If they are a SAML user, sign them out because they're not allowed to access onboarding
                 firebase.auth().fetchSignInMethodsForEmail(email).then(methods => {
 
-                    if (methods.indexOf('saml.google.com') != -1) {
+                    if (methods.indexOf(firebase.auth.GoogleAuthProvider.GOOGLE_SIGN_IN_METHOD) != -1) {
                         firebase.auth().signOut().then(() => {
                             SIGN_IN_REDIRECT()
                         })
