@@ -676,6 +676,6 @@ function createPermanentSignInLink(email, returnUrl) {
 
     if (process.env.FUNCTIONS_EMULATOR == true || process.env.FUNCTIONS_EMULATOR == 'true') return `http://localhost:5000/signin.html?stepupToken=${encodeURIComponent(token)}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}`:'' }`
 
-    return `https://stepup-dashboard.web.app/signin.html?stepupToken=${encodeURIComponent(token)}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}`:'' }`
+    return `https://app.stepuptutoring.org/signin.html?stepupToken=${encodeURIComponent(token)}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}`:'' }`
 
 }

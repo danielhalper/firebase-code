@@ -112,7 +112,7 @@ class SignInPage extends React.Component {
         const urlParams = new URLSearchParams(window.location.search)
 
         //Get the return URL if it exists
-        const returnUrl = urlParams.get('returnUrl') || (EMULATOR ? 'http://localhost:5000/' : 'https://stepuptutoring.org/onboarding-dashboard')
+        const returnUrl = urlParams.get('returnUrl') || (EMULATOR ? 'http://localhost:5000/onboarding_dashboard.html' : 'https://app.stepuptutoring.org/onboarding_dashboard.html')
 
         //Start the button loading
         this.setState({

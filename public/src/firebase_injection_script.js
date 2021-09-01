@@ -34,7 +34,7 @@ function setOnAuthChangedListener() {
                 //If they are a SAML user, sign them out because they're not allowed to access onboarding
                 firebase.auth().fetchSignInMethodsForEmail(email).then(methods => {
 
-                    if (methods.indexOf('saml.google.com') != -1) {
+                    if (methods.indexOf(firebase.auth.GoogleAuthProvider.GOOGLE_SIGN_IN_METHOD) != -1) {
                         firebase.auth().signOut().then(() => {
                             SIGN_IN_REDIRECT()
                         })
@@ -85,7 +85,7 @@ function SIGN_IN_REDIRECT() {
     if (window.location.hostname.includes('squarespace')) { 
         return 
     }
-    window.location.href = `${EMULATOR ? 'http://localhost:5000/signin.html':`https://stepup-dashboard.web.app/signin.html`}?returnUrl=${encodeURIComponent(window.location.href)}`
+    window.location.href = `${EMULATOR ? 'http://localhost:5000/signin.html':`https://app.stepuptutoring.org/signin.html`}?returnUrl=${encodeURIComponent(window.location.href)}`
 }
 
 async function SIGN_OUT_FIREBASE() {
