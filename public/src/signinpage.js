@@ -43,10 +43,22 @@ class SignInPage extends React.Component {
                         loading: false,
                         errorMessage: 'This email has already been used in an application. Enter it below to receive a sign in link.'
                     })
+                    
+                    firebase.analytics().logEvent('error', {
+                        type: 'signin',
+                        message: 'Email already in use',
+                        rawError: error.message
+                    })
                 } else {
                     this.setState({
                         loading: false,
                         errorMessage: error.message
+                    })
+
+                    firebase.analytics().logEvent('error', {
+                        type: 'signin',
+                        message: 'Could not create user',
+                        rawError: error.message
                     })
                 }
 
@@ -83,6 +95,12 @@ class SignInPage extends React.Component {
                         errorMessage: 'Please enter your email below to receive a sign in link'
                     })
 
+                    firebase.analytics.logEvent('error', {
+                        type: 'signin',
+                        message: 'Custom token failed',
+                        rawError: error.message
+                    })
+
                 })
 
             }).catch(error => {
@@ -91,6 +109,12 @@ class SignInPage extends React.Component {
                 this.setState({
                     loading: false,
                     errorMessage: 'Please enter your email below to receive a sign in link'
+                })
+
+                firebase.analytics.logEvent('error', {
+                    type: 'signin',
+                    message: `Couldn't get custom auth token`,
+                    rawError: error.message
                 })
 
             })
@@ -137,6 +161,12 @@ class SignInPage extends React.Component {
                 //Stop loading and send error message
                 this.setState({ loadingButton: false, errorMessage: `We couldn't find an account associated with that email address. You may have entered the wrong email, or you might need to start our application before signing in.` })
 
+                firebase.analytics.logEvent('error', {
+                    type: 'signin',
+                    message: `No account found`,
+                    rawError: error.message
+                })
+            
             }
 
             else {
@@ -146,6 +176,12 @@ class SignInPage extends React.Component {
 
                 //Send an error message
                 message.error('Something went wrong. Please try again at another time.')
+
+                firebase.analytics.logEvent('error', {
+                    type: 'signin',
+                    message: `Couldn't send signin email`,
+                    rawError: error.message
+                })
 
             }
 
