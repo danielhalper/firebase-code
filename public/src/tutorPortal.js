@@ -4,6 +4,7 @@ const mountNode = document.getElementById('portal');
 const { Form, Input, Button, Typography, message } = antd;
 const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined } = icons;
 const { Title } = Typography;
+const ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
 
 const EMULATOR = window.location.href.includes('localhost')
 
@@ -58,6 +59,7 @@ class TutorApp extends React.Component {
                 message: `Could not get tutor`,
                 rawError: error.message
             })
+            Bugsnag.notify(error)
         })
 
     }
@@ -129,4 +131,4 @@ const sidebarItems = [
     }
 ]
 
-ReactDOM.render(<TutorApp />, mountNode)
+ReactDOM.render(<ErrorBoundary><TutorApp /></ErrorBoundary>, mountNode)

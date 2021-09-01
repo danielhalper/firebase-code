@@ -197,6 +197,8 @@ class MessagingWidget extends React.Component {
                         message: `Messaging Widget fetch request failed`,
                         rawError: err.message
                     })
+
+                    Bugsnag.notify(err)
                 })
 
             }, this.pollInterval)
@@ -261,6 +263,7 @@ class MessagingWidget extends React.Component {
                 message: `Messaging Widget couldn't send message`,
                 rawError: error.message
             })
+            Bugsnag.notify(error)
         })
 
     }

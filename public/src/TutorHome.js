@@ -80,6 +80,7 @@ class TutorHome extends React.Component {
                 message: `Couldn't fetch zoom links`,
                 rawError: error.message
             })
+            Bugsnag.notify(error)
         })
     }
 
@@ -97,6 +98,7 @@ class TutorHome extends React.Component {
                 message: `Couldn't fetch announcements`,
                 rawError: error.message
             })
+            Bugsnag.notify(error)
         })
         
         this.displayModal('announcements')

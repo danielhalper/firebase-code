@@ -62,6 +62,8 @@ class SignInPage extends React.Component {
                     })
                 }
 
+                Bugsnag.notify(error)
+
             })
 
         }
@@ -101,6 +103,8 @@ class SignInPage extends React.Component {
                         rawError: error.message
                     })
 
+                    Bugsnag.notify(error)
+
                 })
 
             }).catch(error => {
@@ -116,6 +120,8 @@ class SignInPage extends React.Component {
                     message: `Couldn't get custom auth token`,
                     rawError: error.message
                 })
+
+                Bugsnag.notify(error)
 
             })
 
@@ -185,6 +191,8 @@ class SignInPage extends React.Component {
 
             }
 
+            Bugsnag.notify(error)
+
         })
 
     }
@@ -228,4 +236,4 @@ function generateRandomPassword(length) {
 
 
 
-ReactDOM.render(<SignInPage />, mountNode)
+ReactDOM.render(<ErrorBoundary><SignInPage /></ErrorBoundary>, mountNode)
