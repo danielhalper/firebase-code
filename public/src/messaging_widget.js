@@ -191,6 +191,12 @@ class MessagingWidget extends React.Component {
                     this.poll()
                 }).catch(err => {
                     this.poll()
+
+                    firebase.analytics.logEvent('error', {
+                        type: 'tutorPortal',
+                        message: `Messaging Widget fetch request failed`,
+                        rawError: err.message
+                    })
                 })
 
             }, this.pollInterval)
@@ -248,6 +254,13 @@ class MessagingWidget extends React.Component {
             //Scroll it to the bottom
             this.messagesDisplay.current.scrollToBottom()
 
+        }).catch(error => {
+            message.error('Something went wrong. Please try again.')
+            firebase.analytics.logEvent('error', {
+                type: 'tutorPortal',
+                message: `Messaging Widget couldn't send message`,
+                rawError: error.message
+            })
         })
 
     }

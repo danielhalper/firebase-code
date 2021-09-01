@@ -211,7 +211,12 @@ class OnboardingApp extends React.Component {
         this.setUserProgress(tutorDetailedResult)
         this.disableSideItems(tutorDetailedResult)})
       .catch(error => {
-        console.log(error)
+        message.error('Something went wrong. Please try again.')
+        firebase.analytics.logEvent('error', {
+            type: 'onboardingPortal',
+            message: `Couldn't get onboarding tutor`,
+            rawError: error.message
+        })
       })
   }
 
