@@ -229,8 +229,8 @@ class OnboardingApp extends React.Component {
 
             this.loadUserPollInterval += 500
 
-            // this.loadUserPoll()
-          })
+            this.loadUserPoll()
+})
           .catch(error => {
             console.log(error)
 
