@@ -134,16 +134,18 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
     background-color: rgba(207, 245, 248, 0.67);
     border-radius: 15px;
     margin: 30px;
+    height: 100%;
 }
 
 .support-content-container {
     background-color: #f3f4f5;
     border-radius: 15px;
     margin: 30px;
+    height: 100%;
 }
 
 .main-content {
-    height: 95%;
+    height: 90%;
     margin: 30px;
     padding: 20px;
     padding-top: 25px;

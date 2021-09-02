@@ -215,7 +215,7 @@ class SidebarLayout extends React.Component {
             </Sider>
             <Layout>
 
-                <Layout style={{backgroundColor: 'white'}}>
+                <Layout style={{backgroundColor: 'white', height: '100%'}}>
                     <Content className={this.state.currentTab === 'support' ? 'support-content-container' : 'content-container'}>
                         <div className={this.state.currentTab === 'support' ? 'support-main-content' : 'main-content'}>
 
