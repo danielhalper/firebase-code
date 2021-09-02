@@ -225,12 +225,12 @@ class OnboardingApp extends React.Component {
             this.receiveUser(tutorDetailedResult)
             this.setUserLocalStorage(tutorDetailedResult)
             this.setUserProgress(tutorDetailedResult)
-            this.disableSideItems(tutorDetailedResult)})
+            this.disableSideItems(tutorDetailedResult)
 
             this.loadUserPollInterval += 500
 
-            this.loadUserPoll()
-
+            // this.loadUserPoll()
+          })
           .catch(error => {
             console.log(error)
 
@@ -245,7 +245,7 @@ class OnboardingApp extends React.Component {
 
     this.loadUserPoll()
 
-    
+
   }
 
   // Depending on what step in process user is, sidebar items will be enabled and clickable
