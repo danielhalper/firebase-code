@@ -119,6 +119,10 @@ class OnboardingApp extends React.Component {
     this.setUserProgress = this.setUserProgress.bind(this)
     this.disableSideItems = this.disableSideItems.bind(this)
 
+    this.loadUserPoll = undefined //For periodically fetching user data
+    this.loadUserPollInterval = 0
+    this.currentLoadUserTimeout = undefined
+
   }
 
   calculateCurrentStep(user) {
@@ -202,17 +206,46 @@ class OnboardingApp extends React.Component {
     })
   }
 
+  resetPollInterval() {
+    clearTimeout(this.currentLoadUserTimeout)
+    this.loadUserPollInterval = 0
+    this.loadUserPoll()
+  }
+
   loadTutorData() {
-    firebase.functions().httpsCallable('getOnboardingTutor')()
-      .then(result => {
-        const tutorDetailedResult = result.data
-        this.receiveUser(tutorDetailedResult)
-        this.setUserLocalStorage(tutorDetailedResult)
-        this.setUserProgress(tutorDetailedResult)
-        this.disableSideItems(tutorDetailedResult)})
-      .catch(error => {
-        console.log(error)
-      })
+
+    this.loadUserPoll = () => {
+
+      clearTimeout(this.currentLoadUserTimeout)
+      this.currentLoadUserTimeout = setTimeout(() => {
+
+        firebase.functions().httpsCallable('getOnboardingTutor')()
+          .then(result => {
+            const tutorDetailedResult = result.data
+            this.receiveUser(tutorDetailedResult)
+            this.setUserLocalStorage(tutorDetailedResult)
+            this.setUserProgress(tutorDetailedResult)
+            this.disableSideItems(tutorDetailedResult)
+
+            this.loadUserPollInterval += 500
+
+            this.loadUserPoll()
+          })
+          .catch(error => {
+            console.log(error)
+
+            this.loadUserPollInterval += 500
+
+            this.loadUserPoll()
+          })
+
+      }, this.loadUserPollInterval)
+
+    }
+
+    this.loadUserPoll()
+
+
   }
 
   // Depending on what step in process user is, sidebar items will be enabled and clickable
