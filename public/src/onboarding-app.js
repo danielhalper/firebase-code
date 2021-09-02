@@ -119,6 +119,10 @@ class OnboardingApp extends React.Component {
     this.setUserProgress = this.setUserProgress.bind(this)
     this.disableSideItems = this.disableSideItems.bind(this)
 
+    this.loadUserPoll = undefined //For periodically fetching user data
+    this.loadUserPollInterval = 0
+    this.currentLoadUserTimeout = undefined
+
   }
 
   calculateCurrentStep(user) {
@@ -202,23 +206,51 @@ class OnboardingApp extends React.Component {
     })
   }
 
+  resetPollInterval() {
+    clearTimeout(this.currentLoadUserTimeout)
+    this.loadUserPollInterval = 0
+    this.loadUserPoll()
+  }
+
   loadTutorData() {
-    firebase.functions().httpsCallable('getOnboardingTutor')()
-      .then(result => {
-        const tutorDetailedResult = result.data
-        this.receiveUser(tutorDetailedResult)
-        this.setUserLocalStorage(tutorDetailedResult)
-        this.setUserProgress(tutorDetailedResult)
-        this.disableSideItems(tutorDetailedResult)})
-      .catch(error => {
-        message.error('Something went wrong. Please try again.')
-        firebase.analytics.logEvent('error', {
-            type: 'onboardingPortal',
-            message: `Couldn't get onboarding tutor`,
-            rawError: error.message
-        })
-        Bugsnag.notify(error)
-      })
+
+    this.loadUserPoll = () => {
+
+      clearTimeout(this.currentLoadUserTimeout)
+      this.currentLoadUserTimeout = setTimeout(() => {
+
+        firebase.functions().httpsCallable('getOnboardingTutor')()
+          .then(result => {
+            const tutorDetailedResult = result.data
+            this.receiveUser(tutorDetailedResult)
+            this.setUserLocalStorage(tutorDetailedResult)
+            this.setUserProgress(tutorDetailedResult)
+            this.disableSideItems(tutorDetailedResult)
+
+            this.loadUserPollInterval += 500
+
+            this.loadUserPoll()
+          })
+          .catch(error => {
+            message.error('Something went wrong. Please try again.')
+            firebase.analytics.logEvent('error', {
+                type: 'onboardingPortal',
+                message: `Couldn't get onboarding tutor`,
+                rawError: error.message
+            })
+            Bugsnag.notify(error)
+
+            this.loadUserPollInterval += 500
+
+            this.loadUserPoll()
+          })
+
+      }, this.loadUserPollInterval)
+
+    }
+
+    this.loadUserPoll()
+
   }
 
   // Depending on what step in process user is, sidebar items will be enabled and clickable

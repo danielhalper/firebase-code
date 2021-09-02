@@ -141,7 +141,7 @@ class MessagingWidget extends React.Component {
         this.poll = () => {
 
             setTimeout(() => {
-    
+     
                 firebase.functions().httpsCallable('getMessagesForStudent')({
                     studentId: student
                 }).then(result => {

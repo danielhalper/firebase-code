@@ -16,7 +16,8 @@ class TutorApp extends React.Component {
             user: {},
             pages: {
                 'home': TutorHome,
-                'messaging': TutorMessaging
+                'messaging': TutorMessaging,
+                'support': SupportPage
             },
             sidebarItems: [
                 {
@@ -35,6 +36,48 @@ class TutorApp extends React.Component {
                             disabled: false,
                             complete: false
                         },
+                    ]
+                },
+                {
+                    keyId: 'support',
+                    icon: <QuestionCircleOutlined />,
+                    title: 'Support',
+                    active: false,
+                    disabled: false,
+                    isSupport: true,
+                    subItems: [
+                        {
+                            keyId: 'faq',
+                            title: 'FAQ',
+                            active: false,
+                            disabled: false,
+                            link: 'https://docs.google.com/document/d/1Wc2ztcXHTxDC2uZar6RkoayDRr5itrcv05thvoSs1cs/',
+                            icon: <QuestionOutlined/>
+                          },
+                          {
+                            keyId: 'tutor-resources',
+                            title: 'Tutor Resources',
+                            active: false,
+                            disabled: false,
+                            link: 'https://docs.google.com/document/d/18wWsqnV59P6a47u4i0IeXQIt2POdjAiPHol3r4i-054/edit#heading=h.6esndmj9ohuf',
+                            icon: <SnippetsOutlined/>
+                          },
+                          {
+                            keyId: 'office-hours',
+                            title: 'Sign Up for Office Hours',
+                            active: false,
+                            disabled: false,
+                            link: 'https://stepuptutoring.as.me/officehours',
+                            icon: <ScheduleOutlined/>
+                          },
+                          {
+                            keyId: 'contact',
+                            title: 'Contact Us',
+                            active: false,
+                            disabled: false,
+                            link: 'https://www.stepuptutoring.org/contact',
+                            icon: <MailOutlined/>
+                          }
                     ]
                 }
             ],
