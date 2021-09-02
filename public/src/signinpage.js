@@ -4,6 +4,8 @@ const mountNode = document.getElementById('signin-form');
 const { Form, Input, Button, Typography, message, Alert, Skeleton } = antd;
 const { Title } = Typography;
 
+const ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
+
 const EMULATOR = window.location.href.includes('localhost')
 if (EMULATOR) firebase.functions().useEmulator("localhost", 5001)
 
@@ -43,12 +45,26 @@ class SignInPage extends React.Component {
                         loading: false,
                         errorMessage: 'This email has already been used in an application. Enter it below to receive a sign in link.'
                     })
+                    
+                    firebase.analytics().logEvent('error', {
+                        type: 'signin',
+                        message: 'Email already in use',
+                        rawError: error.message
+                    })
                 } else {
                     this.setState({
                         loading: false,
                         errorMessage: error.message
                     })
+
+                    firebase.analytics().logEvent('error', {
+                        type: 'signin',
+                        message: 'Could not create user',
+                        rawError: error.message
+                    })
                 }
+
+                Bugsnag.notify(error)
 
             })
 
@@ -83,6 +99,14 @@ class SignInPage extends React.Component {
                         errorMessage: 'Please enter your email below to receive a sign in link'
                     })
 
+                    firebase.analytics.logEvent('error', {
+                        type: 'signin',
+                        message: 'Custom token failed',
+                        rawError: error.message
+                    })
+
+                    Bugsnag.notify(error)
+
                 })
 
             }).catch(error => {
@@ -92,6 +116,14 @@ class SignInPage extends React.Component {
                     loading: false,
                     errorMessage: 'Please enter your email below to receive a sign in link'
                 })
+
+                firebase.analytics.logEvent('error', {
+                    type: 'signin',
+                    message: `Couldn't get custom auth token`,
+                    rawError: error.message
+                })
+
+                Bugsnag.notify(error)
 
             })
 
@@ -137,6 +169,12 @@ class SignInPage extends React.Component {
                 //Stop loading and send error message
                 this.setState({ loadingButton: false, errorMessage: `We couldn't find an account associated with that email address. You may have entered the wrong email, or you might need to start our application before signing in.` })
 
+                firebase.analytics.logEvent('error', {
+                    type: 'signin',
+                    message: `No account found`,
+                    rawError: error.message
+                })
+            
             }
 
             else {
@@ -147,7 +185,15 @@ class SignInPage extends React.Component {
                 //Send an error message
                 message.error('Something went wrong. Please try again at another time.')
 
+                firebase.analytics.logEvent('error', {
+                    type: 'signin',
+                    message: `Couldn't send signin email`,
+                    rawError: error.message
+                })
+
             }
+
+            Bugsnag.notify(error)
 
         })
 
@@ -192,4 +238,4 @@ function generateRandomPassword(length) {
 
 
 
-ReactDOM.render(<SignInPage />, mountNode)
+ReactDOM.render(<ErrorBoundary><SignInPage /></ErrorBoundary>, mountNode)

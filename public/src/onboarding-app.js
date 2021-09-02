@@ -1,3 +1,5 @@
+const { message } = antd
+
 class OnboardingApp extends React.Component {
   constructor(props) {
     super(props)
@@ -232,7 +234,13 @@ class OnboardingApp extends React.Component {
             this.loadUserPoll()
           })
           .catch(error => {
-            console.log(error)
+            message.error('Something went wrong. Please try again.')
+            firebase.analytics.logEvent('error', {
+                type: 'onboardingPortal',
+                message: `Couldn't get onboarding tutor`,
+                rawError: error.message
+            })
+            Bugsnag.notify(error)
 
             this.loadUserPollInterval += 500
 
@@ -244,7 +252,6 @@ class OnboardingApp extends React.Component {
     }
 
     this.loadUserPoll()
-
 
   }
 
