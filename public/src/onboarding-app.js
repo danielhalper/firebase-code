@@ -217,6 +217,7 @@ class OnboardingApp extends React.Component {
             message: `Couldn't get onboarding tutor`,
             rawError: error.message
         })
+        Bugsnag.notify(error)
       })
   }
 
