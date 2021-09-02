@@ -1,3 +1,5 @@
+const { message } = antd
+
 class OnboardingApp extends React.Component {
   constructor(props) {
     super(props)
