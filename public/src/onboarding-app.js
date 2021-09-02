@@ -235,7 +235,7 @@ class OnboardingApp extends React.Component {
           })
           .catch(error => {
             message.error('Something went wrong. Please try again.')
-            firebase.analytics.logEvent('error', {
+            firebase.analytics().logEvent('error', {
                 type: 'onboardingPortal',
                 message: `Couldn't get onboarding tutor`,
                 rawError: error.message

@@ -99,7 +99,7 @@ class SignInPage extends React.Component {
                         errorMessage: 'Please enter your email below to receive a sign in link'
                     })
 
-                    firebase.analytics.logEvent('error', {
+                    firebase.analytics().logEvent('error', {
                         type: 'signin',
                         message: 'Custom token failed',
                         rawError: error.message
