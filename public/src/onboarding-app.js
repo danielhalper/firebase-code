@@ -240,7 +240,7 @@ class OnboardingApp extends React.Component {
                 message: `Couldn't get onboarding tutor`,
                 rawError: error.message
             })
-            Bugsnag.notify(error)
+            if (window.Bugsnag) Bugsnag.notify(error)
 
             this.loadUserPollInterval += 500
 

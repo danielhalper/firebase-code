@@ -98,3 +98,21 @@ class AnnouncementView extends React.Component {
         </Timeline>
     }
 }
+
+class ErrorBoundaryDefault extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    componentDidCatch(error, errorInfo) {
+        firebase.analytics().logEvent('error', {
+            type: 'react',
+            message: error.message,
+            rawError: error
+        })
+    }
+
+    render() {
+        return this.props.children
+    }
+}

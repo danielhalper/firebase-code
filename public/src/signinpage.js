@@ -4,7 +4,7 @@ const mountNode = document.getElementById('signin-form');
 const { Form, Input, Button, Typography, message, Alert, Skeleton } = antd;
 const { Title } = Typography;
 
-const ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
+const ErrorBoundary = window.Bugsnag ? Bugsnag.use( bugsnag__react(React) ) : ErrorBoundaryDefault
 
 const EMULATOR = window.location.href.includes('localhost')
 if (EMULATOR) firebase.functions().useEmulator("localhost", 5001)
@@ -64,7 +64,7 @@ class SignInPage extends React.Component {
                     })
                 }
 
-                Bugsnag.notify(error)
+                if (window.Bugsnag) Bugsnag.notify(error)
 
             })
 
@@ -105,7 +105,7 @@ class SignInPage extends React.Component {
                         rawError: error.message
                     })
 
-                    Bugsnag.notify(error)
+                    if (window.Bugsnag) Bugsnag.notify(error)
 
                 })
 
@@ -123,7 +123,7 @@ class SignInPage extends React.Component {
                     rawError: error.message
                 })
 
-                Bugsnag.notify(error)
+                if (window.Bugsnag) Bugsnag.notify(error)
 
             })
 
@@ -193,7 +193,7 @@ class SignInPage extends React.Component {
 
             }
 
-            Bugsnag.notify(error)
+            if (window.Bugsnag) Bugsnag.notify(error)
 
         })
 

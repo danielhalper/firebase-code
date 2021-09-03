@@ -198,7 +198,7 @@ class MessagingWidget extends React.Component {
                         rawError: err.message
                     })
 
-                    Bugsnag.notify(err)
+                    if (window.Bugsnag) Bugsnag.notify(err)
                 })
 
             }, this.pollInterval)
@@ -263,7 +263,7 @@ class MessagingWidget extends React.Component {
                 message: `Messaging Widget couldn't send message`,
                 rawError: error.message
             })
-            Bugsnag.notify(error)
+            if (window.Bugsnag) Bugsnag.notify(error)
         })
 
     }
