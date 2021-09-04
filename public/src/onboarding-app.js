@@ -241,10 +241,6 @@ class OnboardingApp extends React.Component {
                 rawError: error.message
             })
             if (window.Bugsnag) Bugsnag.notify(error)
-
-            this.loadUserPollInterval += 500
-
-            this.loadUserPoll()
           })
 
       }, this.loadUserPollInterval)
