@@ -185,7 +185,7 @@ class TutorHome extends React.Component {
                 <RequiredItem link={"#messaging"} icon={<CommentOutlined/>} title='Message Family'>
                     Communicate with your student's guardian through our online messaging application.
                 </RequiredItem>
-                <RequiredItem onClick={() => {
+                <RequiredItem id='start-zoom' onClick={() => {
                     firebase.analytics().logEvent('started_zoom_call')
                     this.displayModal('zoom')
                 }} icon={<VideoCameraOutlined/>} title='Start Zoom Meeting'>
@@ -201,7 +201,7 @@ class TutorHome extends React.Component {
                     Fill this out each week... so the student's teacher and parent are up-to-date.
                 </RequiredItem>
 
-                <RequiredItem onClick={this.retrieveAnnouncements} icon={<SoundOutlined/>} title='Weekly Announcements'>
+                <RequiredItem id='weekly-announcements' onClick={this.retrieveAnnouncements} icon={<SoundOutlined/>} title='Weekly Announcements'>
                 </RequiredItem>
                 <RequiredItem link='https://www.stepuptutoring.org/tutor-events' newTab icon={<CalendarOutlined/>} title='Events & Gamification' onClick={() => {
                     firebase.analytics().logEvent('check_events')
@@ -234,7 +234,7 @@ class TutorHome extends React.Component {
                 </Modal>
 
                 <Modal title='Weekly Form' display={this.state.modals['weekly-form']} options={{ submit: false }} onClose={() => this.onModalClose('weekly-form')}>
-                    <iframe className="airtable-embed" src="https://airtable.com/embed/shrHFVAQ4wbWOEt7Z?backgroundColor=cyanLight" frameborder="0" onmousewheel="" width="100%" height="533" style={{ background: 'transparent', border: '0px solid #ccc' }}></iframe>
+                    <iframe class="airtable-embed" src="https://airtable.com/embed/shrNNQzXOJOP7WtEm?backgroundColor=yellow" frameBorder="0" onmousewheel="" width="100%" height="533" style={{ background: 'transparent', border: '0px' }}></iframe>
                 </Modal>
                 <Modal title="Weekly Announcements" display = {this.state.modals.announcements} options={{submit:false}} onClose = {() => this.onModalClose('announcements')}>
                     { !this.state.announcements && <LoadingScreen /> }

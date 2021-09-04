@@ -4,9 +4,13 @@ const mountNode = document.getElementById('portal');
 const { Form, Input, Button, Typography, message } = antd;
 const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined } = icons;
 const { Title } = Typography;
-const ErrorBoundary = window.Bugsnag ? Bugsnag.use( bugsnag__react(React) ) : ErrorBoundaryDefault
+const ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
 
 const EMULATOR = window.location.href.includes('localhost')
+
+function OPEN_HEYMARKET() {
+    try { HeymarketWidget.Modal.handleFabButtonClicked() } catch(e) {}
+}
 
 class TutorApp extends React.Component {
     constructor(props) {
@@ -36,6 +40,54 @@ class TutorApp extends React.Component {
                             disabled: false,
                             complete: false
                         },
+                        {
+                            keyId: 'start-zoom-sidebar',
+                            title: 'Zoom link',
+                            icon: <VideoCameraOutlined/>,
+                            active: false,
+                            disabled: false,
+                            onClick: () => {
+                                const el = document.getElementById('start-zoom')
+                                el.click()
+                            },
+                            button: true
+                        },
+                        {
+                            keyId: 'weekly-resources',
+                            title: 'Weekly Resources',
+                            icon: <UnorderedListOutlined/>,
+                            active: false,
+                            disabled: false,
+                            link: 'https://stepuptutoring.softr.app/'
+                        },
+                        {
+                            keyId: 'weekly-form-sidebar',
+                            title: 'Weekly Form',
+                            icon: <FormOutlined/>,
+                            active: false,
+                            disabled: false,
+                            link: 'https://airtable.com/shrNNQzXOJOP7WtEm'
+                        },
+                        {
+                            keyId: 'weekly-announcements-sidebar',
+                            title: 'Weekly Announcements',
+                            icon: <SoundOutlined/>,
+                            active: false,
+                            disabled: false,
+                            onClick: () => {
+                                const el = document.getElementById('weekly-announcements')
+                                el.click()
+                            },
+                            button: true
+                        },
+                        {
+                            keyId: 'home',
+                            title: 'Events and Gamification',
+                            icon: <CalendarOutlined/>,
+                            active: false,
+                            disabled: false,
+                            link: 'https://www.stepuptutoring.org/tutor-events'
+                        }
                     ]
                 },
                 {
@@ -75,8 +127,15 @@ class TutorApp extends React.Component {
                             title: 'Contact Us',
                             active: false,
                             disabled: false,
-                            link: 'https://www.stepuptutoring.org/contact',
+                            onClick: OPEN_HEYMARKET,
                             icon: <MailOutlined/>
+                          },
+                          {
+                              keyId: 'bug',
+                              title: 'Report a bug',
+                              active: false,
+                              disabled: false,
+                              link: 'https://docs.google.com/forms/d/1wa1_CNBfNhdFjJt-16b0udO0iOuqLWxPYLHE16004kk/viewform'
                           }
                     ]
                 }
@@ -97,12 +156,12 @@ class TutorApp extends React.Component {
             })
 
         }).catch(error => {
-            firebase.analytics().logEvent('error', {
+            firebase.analytics.logEvent('error', {
                 type: 'tutorPortal',
                 message: `Could not get tutor`,
                 rawError: error.message
             })
-            if (window.Bugsnag) Bugsnag.notify(error)
+            Bugsnag.notify(error)
         })
 
     }
