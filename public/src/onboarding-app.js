@@ -234,13 +234,14 @@ class OnboardingApp extends React.Component {
             this.loadUserPoll()
           })
           .catch(error => {
-            message.error('Something went wrong. Please try again.')
             firebase.analytics().logEvent('error', {
                 type: 'onboardingPortal',
                 message: `Couldn't get onboarding tutor`,
                 rawError: error.message
             })
             if (window.Bugsnag) Bugsnag.notify(error)
+
+            this.setState({ error: true, loading: false })
           })
 
       }, this.loadUserPollInterval)
@@ -256,14 +257,15 @@ class OnboardingApp extends React.Component {
     const sidebarItems = this.state.sidebarItems
     const hasScheduledChat = this.state.progress.hasScheduledChat
 
-  // Only enable sidebar if user status is empty (hasnt passed intv yet) or 'application accepted' (passed interview, needs to complete next steps)
-    if ((user.status !== 'Application Accepted') && (user.status !== '')) {
-      for (let i = 0; i < sidebarItems[0].subItems.length; i++) {
-        sidebarItems[0].subItems[i]['disabled'] = true;
+    
+    //Start by enabling everything
+    for (let item in sidebarItems) {
+      sidebarItems[item].disabled = false
+      if (!sidebarItems[item].subItems) continue
+      for (let subItem in sidebarItems[item].subItems) {
+        sidebarItems[item].subItems[subItem].disabled = false
+        sidebarItems[item].subItems[subItem].complete = false
       }
-
-      this.setState({ sidebarItems: sidebarItems })
-      return
     }
 
     // if user has not scheduled interview, only enable chat sign up page
@@ -295,25 +297,27 @@ class OnboardingApp extends React.Component {
       sidebarItems[0].subItems[workbookIndex].complete = true
     }
 
-    // if has passed interview, check if live scan & training have been completed, enable pages when not, otherwise disabled
-    if (this.state.userData.status == 'Application Accepted') {
-      if (this.state.progress.hasCompletedLiveScan) {
-        const livescanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
-        sidebarItems[0].subItems[livescanIndex].disabled = true
-        sidebarItems[0].subItems[livescanIndex].complete = true
-      }
+    if (this.state.progress.hasCompletedLiveScan) {
+      const livescanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
+      sidebarItems[0].subItems[livescanIndex].disabled = true
+      sidebarItems[0].subItems[livescanIndex].complete = true
+    }
 
-      if (this.state.progress.hasCompletedLiveTraining) {
-        const liveTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
-        sidebarItems[0].subItems[liveTrainingIndex].disabled = true
-        sidebarItems[0].subItems[liveTrainingIndex].complete = true
-      }
-    } else {
+    if (this.state.progress.hasCompletedLiveTraining) {
+      const liveTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
+      sidebarItems[0].subItems[liveTrainingIndex].disabled = true
+      sidebarItems[0].subItems[liveTrainingIndex].complete = true
+    }
+
+    // if has passed interview, check if live scan & training have been completed, enable pages when not, otherwise disabled
+    if (!this.state.userData.status == 'Application Accepted') {
+    
       const lScanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
       sidebarItems[0].subItems[lScanIndex].disabled = true
 
       const lTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
       sidebarItems[0].subItems[lTrainingIndex].disabled = true
+      
     }
 
     this.setState({
