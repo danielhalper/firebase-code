@@ -59,7 +59,7 @@ class TutorApp extends React.Component {
                             title: 'Tutor Resources',
                             active: false,
                             disabled: false,
-                            link: 'https://docs.google.com/document/d/18wWsqnV59P6a47u4i0IeXQIt2POdjAiPHol3r4i-054/edit#heading=h.6esndmj9ohuf',
+                            link: 'https://stepuptutoring.softr.app/',
                             icon: <SnippetsOutlined/>
                           },
                           {
