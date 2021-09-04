@@ -40,6 +40,12 @@ class SidebarSupportItem extends React.Component {
     }
 
     render() {
+        if (this.props.onClick) {
+            return <div onClick={this.props.onClick} className={`${this.props.isStep ? 'step ' : ''}${this.props.isSubItem ? 'subitem ' : ''}${this.props.isMainItem ? 'main-item ' : ''}`} >
+                {this.props.children}
+            </div>
+        }
+
         return (<Link href={this.props.link} target='_blank'>
             <div className={`${this.props.isStep ? 'step ' : ''}${this.props.isSubItem ? 'subitem ' : ''}
                 ${this.props.isMainItem ? 'main-item ' : ''}`} >
@@ -190,7 +196,7 @@ class SidebarLayout extends React.Component {
                                 {/* Sidebar for Support Items */}
                                 {!this.props.loading && item.isSupport && <div>
                                     {item.subItems && item.subItems.map(subItem => {
-                                        return <SidebarSupportItem isSubItem link={subItem.link} >{subItem.title}</SidebarSupportItem>
+                                        return <SidebarSupportItem isSubItem link={subItem.link} onClick={subItem.onClick} >{subItem.title}</SidebarSupportItem>
                                     })}
                                 </div>}
 
