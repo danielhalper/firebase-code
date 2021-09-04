@@ -113,6 +113,13 @@ class OnboardingApp extends React.Component {
               link: 'https://www.stepuptutoring.org/contact',
               icon: <MailOutlined/>
             },
+            {
+              keyId: 'bug',
+              title: 'Report a bug',
+              active: false,
+              disabled: false,
+              link: 'https://docs.google.com/forms/d/1hZL5lcDXqp77ixit2ZWwqafj3Ew4K7RpgoHqH37kzAE/viewform'
+            }
           ]
         }
       ]

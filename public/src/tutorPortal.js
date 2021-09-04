@@ -77,6 +77,13 @@ class TutorApp extends React.Component {
                             disabled: false,
                             link: 'https://www.stepuptutoring.org/contact',
                             icon: <MailOutlined/>
+                          },
+                          {
+                              keyId: 'bug',
+                              title: 'Report a bug',
+                              active: false,
+                              disabled: false,
+                              link: 'https://docs.google.com/forms/d/1wa1_CNBfNhdFjJt-16b0udO0iOuqLWxPYLHE16004kk/viewform'
                           }
                     ]
                 }
