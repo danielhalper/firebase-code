@@ -4,7 +4,7 @@ const mountNode = document.getElementById('portal');
 const { Form, Input, Button, Typography, message } = antd;
 const { HomeOutlined, SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CommentOutlined, UserOutlined, QuestionCircleOutlined } = icons;
 const { Title } = Typography;
-const ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
+const ErrorBoundary = window.Bugsnag ? Bugsnag.use( bugsnag__react(React) ) : ErrorBoundaryDefault
 
 const EMULATOR = window.location.href.includes('localhost')
 
@@ -59,7 +59,7 @@ class TutorApp extends React.Component {
                             title: 'Tutor Resources',
                             active: false,
                             disabled: false,
-                            link: 'https://stepuptutoring.softr.app/',
+                            link: 'https://docs.google.com/document/d/18wWsqnV59P6a47u4i0IeXQIt2POdjAiPHol3r4i-054/edit#heading=h.6esndmj9ohuf',
                             icon: <SnippetsOutlined/>
                           },
                           {
@@ -97,12 +97,12 @@ class TutorApp extends React.Component {
             })
 
         }).catch(error => {
-            firebase.analytics.logEvent('error', {
+            firebase.analytics().logEvent('error', {
                 type: 'tutorPortal',
                 message: `Could not get tutor`,
                 rawError: error.message
             })
-            Bugsnag.notify(error)
+            if (window.Bugsnag) Bugsnag.notify(error)
         })
 
     }

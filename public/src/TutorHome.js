@@ -191,7 +191,7 @@ class TutorHome extends React.Component {
                 }} icon={<VideoCameraOutlined/>} title='Start Zoom Meeting'>
                     Meet with your student face-to-face over Zoom.
                 </RequiredItem>
-                <RequiredItem link={"https://www.stepuptutoring.org/resources-extended"} newTab icon={<UnorderedListOutlined/>} title='Weekly Resources'>
+                <RequiredItem link={"https://stepuptutoring.softr.app/"} newTab icon={<UnorderedListOutlined/>} title='Weekly Resources'>
                     Your weekly session guide, customized to your student's needs
                 </RequiredItem>
             </div>
