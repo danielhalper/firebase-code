@@ -1,5 +1,9 @@
 const { message } = antd
 
+function OPEN_HEYMARKET() {
+  try { HeymarketWidget.Modal.handleFabButtonClicked() } catch(e) {}
+}
+
 class OnboardingApp extends React.Component {
   constructor(props) {
     super(props)
@@ -110,9 +114,16 @@ class OnboardingApp extends React.Component {
               title: 'Contact Us',
               active: false,
               disabled: false,
-              link: 'https://www.stepuptutoring.org/contact',
+              onClick: OPEN_HEYMARKET,
               icon: <MailOutlined/>
             },
+            {
+              keyId: 'bug',
+              title: 'Report a bug',
+              active: false,
+              disabled: false,
+              link: 'https://docs.google.com/forms/d/1hZL5lcDXqp77ixit2ZWwqafj3Ew4K7RpgoHqH37kzAE/viewform'
+            }
           ]
         }
       ]

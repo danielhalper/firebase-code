@@ -8,6 +8,10 @@ const ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
 
 const EMULATOR = window.location.href.includes('localhost')
 
+function OPEN_HEYMARKET() {
+    try { HeymarketWidget.Modal.handleFabButtonClicked() } catch(e) {}
+}
+
 class TutorApp extends React.Component {
     constructor(props) {
         super(props)
@@ -75,8 +79,15 @@ class TutorApp extends React.Component {
                             title: 'Contact Us',
                             active: false,
                             disabled: false,
-                            link: 'https://www.stepuptutoring.org/contact',
+                            onClick: OPEN_HEYMARKET,
                             icon: <MailOutlined/>
+                          },
+                          {
+                              keyId: 'bug',
+                              title: 'Report a bug',
+                              active: false,
+                              disabled: false,
+                              link: 'https://docs.google.com/forms/d/1wa1_CNBfNhdFjJt-16b0udO0iOuqLWxPYLHE16004kk/viewform'
                           }
                     ]
                 }
