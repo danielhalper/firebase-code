@@ -13,6 +13,15 @@ class SidebarItem extends React.Component {
     }
 
     handleOnClick() {
+        if (this.props.link) {
+            window.open(this.props.link, '_blank')
+            return
+        }
+
+        if (this.props.button) {
+            this.props.onClick()
+            return
+        }
 
         if (!this.props.disabled && !this.props.complete) {
 
@@ -189,7 +198,7 @@ class SidebarLayout extends React.Component {
                                 {/* Sidebar For Tutor Portal */}
                                 {!this.props.loading && !item.isSteps && !item.isSupport && <div>
                                     {item.subItems && item.subItems.map(subItem => {
-                                        return <SidebarItem isSubItem keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem>
+                                        return <SidebarItem isSubItem keyId={subItem.keyId} link={subItem.link} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={subItem.onClick || this.onSideBarItemClicked} button={subItem.button}>{subItem.title}</SidebarItem>
                                 })}
                                 </div>}
 
