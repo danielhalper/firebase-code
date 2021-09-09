@@ -75,12 +75,12 @@ class TutorHome extends React.Component {
         }).catch(error => {
 
             message.error('Something went wrong. Please try again.')
-            firebase.analytics.logEvent('error', {
+            firebase.analytics().logEvent('error', {
                 type: 'tutorPortal',
                 message: `Couldn't fetch zoom links`,
                 rawError: error.message
             })
-            Bugsnag.notify(error)
+            if (window.Bugsnag) Bugsnag.notify(error)
         })
     }
 
@@ -93,12 +93,12 @@ class TutorHome extends React.Component {
             
         }).catch( error => {
             message.error('Something went wrong. Please try again.')
-            firebase.analytics.logEvent('error', {
+            firebase.analytics().logEvent('error', {
                 type: 'tutorPortal',
                 message: `Couldn't fetch announcements`,
                 rawError: error.message
             })
-            Bugsnag.notify(error)
+            if (window.Bugsnag) Bugsnag.notify(error)
         })
         
         this.displayModal('announcements')

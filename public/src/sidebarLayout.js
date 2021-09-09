@@ -110,6 +110,7 @@ class SidebarLayout extends React.Component {
         this.state.sidebarItems = this.props.sidebarItems
         this.state.pages = this.props.pages
         this.state.currentTab = this.props.currentTab
+        this.state.error = this.props.error
 
         this.onSideBarItemClicked = this.onSideBarItemClicked.bind(this)
 
@@ -164,9 +165,33 @@ class SidebarLayout extends React.Component {
         }
     }
 
+    findFirstOpenPage() {
+        for (let item in this.state.sidebarItems) {
+            if (this.state.sidebarItems[item].disabled) continue
+            return this.state.sidebarItems[item].keyId
+        }
+
+        return this.state.sidebarItems[0]
+    }
+
+    getCurrentSidebarItem() {
+        for (let item in this.state.sidebarItems) {
+            if (this.state.sidebarItems[item].keyId == this.state.currentTab) return this.state.sidebarItems[item]
+            if (!this.state.sidebarItems[item].subItems) continue
+            for (let j in this.state.sidebarItems[item].subItems) {
+                if (this.state.sidebarItems[item].subItems[j].keyId == this.state.currentTab) return this.state.sidebarItems[item].subItems[j]
+            }
+        }
+        return {}
+    }
+
+
+
     render() {
 
-        const CurrentPage = this.state.pages[this.state.currentTab] || Empty
+        let CurrentPage = this.state.pages[this.state.currentTab] || Empty
+
+        if (this.getCurrentSidebarItem().disabled) CurrentPage = this.state.pages[ this.findFirstOpenPage() ] || Empty
 
         return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
 
@@ -191,6 +216,7 @@ class SidebarLayout extends React.Component {
                                 {/* Sidebar For Onboarding Portal (checklist pages) */}
                                 {!this.props.loading && item.isSteps && <Timeline className='subitem'>
                                     {item.subItems && item.subItems.map(subItem => {
+                                        if (this.props.error) subItem.disabled = true
                                         return <Timeline.Item className="step" color={subItem.disabled ? 'gray' : '#1BCBD9'} dot={subItem.complete ? <CheckCircleFilled /> : ''}> <SidebarItem complete={subItem.complete} isStep keyId={subItem.keyId} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={this.onSideBarItemClicked}>{subItem.title}</SidebarItem> </Timeline.Item>
                                     })}
                                 </Timeline>}
@@ -221,7 +247,8 @@ class SidebarLayout extends React.Component {
 
                     <div className='sidebar-footer' style={{ marginBottom: 50 }}>
 
-                        {!this.props.loading && <Popover content={<UserItem />} title='User Options' trigger='click'><span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}} className='hoverable'><Avatar size='large' icon={<UserOutlined />}/>{this.props.userData.firstname + ' ' + this.props.userData.lastname}</span></Popover>}
+                        { this.props.error && <Button type='primary' onClick={SIGN_OUT_FIREBASE}>Log Out</Button>}
+                        {(!this.props.loading && !this.props.error) && <Popover content={<UserItem />} title='User Options' trigger='click'><span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}} className='hoverable'><Avatar size='large' icon={<UserOutlined />}/>{this.props.userData.firstname + ' ' + this.props.userData.lastname}</span></Popover>}
 
                     </div>
 

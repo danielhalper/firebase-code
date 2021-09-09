@@ -1,4 +1,7 @@
-const ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
+let ErrorBoundary = ErrorBoundaryDefault
+try {
+    ErrorBoundary = Bugsnag.use( bugsnag__react(React) )
+} catch(e) {}
 
 //The node to mount on
 const mountNode = document.getElementById('content')
