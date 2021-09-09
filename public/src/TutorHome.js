@@ -165,7 +165,7 @@ class TutorHome extends React.Component {
             label:"Last Session",
             id:"last_session",
             type: "string",
-            value: new Date(this.state.student.lastSession).toLocaleDateString(),
+            value: new Date(this.state.student.lastSession.replace(/-/g, '\/')).toLocaleDateString(),
         })
 
         return <div style={{display:"flex", width:"100%", flexDirection:"column", justifyContent: "center", alignItems:"center"}}>
