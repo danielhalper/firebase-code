@@ -310,7 +310,7 @@ class OnboardingApp extends React.Component {
     }
 
     // if has passed interview, check if live scan & training have been completed, enable pages when not, otherwise disabled
-    if (!this.state.userData.status == 'Application Accepted') {
+    if (!(this.state.userData.status == 'Application Accepted')) {
     
       const lScanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
       sidebarItems[0].subItems[lScanIndex].disabled = true
