@@ -131,6 +131,7 @@ class OnboardingApp extends React.Component {
 
     this.setUserProgress = this.setUserProgress.bind(this)
     this.disableSideItems = this.disableSideItems.bind(this)
+    this.resetPollInterval = this.resetPollInterval.bind(this)
 
     this.loadUserPoll = undefined //For periodically fetching user data
     this.loadUserPollInterval = 0
