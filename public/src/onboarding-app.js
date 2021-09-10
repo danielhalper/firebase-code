@@ -338,6 +338,7 @@ class OnboardingApp extends React.Component {
 
 componentDidMount() {
   FIREBASE_RUN_ON_READY.push((user) => {
+    window.addEventListener('click', this.resetPollInterval)
     this.loadTutorData()
   })
 }
