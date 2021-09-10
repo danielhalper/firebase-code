@@ -106,19 +106,18 @@ exports.getTutor = async (data, context) => {
             let studentObj = studentRecord.data()
 
             try {
-                console.log(userObj['stepUpEmail'].toUpperCase())
+
                 //Also get their Zoom Tracking data
                 const studentZoomDataResult = await base('Source').select({
                     maxRecords: 1,
                     filterByFormula: `AND({record_id} = '${studentId}',{StepUp Email capitalized (from Tutors)} = UPPER('${userObj['stepUpEmail']}'))`,
-                    fields: ['record_id', 'Total meeting count (Tutor session id)', `Total meeting time (from Session count) copy (from Zoom information)`, 'Last meeting date (from Weekly) (from Session count) copy (from Zoom information)']
+                    fields: ['record_id', 'Total meeting count (Tutor session id)', `Tutor total meeting time (from Session count) copy (from Zoom information)`, 'Last meeting date (from Weekly) (from Session count) copy (from Zoom information)']
                 }).firstPage()
-                console.log(studentId)
-                console.log(studentZoomDataResult[0]['_rawJson']['fields'])
+                console.log(studentZoomDataResult)
                 if (studentZoomDataResult && studentZoomDataResult[0]) {
                     const zoomData = studentZoomDataResult[0]['_rawJson']['fields']
                     studentObj['totalSessions'] = zoomData['Total meeting count (Tutor session id)'] || 0
-                    studentObj['minutesTutored'] = (zoomData[`Total meeting time (from Session count) copy (from Zoom information)`][0] || 0) / 60
+                    studentObj['minutesTutored'] = (zoomData[`Tutor total meeting time (from Session count) copy (from Zoom information)`][0] || 0) / 60
                     studentObj['lastSession'] = zoomData['Last meeting date (from Weekly) (from Session count) copy (from Zoom information)'][0] || null
                 }
 
