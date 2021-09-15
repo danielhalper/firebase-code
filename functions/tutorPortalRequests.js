@@ -641,7 +641,7 @@ async function verifyOnboardingUser(context) {
     const result = await base('Tutors').select({
         maxRecords: 1,
         filterByFormula: `TRIM(LOWER({Email})) = '${email.toLowerCase().trim()}'`,
-        fields: ['Waiver?', 'Creating Boundaries section', 'Math section', 'Section 1', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date', 'Live Scan?', 'Live Training?']
+        fields: ['Waiver?', 'Creating Boundaries section', 'Math section', 'Section 1', 'Section 2', 'Email', 'First Name', 'Last Name', 'Status', 'Interview Date', 'Live Scan?', 'Live Training?', 'Live Training sign up?']
     }).firstPage()
 
     //Make sure it exists
@@ -661,7 +661,8 @@ async function verifyOnboardingUser(context) {
         workbookForm3Completed: result[0].fields['Math section'] || false,
         workbookForm4Completed: result[0].fields['Section 2'] || false,
         liveScanCompleted: result[0].fields['Live Scan?'] || false,
-        liveTrainingCompleted: result[0].fields['Live Training?'] || false
+        liveTrainingCompleted: result[0].fields['Live Training?'] || false,
+        liveTrainingDate: result[0].fields['Live Training sign up?'] || false
     }
 
 }
