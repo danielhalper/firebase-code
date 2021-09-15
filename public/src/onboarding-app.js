@@ -18,7 +18,8 @@ class OnboardingApp extends React.Component {
         hasCompletedWaiver: false,
         hasCompletedAllWorkbook: false,
         hasCompletedLiveScan: false,
-        hasCompletedLiveTraining: false
+        hasCompletedLiveTraining: false,
+        hasScheduledLiveTraining: false
       },
       workbookForms: {
         hasCompletedWbForm1: false,
@@ -187,6 +188,7 @@ class OnboardingApp extends React.Component {
   // takes user data and sets completed tracked items in state
   setUserProgress(user) {
     let scheduledChat = notNull(user.interviewDate);
+    let scheduledLiveTraining = notNull(user.liveTrainingDate);
     let completedWaiver = user.waiverCompleted;
     let completedLiveScan = user.liveScanCompleted;
     let completedLiveTraining = user.liveTrainingCompleted;
@@ -206,6 +208,7 @@ class OnboardingApp extends React.Component {
     this.setState({
       progress:{
         hasScheduledChat: scheduledChat,
+        hasScheduledLiveTraining: scheduledLiveTraining,
         hasCompletedWaiver: completedWaiver,
         hasCompletedAllWorkbook: completedAllWorkbook,
         hasCompletedLiveScan: completedLiveScan,
@@ -269,7 +272,7 @@ class OnboardingApp extends React.Component {
     const sidebarItems = this.state.sidebarItems
     const hasScheduledChat = this.state.progress.hasScheduledChat
 
-    
+
     //Start by enabling everything
     for (let item in sidebarItems) {
       sidebarItems[item].disabled = false
@@ -323,13 +326,13 @@ class OnboardingApp extends React.Component {
 
     // if has passed interview, check if live scan & training have been completed, enable pages when not, otherwise disabled
     if (this.state.userData.status != 'Application Accepted') {
-    
+
       const lScanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
       sidebarItems[0].subItems[lScanIndex].disabled = true
 
       const lTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
       sidebarItems[0].subItems[lTrainingIndex].disabled = true
-      
+
     }
 
     this.setState({

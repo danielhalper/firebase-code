@@ -137,12 +137,23 @@ class SecondSteps extends React.Component {
 
     render() {
         let progress = this.props.progress
+        let tutorDetails = this.props.tutorDetails
+        let liveTrainingDate = '';
+
+        if (notNull(liveTrainingDate)) liveTrainingDate = tutorDetails.liveTrainingDate;
 
         //Show a skeleton when loading
         if (this.state.isLoading) return <Skeleton active />
 
         //Otherwise show the dashboard items --> Shows when interview has been passed but other items need to be completed
         return <div className='step'>
+
+
+            {liveTrainingDate ?
+            <div><Title level={3} color='primary'>Your Live Training Date: <u>{liveTrainingDate}</u></Title>
+            <p>We cannot wait to see your awesome face!</p>
+            <h5>*Check email for confirmation or to reschedule date.</h5> </div>
+            : null}
 
             <Title level={3}>Thanks for chatting with us!</Title>
 
@@ -160,7 +171,7 @@ class SecondSteps extends React.Component {
                 LiveScan is a government requirement for working with children. This is completed outside of StepUp.
             </RequiredOBItem> }
 
-                {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveTraining} linkTo={this.props.onSideBarItemClicked} pageKey={'live-training'} icon={<RocketOutlined/>} title='Live Training'>
+                {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveTraining} linkTo={this.props.onSideBarItemClicked} pageKey={'training'} icon={<RocketOutlined/>} title='Live Training'>
                 You will need to complete a live training session with one of our leaders before you can be matched with a student.
             </RequiredOBItem> }
             </div>
