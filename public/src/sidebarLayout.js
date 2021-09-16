@@ -39,7 +39,7 @@ class SidebarItem extends React.Component {
         return ( <div id={this.props.keyId} onFocus={this.handleOnClick} onClick={this.handleOnClick}
         className={`${this.props.active ? 'active ':''}${this.props.disabled ? 'disabled ':''}
         ${this.props.isStep ? 'step ':''}${this.props.isSubItem ? 'subitem ':''}${this.props.isMainItem ? 'main-item ':''}
-        ${this.props.complete ? 'complete ':''}`}>{this.props.icon && this.props.icon} {this.props.children}</div>)
+        ${this.props.complete ? 'complete ' : ''}`}>{this.props.icon && this.props.icon} {this.props.children}{this.props.active ? <span className="active-item-marker">&#8226;</span> : null}</div>)
     }
 }
 
