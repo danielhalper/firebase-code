@@ -106,14 +106,13 @@ exports.getTutor = async (data, context) => {
             let studentObj = studentRecord.data()
 
             try {
-
                 //Also get their Zoom Tracking data
                 const studentZoomDataResult = await base('Source').select({
                     maxRecords: 1,
-                    filterByFormula: `AND({record_id} = '${studentId}',{StepUp Email capitalized (from Tutors)} = UPPER('${userObj['stepUpEmail']}'))`,
+                    filterByFormula: `AND({record_id} = '${studentId}',FIND(UPPER('${userObj['stepUpEmail']}'), {StepUp Email capitalized (from Tutors)}) > 0)`,
                     fields: ['record_id', 'Total meeting count (Tutor session id)', `Tutor total meeting time (from Session count) copy (from Zoom information)`, 'Last meeting date (from Weekly) (from Session count) copy (from Zoom information)']
                 }).firstPage()
-                console.log(studentZoomDataResult)
+
                 if (studentZoomDataResult && studentZoomDataResult[0]) {
                     const zoomData = studentZoomDataResult[0]['_rawJson']['fields']
                     studentObj['totalSessions'] = zoomData['Total meeting count (Tutor session id)'] || 0
