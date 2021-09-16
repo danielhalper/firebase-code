@@ -27,7 +27,8 @@ h3.ant-typography {
 }
 
 .requirement:hover {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 5px;
+    cursor: pointer;
+    box-shadow: rgb(0 0 0 / 10%) 0px 3px 5px;
 }
 
 .requirement .description {

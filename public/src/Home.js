@@ -21,7 +21,7 @@ class RequiredOBItem extends React.Component {
         if (this.props.requirementCompleted) {
             return (
                 <Badge.Ribbon text={<CheckOutlined />} color="#1BCBD9">
-                    <div className='requirement inner-req-div completed-requirement' >
+                    <div className='requirement inner-req-div completed-requirement' onClick={() => this.props.linkTo(this.props.pageKey)}>
                     <div>
                         {this.props.icon && this.props.icon} {this.props.title}
                         <p className='description'>
@@ -171,7 +171,7 @@ class SecondSteps extends React.Component {
                 LiveScan is a government requirement for working with children. This is completed outside of StepUp.
             </RequiredOBItem> }
 
-                {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveTraining} linkTo={this.props.onSideBarItemClicked} pageKey={'training'} icon={<RocketOutlined/>} title='Live Training'>
+                {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveTraining} linkTo={this.props.onSideBarItemClicked} pageKey={'live-training'} icon={<RocketOutlined/>} title='Live Training'>
                 You will need to complete a live training session with one of our leaders before you can be matched with a student.
             </RequiredOBItem> }
             </div>
