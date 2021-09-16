@@ -271,7 +271,7 @@ class OnboardingApp extends React.Component {
   disableSideItems(user) {
     const sidebarItems = this.state.sidebarItems
     const hasScheduledChat = this.state.progress.hasScheduledChat
-
+    const userStatus = this.state.userData.status
 
     //Start by enabling everything
     for (let item in sidebarItems) {
@@ -295,37 +295,32 @@ class OnboardingApp extends React.Component {
 
     // at this point chat has been scheduled and becomes disabled
     const chatIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'chat-signup')
-      sidebarItems[0].subItems[chatIndex]['disabled'] = true;
       sidebarItems[0].subItems[chatIndex]['complete'] = true;
 
     //if waiver has been completed, disable waiver page
     if (this.state.progress.hasCompletedWaiver) {
       const waiverIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'waiver')
-      sidebarItems[0].subItems[waiverIndex].disabled = true
       sidebarItems[0].subItems[waiverIndex].complete = true
     }
 
     // if workbook has been completed, disable workbook page
     if (this.state.progress.hasCompletedAllWorkbook) {
       const workbookIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'workbook')
-      sidebarItems[0].subItems[workbookIndex].disabled = true
       sidebarItems[0].subItems[workbookIndex].complete = true
     }
 
     if (this.state.progress.hasCompletedLiveScan) {
       const livescanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
-      sidebarItems[0].subItems[livescanIndex].disabled = true
       sidebarItems[0].subItems[livescanIndex].complete = true
     }
 
     if (this.state.progress.hasCompletedLiveTraining) {
       const liveTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
-      sidebarItems[0].subItems[liveTrainingIndex].disabled = true
       sidebarItems[0].subItems[liveTrainingIndex].complete = true
     }
 
     // if has passed interview, check if live scan & training have been completed, enable pages when not, otherwise disabled
-    if (this.state.userData.status != 'Application Accepted') {
+    if (userStatus != 'Application Accepted' && userStatus != 'Ready to Tutor' ) {
 
       const lScanIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'livescan')
       sidebarItems[0].subItems[lScanIndex].disabled = true
@@ -333,6 +328,14 @@ class OnboardingApp extends React.Component {
       const lTrainingIndex = sidebarItems[0].subItems.findIndex(subItemObj => subItemObj.keyId == 'live-training')
       sidebarItems[0].subItems[lTrainingIndex].disabled = true
 
+    }
+
+
+    // if user is not one of these statuses, disable all sidebaritems
+    if (userStatus != 'Application Accepted' && userStatus != '' && userStatus != 'Ready to Tutor') {
+      for (let i = 0; i < sidebarItems[0].subItems.length; i++) {
+        sidebarItems[0].subItems[i]['disabled'] = true;
+      }
     }
 
     this.setState({
