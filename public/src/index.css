@@ -229,6 +229,17 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
     font-family: 'Open Sans', sans-serif;
 }
 
+.chat-scheduled-date-container {
+    background-color: white;
+    border-radius: 5px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    min-height: 30vh;
+    justify-content: center;
+}
+
 .waiver-paperform-div {
     border-radius: 10px;
     margin-top: 5%

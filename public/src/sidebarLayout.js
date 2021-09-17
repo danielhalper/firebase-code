@@ -26,7 +26,7 @@ class SidebarItem extends React.Component {
         if (!this.props.disabled) {
 
             if (!this.props.active) {
-                window.location.hash = '#' + this.props.keyId
+                // window.location.hash = '#' + this.props.keyId
             }
 
             this.props.onClick(this.props.keyId)
