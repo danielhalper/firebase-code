@@ -41,7 +41,7 @@ class ChatSignup extends React.Component {
           </div>
         </div>
         )
-      } else {
+    } else if (this.props.progress.hasScheduledChat && tutorDetails.status === ''){
           return (
             <div>
               <h1 className = "section-header-h1" > 15-Minute Chat</h1 >
@@ -51,6 +51,15 @@ class ChatSignup extends React.Component {
               </div>
             </div>
           )
+    } else {
+      return(
+        <div>
+          <h1 className="section-header-h1" > 15-Minute Chat</h1 >
+          <div className="chat-scheduled-date-container">
+            <p>Great speaking with you, lorem ipsum...</p>
+          </div>
+        </div>
+      )
     }
   }
 }
