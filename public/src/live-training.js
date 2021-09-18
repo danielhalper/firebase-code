@@ -1,3 +1,5 @@
+const { Button} = antd;
+
 class LiveTraining extends React.Component {
 
   loadDeferredIframe() {
@@ -5,11 +7,13 @@ class LiveTraining extends React.Component {
     const userLocalFirstName = getFirstNameFromLocalStorage();
     const userLocalLastName = getLastNameFromLocalStorage();
     const iframe = document.getElementById("deferred-iframe");
-    iframe.src = `https://calendly.com/stepup-tut/training?name=${userLocalFirstName}%20${userLocalLastName}&email=${userLocalEmail}`;
-    iframe.title = "Schedule Live Training";
-    iframe.width = "100%";
-    iframe.height = "800";
-    iframe.frameBorder = "0";
+    if (iframe) {
+      iframe.src = `https://calendly.com/stepup-tut/training?name=${userLocalFirstName}%20${userLocalLastName}&email=${userLocalEmail}`;
+      iframe.title = "Schedule Live Training";
+      iframe.width = "100%";
+      iframe.height = "800";
+      iframe.frameBorder = "0";
+    }
   };
 
   componentDidMount() {
@@ -17,6 +21,9 @@ class LiveTraining extends React.Component {
   };
 
   render() {
+    const tutorDetails = this.props.tutorDetails;
+
+    if (!tutorDetails.liveTrainingDate) {
     return (
       <div>
         <h1 className="section-header-h1">Live Training</h1>
@@ -26,5 +33,21 @@ class LiveTraining extends React.Component {
         </div>
       </div>
     )
+    } else {
+      return (
+        <div>
+          <h1 className="section-header-h1">Live Training</h1>
+          <div className="chat-scheduled-date-container">
+            <p>Thanks for scheduling your training session with Step Up Tutoring!</p>
+            <p>Live Training Session</p>
+            <p><strong>{tutorDetails.liveTrainingDate}</strong></p>
+            <div>
+              <Button type="primary" href={`https://calendly.com/reschedulings/${tutorDetails.calendlyInviteeID}`} target="_blank">Reschedule</Button>
+              <Button type="primary" href={`https://calendly.com/cancellations/${tutorDetails.calendlyInviteeID}`} target="_blank">Cancel</Button>
+            </div>
+          </div>
+        </div>
+      )
+    }
   }
 }
