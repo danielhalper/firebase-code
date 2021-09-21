@@ -1,4 +1,5 @@
-const { Row, Col } = antd;
+const { Row, Col, Button, Link } = antd;
+const { CalendarOutlined } = icons;
 
 class ChatSignup extends React.Component {
 
@@ -35,7 +36,7 @@ class ChatSignup extends React.Component {
 
           <p className="section-p">All meetings with us are via Zoom, be on the lookout for the link in your confirmation email.</p>
 
-          <p className="section-p">If you need assistance, please reach out to our Onboarding Specialist at laura@stepuptutoring.org or (205) 953-1894. If you have already signed up or completed session, please disregard.</p>
+          <p className="section-p">If you need assistance, please reach out to our Onboarding Specialist at <Link href='mailto:laura@stepuptutoring.org'>laura@stepuptutoring.org</Link>. If you have already signed up or completed session, please disregard.</p>
           <div className="center-embed-iframe">
             <iframe id="my-deferred-iframe" src="about:blank" /><script src="https://embed.acuityscheduling.com/js/embed.js" type="text/javascript"></script>
           </div>
@@ -45,9 +46,15 @@ class ChatSignup extends React.Component {
           return (
             <div>
               <h1 className = "section-header-h1" > 15-Minute Chat</h1 >
-              <div className="chat-scheduled-date-container">
-                <p>Thanks for scheduling a chat with us, we&#39;re excited to speak to you!</p>
-                <p>Your interview is scheduled for <strong>{new Date(interviewDate).toLocaleString()}</strong> </p>
+              <div className="content-completed-container">
+                <div className="appointment-confirmation-icon"><CalendarOutlined /></div>
+                <p>{tutorDetails.firstname}, we have you confirmed for your appointment!</p>
+                <p className="appointment-confirmation-title">15 Minute Zoom Chat</p>
+                <p><strong>{new Date(interviewDate).toLocaleString()}</strong> </p>
+                <div>
+                  <Button className="chat-cancel-button" type="primary" href={`https://us-central1-acuity-82682.cloudfunctions.net/rescheduleAppointment?appointmentId=${tutorDetails.acuityAppointmentID}&email=${tutorDetails.email}`} target="_blank">Cancel & Reschedule</Button>
+                  <p>Once buttton is clicked, appointment will be cancelled.</p>
+                </div>
               </div>
             </div>
           )
@@ -55,7 +62,7 @@ class ChatSignup extends React.Component {
       return(
         <div>
           <h1 className="section-header-h1" > 15-Minute Chat</h1 >
-          <div className="chat-scheduled-date-container">
+          <div className="content-completed-container">
             <p>Great speaking with you, lorem ipsum...</p>
           </div>
         </div>
