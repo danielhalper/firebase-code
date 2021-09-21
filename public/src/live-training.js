@@ -1,4 +1,5 @@
 const { Button} = antd;
+const { CalendarOutlined } = icons;
 
 class LiveTraining extends React.Component {
 
@@ -37,13 +38,14 @@ class LiveTraining extends React.Component {
       return (
         <div>
           <h1 className="section-header-h1">Live Training</h1>
-          <div className="chat-scheduled-date-container">
-            <p>Thanks for scheduling your training session with Step Up Tutoring!</p>
-            <p>Live Training Session</p>
+          <div className="content-completed-container">
+            <div className="appointment-confirmation-icon"><CalendarOutlined /></div>
+            <p>{tutorDetails.firstname}, we have you confirmed for your appointment!</p>
+            <p className="appointment-confirmation-title">Live Training Session</p>
             <p><strong>{tutorDetails.liveTrainingDate}</strong></p>
-            <div>
-              <Button type="primary" href={`https://calendly.com/reschedulings/${tutorDetails.calendlyInviteeID}`} target="_blank">Reschedule</Button>
-              <Button type="primary" href={`https://calendly.com/cancellations/${tutorDetails.calendlyInviteeID}`} target="_blank">Cancel</Button>
+            <div className="live-training-button-container">
+              <Button type="primary" href={`https://calendly.com/reschedulings/${tutorDetails.calendlyInviteeID}`} target="_blank" className="live-training-reschedule-buttons">Reschedule</Button>
+              <Button type="primary" href={`https://calendly.com/cancellations/${tutorDetails.calendlyInviteeID}`} target="_blank" className="live-training-reschedule-buttons">Cancel</Button>
             </div>
           </div>
         </div>
