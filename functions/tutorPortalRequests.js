@@ -17,6 +17,8 @@ const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
 const zoomAPIKey = functions.config().zoom.api_key
 const zoomAPISecret = functions.config().zoom.api_secret
 
+const zapierAuthToken = functions.config().zapier.auth_token
+
 //Step Up custom credentials
 const stepUpTokenEncryptionKey = functions.config().stepup.token_encryption_key
 
@@ -465,6 +467,7 @@ exports.onNewUserCreated = functions.auth.user().onCreate((user) => {
             method: 'post',
             body: JSON.stringify({
                 email: email,
+                authToken: zapierAuthToken,
                 signInLink: emailSignInLink
             })
         })
@@ -510,6 +513,7 @@ exports.sendEmailSignInLink = functions.https.onCall(async (data, context) => {
                 method: 'post',
                 body: JSON.stringify({
                     email: email,
+                    authToken: zapierAuthToken,
                     signInLink: emailSignInLink
                 })
             })
