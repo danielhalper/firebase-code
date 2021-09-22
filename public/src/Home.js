@@ -21,7 +21,7 @@ class RequiredOBItem extends React.Component {
         if (this.props.requirementCompleted) {
             return (
                 <Badge.Ribbon text={<CheckOutlined />} color="#1BCBD9">
-                    <div className='requirement inner-req-div completed-requirement' >
+                    <div className='requirement inner-req-div completed-requirement' onClick={() => this.props.linkTo(this.props.pageKey)}>
                     <div>
                         {this.props.icon && this.props.icon} {this.props.title}
                         <p className='description'>
@@ -137,12 +137,23 @@ class SecondSteps extends React.Component {
 
     render() {
         let progress = this.props.progress
+        let tutorDetails = this.props.tutorDetails
+        let liveTrainingDate = '';
+
+        if (notNull(liveTrainingDate)) liveTrainingDate = tutorDetails.liveTrainingDate;
 
         //Show a skeleton when loading
         if (this.state.isLoading) return <Skeleton active />
 
         //Otherwise show the dashboard items --> Shows when interview has been passed but other items need to be completed
         return <div className='step'>
+
+
+            {liveTrainingDate ?
+            <div><Title level={3} color='primary'>Your Live Training Date: <u>{liveTrainingDate}</u></Title>
+            <p>We cannot wait to see your awesome face!</p>
+            <h5>*Check email for confirmation or to reschedule date.</h5> </div>
+            : null}
 
             <Title level={3}>Thanks for chatting with us!</Title>
 
