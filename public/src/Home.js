@@ -93,8 +93,6 @@ class FirstSteps extends React.Component {
                 <p>Once you've had your interview, you'll move on to the next steps!</p>
                 <strong><Title level={4}>Your interview date*: {new Date(interviewDate).toLocaleString()}</Title></strong>
 
-                <h5>*Check email for confirmation or to reschedule date.</h5>
-
                 <div>
 
                     <Title level={3}>Other Steps</Title>
@@ -152,7 +150,7 @@ class SecondSteps extends React.Component {
             {liveTrainingDate ?
             <div><Title level={3} color='primary'>Your Live Training Date: <u>{liveTrainingDate}</u></Title>
             <p>We cannot wait to see your awesome face!</p>
-            <h5>*Check email for confirmation or to reschedule date.</h5> </div>
+            </div>
             : null}
 
             <Title level={3}>Thanks for chatting with us!</Title>

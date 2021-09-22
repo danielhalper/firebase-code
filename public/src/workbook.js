@@ -7,6 +7,7 @@ function CompletedFormMsg(props) {
         <div className="completed-form-icon"><SmileTwoTone twoToneColor="#1BCBD9" /></div>
         <h2 className="completed-form-thank-you">Thank You!</h2>
         <p>Your submission for {props.workbookForm} has been saved.</p>
+        <p>Review the form. This will be a link</p>
       </div>
     )
 }
@@ -15,6 +16,20 @@ function CompletedFormMsg(props) {
 class Workbook extends React.Component {
   constructor(props) {
     super(props)
+  }
+
+  componentDidMount() {
+    const myIframes = document.querySelectorAll("iframe");
+    myIframes.forEach(function(iframe) {
+      iframe.addEventListener("load",
+        function () {
+          document.querySelector('.main-content').scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+          });
+        });
+    })
   }
 
   render() {
@@ -36,7 +51,7 @@ class Workbook extends React.Component {
               key="1"
               forceRender="true"  >
               {wbForms.hasCompletedWbForm1 ? <CompletedFormMsg workbookForm={"General Expectations"} /> :
-                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLScN2qPXuWx7PcG4rAPzFUx06M-V5Ahtx0o-ge1L3ifc-9VVFQ/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.147453066=${userLocalEmail}`} width="640" height="3300" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
+                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLScN2qPXuWx7PcG4rAPzFUx06M-V5Ahtx0o-ge1L3ifc-9VVFQ/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.147453066=${userLocalEmail}`} width="640" height="3500" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
               }
             </TabPane>
 
@@ -45,7 +60,7 @@ class Workbook extends React.Component {
               key="2"
               forceRender="true" >
               {wbForms.hasCompletedWbForm2 ? <CompletedFormMsg workbookForm={"Sexual Harassment and Boundaries"} /> :
-                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLSdx3uxtfVJEf8jSs4bXwKUFZp0a5teFBxxs-vwod3koxJ1gbA/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.147453066=${userLocalEmail}`} width="640" height="2150" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
+                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLSdx3uxtfVJEf8jSs4bXwKUFZp0a5teFBxxs-vwod3koxJ1gbA/viewform?embedded=true&usp=pp_url&entry.1506871634=${userLocalFirstName}%20${userLocalLastName}&entry.147453066=${userLocalEmail}`} width="640" height="2300" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
               }
               </TabPane>
 
@@ -54,7 +69,7 @@ class Workbook extends React.Component {
               key="3"
               forceRender="true" >
               {wbForms.hasCompletedWbForm3 ? <CompletedFormMsg workbookForm={"Tutoring Math"} /> :
-                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLSca40szBn7VgKf8QGM1nhAzrh0wumXnfAdWqsV9r5EZq4eCdA/viewform?embedded=true&usp=pp_url&entry.1424269320=${userLocalFirstName}%20${userLocalLastName}&entry.348644900=${userLocalEmail}`} width="640" height="3000" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
+                <iframe src={`https://docs.google.com/forms/d/e/1FAIpQLSca40szBn7VgKf8QGM1nhAzrh0wumXnfAdWqsV9r5EZq4eCdA/viewform?embedded=true&usp=pp_url&entry.1424269320=${userLocalFirstName}%20${userLocalLastName}&entry.348644900=${userLocalEmail}`} width="640" height="3200" frameBorder="0" marginHeight="0" marginWidth="0">Loading…</iframe>
               }
               </TabPane>
 
