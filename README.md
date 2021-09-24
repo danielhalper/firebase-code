@@ -53,8 +53,14 @@ cd ..
 This will start the Firebase emulators and begin watching the JS files in the `src` folder, so any changes you make to the frontend or backend code should be immediately reflected.
 
 ### Viewing the App
-Before you can view the onboarding portal, you will have to visit [http://localhost:5001/stepup-dashboard/us-central1/syncPeopleDataTest](http://localhost:5001/stepup-dashboard/us-central1/syncPeopleDataTest) in your browser. This will add relevant tutor and student information to the Firestore emulator and allow the dashboard to load successfully. **Skipping this step will prevent the dashboard from loading and will cause a 403 error**.
 
-To view the onboarding dashboard in your browser, go to [http://localhost:5000/onboarding_dashboard.html](http://localhost:5000/onboarding_dashboard.html). 
+#### Onboarding Portal
+To view the onboarding portal in your browser, go to [http://localhost:5000/onboarding_dashboard.html](http://localhost:5000/onboarding_dashboard.html). 
 
-To view the tutor dashboard in your browser, go to [http://localhost:5000/tutor_portal.html](http://localhost:5000/tutor_portal.html).
+This will redirect you to a sign in page. **DO NOT** click "Start our Application"; that button is only relevant for the production environment. Instead, change the URL for the page to include `?email=<email_you_applied_with>` (so the full link should now be [https://localhost:5000/signin.html?email=<email_you_applied_with>](https://localhost:5000/signin.html?email=<email_you_applied_with>)). This will create an account for you and bring you to the onboarding dashboard. 
+
+**NOTE:** At various times, you may have to either change the email you sign in with, create test accounts, or have your data updated by a supervisor in Airtable in order to test the state of the app.
+
+#### Tutor Portal
+
+To view the tutor portal in your browser, go to [http://localhost:5000/tutor_portal.html](http://localhost:5000/tutor_portal.html). It will show a sign in screen saying no accounts have been created - click "Add an account", and enter your Step Up email (@stepuptutoring.org) in the "email" section. This will sign you in to the tutor portal.
