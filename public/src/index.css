@@ -236,7 +236,7 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
 .content-completed-container {
     background-color: white;
     border-radius: 5px;
-    padding: 25px 15px;
+    padding: 35px 30px;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -245,7 +245,7 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
 }
 
 .appointment-confirmation-icon {
-    font-size: 5rem;
+    font-size: 4rem;
     color: #327D83;
 }
 
@@ -256,6 +256,30 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
     font-size: 1.1rem;
 }
 
+.header-completed-done-check {
+    background: rgb(27, 203, 217);
+    color: white;
+    padding: 0px 4px;
+    border-radius: 3px;
+    font-size: 2rem;
+}
+
+.complete-checkmark-outer {
+    font-size: 5rem;
+    margin: 20px 0 40px;
+    color: #327D83;
+}
+
+.complete-checkmark-inner {
+    background-color: #04d5e533;
+    border-radius: 100px;
+    padding: 12px 22px;
+    filter: drop-shadow(
+      1px 2px 8px var(--shadow-color)
+    );
+    --shadow-color: #14656e;
+}
+
 .chat-cancel-button {
     margin: 5px 0 10px;
     border-radius: 5px;
@@ -263,6 +287,15 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
 
 #completed-waiver-container {
     text-align: left;
+}
+
+.waiver-done-message {
+    text-align: center;
+    font-size: 1.2rem;
+    font-family: 'Open Sans', sans-serif;
+    color: #238d95;
+    font-weight: bold;
+    padding: 10px;
 }
 
 .waiver-paperform-div {

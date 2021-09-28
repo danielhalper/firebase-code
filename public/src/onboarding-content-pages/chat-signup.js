@@ -53,7 +53,7 @@ class ChatSignup extends React.Component {
                 <p><strong>{new Date(interviewDate).toLocaleString()}</strong> </p>
                 <div>
                   <Button className="chat-cancel-button" type="primary" href={`https://us-central1-acuity-82682.cloudfunctions.net/rescheduleAppointment?appointmentId=${tutorDetails.acuityAppointmentID}&email=${tutorDetails.email}`} target="_blank">Cancel & Reschedule</Button>
-                  <p>Once buttton is clicked, appointment will be cancelled.</p>
+                  <p style={{ fontSize: '12px' }}>*Cancellations without a reschedule may take 20 minutes to reflect change.</p>
                 </div>
               </div>
             </div>
@@ -64,7 +64,7 @@ class ChatSignup extends React.Component {
           <h1 className="section-header-h1" > 15-Minute Chat {tutorDetails.status === 'Application Accepted' ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1 >
           <div className="content-completed-container">
             <div className="complete-checkmark-outer"><span className="complete-checkmark-inner">< CheckOutlined /></span></div>
-            <p>Thank you for completing the 15 minute chat, it was great to meet you {tutorDetails.firstname}.</p>
+            <p>Thank you for completing the 15 minute chat with us, it was great to meet you {tutorDetails.firstname}.</p>
             <p>You're now one step closer to becoming a Step Up Tutor and making a difference in a child's life!</p>
           </div>
         </div>
