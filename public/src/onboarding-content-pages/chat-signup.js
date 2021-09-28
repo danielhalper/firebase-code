@@ -63,7 +63,7 @@ class ChatSignup extends React.Component {
         <div>
           <h1 className="section-header-h1" > 15-Minute Chat {tutorDetails.status === 'Application Accepted' ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1 >
           <div className="content-completed-container">
-            <div className="complete-checkmark-outer"><span className="complete-checkmark-inner">< CheckOutlined /></span></div>
+            <img className="svg-completed-img" src="./meeting.svg" alt="calendar booked image"></img>
             <p>Thank you for completing the 15 minute chat with us, it was great to meet you {tutorDetails.firstname}.</p>
             <p>You're now one step closer to becoming a Step Up Tutor and making a difference in a child's life!</p>
           </div>
