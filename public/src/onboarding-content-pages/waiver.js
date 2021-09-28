@@ -10,6 +10,8 @@ class Waiver extends React.Component {
     const userLocalEmail = getEmailFromLocalStorage();
     const userLocalFirstName = getFirstNameFromLocalStorage();
     const userLocalLastName = getLastNameFromLocalStorage();
+    let tutorDetails = this.props.tutorDetails;
+
     if(!this.props.progress.hasCompletedWaiver) {
       return (
         <div>
@@ -22,7 +24,7 @@ class Waiver extends React.Component {
       } else {
         return (
         <div>
-          <h1 className="section-header-h1"> Waiver</h1 >
+            <h1 className="section-header-h1"> Waiver {tutorDetails.waiverCompleted ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1 >
           <p>Thanks for completing the waiver! Feel free to review below.</p>
           <div className="content-completed-container" id="completed-waiver-container">
 

@@ -34,7 +34,7 @@ class LiveTraining extends React.Component {
         </div>
       </div>
     )
-    } else {
+    } else if (tutorDetails.liveTrainingDate && !tutorDetails.liveTrainingCompleted){
       return (
         <div>
           <h1 className="section-header-h1">Live Training</h1>
@@ -49,6 +49,15 @@ class LiveTraining extends React.Component {
             </div>
           </div>
         </div>
+      )
+    } else {
+      return (
+        <div>
+          <h1 className="section-header-h1">Live Training {tutorDetails.liveTrainingCompleted ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1>
+          <div className="content-completed-container">
+            <p>Info here</p>
+          </div>
+          </div>
       )
     }
   }

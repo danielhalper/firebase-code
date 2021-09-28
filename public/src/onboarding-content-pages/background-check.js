@@ -3,10 +3,11 @@ const { Divider } = antd;
 class BackgroundCheck extends React.Component {
 
   render() {
+    const tutorDetails = this.props.tutorDetails;
 
     return (
       <div>
-        <h1 className="section-header-h1">Live Scan</h1>
+        <h1 className="section-header-h1">Live Scan {tutorDetails.liveScanCompleted ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1>
         <h3 className="section-approx-time">Approximate time: 2-4 days</h3>
         <p className="section-p"> Per LAUSD request, all tutors will be required to complete a Live Scan fingerprint background check. Tutors are asked to pay for their own fingerprinting/background check, which costs $25-35. If you are a college student with need-based financial aid or have special circumstances, you may be eligible for reimbursement. Unfortunately, prior Live Scans from other organizations cannot be accepted (DOJ rules).</p>
         <p className="section-p">Here is basic information for individuals needing to submit fingerprints to the DOJ for background checks.</p>
