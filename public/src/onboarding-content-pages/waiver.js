@@ -10,6 +10,8 @@ class Waiver extends React.Component {
     const userLocalEmail = getEmailFromLocalStorage();
     const userLocalFirstName = getFirstNameFromLocalStorage();
     const userLocalLastName = getLastNameFromLocalStorage();
+    let tutorDetails = this.props.tutorDetails;
+
     if(!this.props.progress.hasCompletedWaiver) {
       return (
         <div>
@@ -22,10 +24,10 @@ class Waiver extends React.Component {
       } else {
         return (
         <div>
-          <h1 className="section-header-h1"> Waiver</h1 >
-          <p>Thanks for completing the waiver! Feel free to review below.</p>
-          <div className="content-completed-container" id="completed-waiver-container">
+            <h1 className="section-header-h1"> Waiver {tutorDetails.waiverCompleted ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1 >
 
+          <div className="content-completed-container" id="completed-waiver-container">
+              <p className="waiver-done-message">Thanks for completing the waiver! Feel free to review below.</p>
               <div>
                 <p>Step Up Tutoring(collectively, with its affiliates, “Step Up Tutoring” or “we”) requires you(“Tutor” or “you”) to sign this
                   Tutor Agreement(this “Agreement”) in order to provide tutoring services to students participating in Step Up Tutoring’s tutoring program(the “Program”).

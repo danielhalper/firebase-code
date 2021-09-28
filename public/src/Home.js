@@ -89,13 +89,11 @@ class FirstSteps extends React.Component {
             {/* Show when interview has been scheduled but not yet passed */}
             {progress.hasScheduledChat && <div>
 
-                <Title level={3} color='primary'>Thanks for scheduling a chat with us!</Title>
-                <p>Once you've had your interview, you'll move on to the next steps!</p>
-                <strong><Title level={4}>Your interview date*: {new Date(interviewDate).toLocaleString()}</Title></strong>
+                <div style={{ marginBottom: 50 }}><Title level={3} color='primary'>We can't wait to see you on <strong>{new Date(interviewDate).toLocaleString()}</strong></Title>
+                <p>Once you've had your interview, you'll move on to the next steps!</p></div>
+                {/* <strong><Title level={4}>Your interview date*: </Title></strong> */}
 
                 <div>
-
-                    <Title level={3}>Other Steps</Title>
 
                     <p>While you're waiting, you can work on these items:</p>
 
@@ -147,7 +145,7 @@ class SecondSteps extends React.Component {
         return <div className='step'>
 
 
-            {liveTrainingDate ?
+            {liveTrainingDate && !tutorDetails.liveTrainingCompleted ?
             <div><Title level={3} color='primary'>Your Live Training Date: <u>{liveTrainingDate}</u></Title>
             <p>We cannot wait to see your awesome face!</p>
             </div>
@@ -255,7 +253,8 @@ class Home extends React.Component {
         //Otherwise, show the regular dashboard
         return <div>
             <Title>Your Onboarding Dashboard</Title>
-            <p>There's just a few things we'll need you to complete before proceeding.</p>
+            {!this.props.progress.hasScheduledChat ? <div><p>{this.props.tutorDetails.firstname} we're so glad you're here! We appreciate you applying to become a tutor and adding some good to the world.</p>
+            <p>There are 5 main tasks an applicant needs to complete to be matched with a student. Complete them as soon as you can and don't hesitate to reach out if any questions or concerns arise.</p></div> : <p>{this.props.tutorDetails.firstname}, there are just a few things we'll need you to complete before proceeding.</p>}
             <div className='steps-container'>
                 <Steps current={this.props.currentStep}  className='steps' responsive={true}>
                     <Step title='First Steps'/>
