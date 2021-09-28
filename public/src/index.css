@@ -244,6 +244,12 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
     justify-content: center;
 }
 
+.svg-completed-img {
+    height: 200px;
+    width: 200px;
+    margin: 0 auto 10px;
+}
+
 .appointment-confirmation-icon {
     font-size: 4rem;
     color: #327D83;
