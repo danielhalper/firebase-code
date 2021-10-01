@@ -39,7 +39,7 @@ class OnboardingApp extends React.Component {
             {
               keyId: 'chat-signup',
               icon: <CommentOutlined />,
-              title: 'Chat Signup',
+              title: 'Chat Sign-up',
               active: false,
               disabled: false,
               complete: false
@@ -63,7 +63,7 @@ class OnboardingApp extends React.Component {
             {
               keyId: 'livescan',
               icon: <SecurityScanOutlined />,
-              title: 'Background Check',
+              title: 'Live Scan',
               active: false,
               disabled: false,
               complete: false
@@ -284,7 +284,7 @@ class OnboardingApp extends React.Component {
     }
 
     // if user has not scheduled interview, only enable chat sign up page
-    if (!hasScheduledChat) {
+    if (!hasScheduledChat && userStatus === '') {
       for (let i = 1; i < sidebarItems[0].subItems.length; i++) {
         sidebarItems[0].subItems[i]['disabled'] = true;
       }

@@ -31,7 +31,7 @@ class SupportPage extends React.Component {
       <div>
         <div className="support-header">
           <h1 className="section-header-h1" id="support-h1">Support</h1>
-          <h3>Hey there you lost? Here are some helpful links to answer your question or get in contact with one of our team members!</h3>
+          <h3>Hey there, you lost? Here are some helpful links to answer your question or get in contact with one of our onboarding team members!</h3>
         </div>
 
         <div className="support-container">

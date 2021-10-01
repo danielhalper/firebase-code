@@ -100,11 +100,11 @@ class FirstSteps extends React.Component {
                     <div className='dashboard-required-items'>
 
                         {<RequiredOBItem requirementCompleted={progress.hasCompletedWaiver} linkTo={this.props.onSideBarItemClicked} pageKey={'waiver'} icon={<SolutionOutlined />} title='Tutor Waiver'>
-                            The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
+                            The tutor waiver is the formal, legal agreement between you (volunteer tutor) and Step Up Tutoring.
                         </RequiredOBItem>}
 
                         {<RequiredOBItem requirementCompleted={progress.hasCompletedAllWorkbook} linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined />} title='The Workbook'>
-                            The workbook is our training course for new tutors. It will set you up for success with your student.
+                            The workbook is our self-paced training guide for new tutors. It will provide a foundation for your tutoring sessions.
                         </RequiredOBItem>}
 
                     </div>
@@ -156,19 +156,20 @@ class SecondSteps extends React.Component {
             <p>You’re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match!</p>
             <div className='dashboard-required-items'>
                 {<RequiredOBItem requirementCompleted={progress.hasCompletedWaiver} linkTo={this.props.onSideBarItemClicked} pageKey={'waiver'} icon={<SolutionOutlined/>} title='Tutor Waiver'>
-                The tutor waiver is a binding legal agreement between you (the tutor) and StepUp Tutoring.
+                    The tutor waiver is the formal, legal agreement between you (volunteer tutor) and Step Up Tutoring.
             </RequiredOBItem> }
 
                 {<RequiredOBItem requirementCompleted={progress.hasCompletedAllWorkbook} linkTo={this.props.onSideBarItemClicked} pageKey={'workbook'} icon={<BookOutlined/>} title='The Workbook'>
-                The workbook is our training course for new tutors. It will set you up for success with your student.
+                    The workbook is our self-paced training guide for new tutors. It will provide a foundation for your tutoring sessions
             </RequiredOBItem> }
 
-                {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveScan} linkTo={this.props.onSideBarItemClicked} pageKey={'livescan'} icon={<SecurityScanOutlined/>} title='LiveScan'>
-                LiveScan is a government requirement for working with children. This is completed outside of StepUp.
+                {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveScan} linkTo={this.props.onSideBarItemClicked} pageKey={'livescan'} icon={<SecurityScanOutlined/>} title='Live Scan'>
+                    Live Scan is a background check (fingerprints) completed outside of Step Up, which is a mandatory requirement in order to work with students.
             </RequiredOBItem> }
 
                 {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveTraining} linkTo={this.props.onSideBarItemClicked} pageKey={'live-training'} icon={<RocketOutlined/>} title='Live Training'>
-                You will need to complete a live training session with one of our leaders before you can be matched with a student.
+                {/* You will need to complete a live training session with one of our leaders before you can be matched with a student. */}
+                    Live training is a Zoom session, led by members of the Step up  team. After this session, you’ll have a good understanding of the onboarding process, how matches are processed and what tutoring looks like.
             </RequiredOBItem> }
             </div>
         </div>;
@@ -258,7 +259,7 @@ class Home extends React.Component {
             <div className='steps-container'>
                 <Steps current={this.props.currentStep}  className='steps' responsive={true}>
                     <Step title='First Steps'/>
-                    <Step title='LiveScan & Info Session'/>
+                    <Step title='Live Scan & Info Session'/>
                     <Step title='Student Match'/>
                 </Steps>
             </div>
