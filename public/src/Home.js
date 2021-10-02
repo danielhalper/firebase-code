@@ -78,10 +78,10 @@ class FirstSteps extends React.Component {
 
                 <Title level={3} color='primary'>Chat with Talent Coordinator</Title>
 
-                <p>As soon as you can, we'd like you to schedule a chat with one of our talent coordinators so we can get to know you a little better.</p>
+                <p>As soon as you can, we'd like you to schedule an interview with one of our talent coordinators so we can get to know you a little better.</p>
 
                 <Button className='btn' icon={<CalendarFilled />} type='primary' size='large' onClick={() => this.props.onSideBarItemClicked('chat-signup')} >
-                    Schedule a chat
+                    Schedule an Interview
                 </Button>
 
             </div>) }
@@ -164,7 +164,7 @@ class SecondSteps extends React.Component {
             </RequiredOBItem> }
 
                 {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveScan} linkTo={this.props.onSideBarItemClicked} pageKey={'livescan'} icon={<SecurityScanOutlined/>} title='Live Scan'>
-                    Live Scan is a background check (fingerprints) completed outside of Step Up, which is a mandatory requirement in order to work with students.
+                    Live Scan is a mandatory background check completed outside of Step Up, required in order to work with students.
             </RequiredOBItem> }
 
                 {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveTraining} linkTo={this.props.onSideBarItemClicked} pageKey={'live-training'} icon={<RocketOutlined/>} title='Live Training'>

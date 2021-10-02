@@ -39,7 +39,7 @@ class OnboardingApp extends React.Component {
             {
               keyId: 'chat-signup',
               icon: <CommentOutlined />,
-              title: 'Chat Sign-up',
+              title: 'Interview',
               active: false,
               disabled: false,
               complete: false
@@ -91,7 +91,7 @@ class OnboardingApp extends React.Component {
               title: 'FAQ',
               active: false,
               disabled: false,
-              link: 'https://docs.google.com/document/d/1Wc2ztcXHTxDC2uZar6RkoayDRr5itrcv05thvoSs1cs/',
+              link: 'https://docs.google.com/document/d/1QJdP8TL26mTNKUzntw4jVuwWji3xCmOEl5QcsY2jvx4/edit',
               icon: <QuestionOutlined/>
             },
             {
