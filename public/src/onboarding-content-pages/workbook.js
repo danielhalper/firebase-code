@@ -43,7 +43,7 @@ class Workbook extends React.Component {
       <div className="section-content" id="workbook-section-content">
         <h1 className="section-header-h1"> Workbook Training Modules {progress.hasCompletedAllWorkbook ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1>
         <h3 className="section-approx-time">Approximate time: 1-2 hours</h3>
-        <p className="section-p">Please take your time when completing the Step Up workbook. It is essential for....</p>
+        <p className="section-p">The workbook is our self-paced training guide for new tutors. It will provide a foundation for your tutoring sessions.</p>
         <div className="workbook-tab-style" id="workbook-tabs">
           <Tabs defaultActiveKey="1" centered className="tab-content-style">
 

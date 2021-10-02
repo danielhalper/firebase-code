@@ -169,7 +169,7 @@ class SecondSteps extends React.Component {
 
                 {<RequiredOBItem requirementCompleted={progress.hasCompletedLiveTraining} linkTo={this.props.onSideBarItemClicked} pageKey={'live-training'} icon={<RocketOutlined/>} title='Live Training'>
                 {/* You will need to complete a live training session with one of our leaders before you can be matched with a student. */}
-                    Live training is a Zoom session, led by members of the Step up  team. After this session, you’ll have a good understanding of the onboarding process, how matches are processed and what tutoring looks like.
+                    Live training is an hour long Zoom session where you can find out more about Step Up and ask any questions you may have.
             </RequiredOBItem> }
             </div>
         </div>;
