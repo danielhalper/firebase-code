@@ -2,18 +2,27 @@ const { Row, Col, Button } = antd;
 const { QuestionOutlined, SnippetsOutlined, ScheduleOutlined, MailOutlined, CalendarOutlined } = icons;
 const { Link } = Typography
 
+function OPEN_HEYMARKET() {
+  try { HeymarketWidget.Modal.handleFabButtonClicked()
+  } catch (e) {
+    console.log('widget not responding from support paage');
+  }
+}
+
 class SupportPageItem extends React.Component {
   constructor(props) {
     super(props)
   }
 
   render() {
+    const subItem = this.props.subItem
+
     return (
       <Col span={11} className="support-item-col">
-        <Button type="link" className="support-page-link" href={this.props.link} target="_blank">
+        <Button type="link" className="support-page-link" href={subItem.link} onClick={subItem.keyId === 'contact' ? OPEN_HEYMARKET : null} target="_blank">
           <div className="support-col-outer-div">
-            <div className="support-item-icon" >{this.props.icon}</div>
-            <div className="support-item-inner-div">{this.props.title.toUpperCase()}</div>
+            <div className="support-item-icon" >{subItem.icon}</div>
+            <div className="support-item-inner-div">{subItem.title.toUpperCase()}</div>
           </div>
         </Button>
       </Col>
@@ -37,7 +46,7 @@ class SupportPage extends React.Component {
         <div className="support-container">
           <Row className="support-gutter" gutter={[12, 24]}>
             {this.props.sidebarItems[1].subItems.map((subItem, key) => {
-              return <SupportPageItem link={subItem.link} icon={subItem.icon} title={subItem.title} key={key} />})
+              return <SupportPageItem key={key} subItem={subItem} />})
             }
           </Row>
         </div>
