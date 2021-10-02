@@ -52,8 +52,8 @@ class ChatSignup extends React.Component {
                 <p className="appointment-confirmation-title">20 Minute Zoom Interview</p>
                 <p><strong>{new Date(interviewDate).toLocaleString()}</strong> </p>
                 <div>
-                  <Button className="chat-cancel-button" type="primary" href={`https://us-central1-acuity-82682.cloudfunctions.net/rescheduleAppointment?appointmentId=${tutorDetails.acuityAppointmentID}&email=${tutorDetails.email}`} target="_blank">Cancel & Reschedule</Button>
-                  <p style={{ fontSize: '12px' }}>*Once buttton is clicked, appointment will be cancelled. </p>
+                  <Link className="cancel-and-reschedule-links" href={`https://us-central1-acuity-82682.cloudfunctions.net/rescheduleAppointment?appointmentId=${tutorDetails.acuityAppointmentID}&email=${tutorDetails.email}`} target="_blank">Cancel & Reschedule</Link>
+                  <p style={{ fontSize: '12px', paddingTop: '5px' }}>*Once buttton is clicked, appointment will be cancelled. </p>
                 </div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-const { Button} = antd;
+const { Button, Link} = antd;
 const { CalendarOutlined } = icons;
 
 class LiveTraining extends React.Component {
@@ -44,8 +44,8 @@ class LiveTraining extends React.Component {
             <p className="appointment-confirmation-title">Live Training Session</p>
             <p><strong>{tutorDetails.liveTrainingDate}</strong></p>
             <div className="live-training-button-container">
-              <Button type="primary" href={`https://calendly.com/reschedulings/${tutorDetails.calendlyInviteeID}`} target="_blank" className="live-training-reschedule-buttons">Reschedule</Button>
-              <Button type="primary" href={`https://calendly.com/cancellations/${tutorDetails.calendlyInviteeID}`} target="_blank" className="live-training-reschedule-buttons">Cancel</Button>
+              <Link href={`https://calendly.com/reschedulings/${tutorDetails.calendlyInviteeID}`} target="_blank" className="cancel-and-reschedule-links">Reschedule</Link>
+              <Link href={`https://calendly.com/cancellations/${tutorDetails.calendlyInviteeID}`} target="_blank" className="cancel-and-reschedule-links">Cancel</Link>
             </div>
           </div>
         </div>

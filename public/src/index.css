@@ -286,11 +286,6 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
     --shadow-color: #14656e;
 }
 
-.chat-cancel-button {
-    margin: 5px 0 10px;
-    border-radius: 5px;
-}
-
 #completed-waiver-container {
     text-align: left;
 }
@@ -441,11 +436,14 @@ h3.bg-check-step-title:after {
     justify-content: center;
 }
 
-.live-training-reschedule-buttons {
-    flex: 1 1 0px;
-    margin: 0 5px;
-    max-width: 205px;
-    border-radius: 5px;
+a.cancel-and-reschedule-links {
+    margin: 0 20px;
+    color: #646464;
+    text-decoration: underline;
+}
+
+a.cancel-and-reschedule-links:hover {
+    color: grey;
 }
 
 .support-header {
