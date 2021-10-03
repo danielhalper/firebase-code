@@ -30,13 +30,13 @@ class ChatSignup extends React.Component {
     if (!this.props.progress.hasScheduledChat){
       return (
         <div>
-          <h1 className="section-header-h1">15-Minute Chat</h1>
+          <h1 className="section-header-h1">20-Minute Interview</h1>
 
           <p className="section-p">We want to keep it casual, ask a few questions, and get to know you better!</p>
 
           <p className="section-p">All meetings with us are via Zoom, be on the lookout for the link in your confirmation email.</p>
 
-          <p className="section-p">If you need assistance, please reach out to our Onboarding Specialist at <Link href='mailto:laura@stepuptutoring.org'>laura@stepuptutoring.org</Link>. If you have already signed up or completed session, please disregard.</p>
+          <p className="section-p">If you need assistance, please reach out to our Onboarding Manager at <strong><Link href='mailto:charmaine@stepuptutoring.org'>charmaine@stepuptutoring.org.</Link></strong></p>
           <div className="center-embed-iframe">
             <iframe id="my-deferred-iframe" src="about:blank" /><script src="https://embed.acuityscheduling.com/js/embed.js" type="text/javascript"></script>
           </div>
@@ -45,15 +45,15 @@ class ChatSignup extends React.Component {
     } else if (this.props.progress.hasScheduledChat && tutorDetails.status === ''){
           return (
             <div>
-              <h1 className = "section-header-h1" > 15-Minute Chat</h1 >
+              <h1 className = "section-header-h1" > 20-Minute Interview</h1 >
               <div className="content-completed-container">
                 <div className="appointment-confirmation-icon"><CalendarOutlined /></div>
                 <p>{tutorDetails.firstname}, we have you confirmed for your appointment!</p>
-                <p className="appointment-confirmation-title">15 Minute Zoom Chat</p>
+                <p className="appointment-confirmation-title">20 Minute Zoom Interview</p>
                 <p><strong>{new Date(interviewDate).toLocaleString()}</strong> </p>
                 <div>
-                  <Button className="chat-cancel-button" type="primary" href={`https://us-central1-acuity-82682.cloudfunctions.net/rescheduleAppointment?appointmentId=${tutorDetails.acuityAppointmentID}&email=${tutorDetails.email}`} target="_blank">Cancel & Reschedule</Button>
-                  <p style={{ fontSize: '12px' }}>*Cancellations without a reschedule may take 20 minutes to reflect change.</p>
+                  <Link className="cancel-and-reschedule-links" href={`https://us-central1-acuity-82682.cloudfunctions.net/rescheduleAppointment?appointmentId=${tutorDetails.acuityAppointmentID}&email=${tutorDetails.email}`} target="_blank">Cancel & Reschedule</Link>
+                  <p style={{ fontSize: '12px', paddingTop: '5px' }}>*Once buttton is clicked, appointment will be cancelled. </p>
                 </div>
               </div>
             </div>
@@ -61,10 +61,10 @@ class ChatSignup extends React.Component {
     } else {
       return(
         <div>
-          <h1 className="section-header-h1" > 15-Minute Chat {tutorDetails.status === 'Application Accepted' ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1 >
+          <h1 className="section-header-h1" > 20-Minute Interview {tutorDetails.status === 'Application Accepted' ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1 >
           <div className="content-completed-container">
             <img className="svg-completed-img" src="./meeting.svg" alt="calendar booked image"></img>
-            <p>Thank you for completing the 15 minute chat with us, it was great to meet you {tutorDetails.firstname}.</p>
+            <p>Thank you for completing the 20 minute interview with us, it was great to meet you {tutorDetails.firstname}.</p>
             <p>You're now one step closer to becoming a Step Up Tutor and making a difference in a child's life!</p>
           </div>
         </div>
