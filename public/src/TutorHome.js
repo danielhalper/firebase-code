@@ -61,7 +61,7 @@ class TutorHome extends React.Component {
 
         }
 
-        this.retrieveAnnouncements = this.retrieveAnnouncements.bind(this)
+        this.showAnnouncements = this.showAnnouncements.bind(this)
     }
 
     retrieveZoomLinks() {
@@ -84,9 +84,7 @@ class TutorHome extends React.Component {
         })
     }
 
-    retrieveAnnouncements(){
-
-        firebase.analytics().logEvent('check_announcements')        
+    showAnnouncements(){
         this.displayModal('announcements')
     }
 
@@ -187,7 +185,7 @@ class TutorHome extends React.Component {
                     Fill this out each week... so the student's teacher and parent are up-to-date.
                 </RequiredItem>
 
-                <RequiredItem id='weekly-announcements' onClick={this.retrieveAnnouncements} icon={<SoundOutlined/>} title='Weekly Announcements'>
+                <RequiredItem id='weekly-announcements' onClick={this.showAnnouncements} icon={<SoundOutlined/>} title='Weekly Announcements'>
                 </RequiredItem>
                 <RequiredItem link='https://www.stepuptutoring.org/tutor-events' newTab icon={<CalendarOutlined/>} title='Events & Gamification' onClick={() => {
                     firebase.analytics().logEvent('check_events')
