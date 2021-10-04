@@ -52,7 +52,7 @@ class TutorHome extends React.Component {
                 'weekly-form': false,
                 'announcements': false
             },
-            announcements: undefined
+            announcements: this.props.tutor.weeklyAnnouncements
         }
 
         for (let i = 0;i < this.props.tutor.students.length;i++) {
@@ -86,21 +86,7 @@ class TutorHome extends React.Component {
 
     retrieveAnnouncements(){
 
-        firebase.analytics().logEvent('check_announcements')
-
-        firebase.functions().httpsCallable('getWeeklyAnnouncements')().then(result => {
-            this.setState( { announcements: result.data } )
-            
-        }).catch( error => {
-            message.error('Something went wrong. Please try again.')
-            firebase.analytics().logEvent('error', {
-                type: 'tutorPortal',
-                message: `Couldn't fetch announcements`,
-                rawError: error.message
-            })
-            if (window.Bugsnag) Bugsnag.notify(error)
-        })
-        
+        firebase.analytics().logEvent('check_announcements')        
         this.displayModal('announcements')
     }
 
