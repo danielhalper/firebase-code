@@ -680,3 +680,37 @@ div.info-bar {
     align-items: center;
     justify-content: center;
 }
+
+@media only screen and (max-width: 768px) {
+    /* --- Dashboard Page ---- */
+    .content-container {
+        margin: 0;
+        border-radius: 0;
+        padding-top: 16pt;
+        /* prevents the view from squishing beyond a reasonable size when the sidebar is visible */
+        min-width: 300px;
+    }
+
+    .main-content {
+        margin: 0;
+    }
+
+    .dashboard-required-items {
+        flex-direction: column;
+    }
+
+    /* --- Support Page ---- */
+    .support-container {
+        padding: 0;
+    }
+
+    .support-content-container {
+        margin: 0;
+        /* prevents the view from squishing beyond a reasonable size when the sidebar is visible */
+        min-width: 300px;
+    }
+    .support-item-inner-div {
+        /* allows for text to overflow (this is disabled by default in ant)*/
+        white-space: normal;
+    }
+}

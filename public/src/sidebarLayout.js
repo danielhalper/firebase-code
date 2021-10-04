@@ -195,7 +195,7 @@ class SidebarLayout extends React.Component {
 
         return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
 
-            <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' width='240'>
+            <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' collapsedWidth="0" width='240' zeroWidthTriggerStyle={{ top: 0 }}>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
 
                     <div className='sidebar-header hoverable' onClick={() => this.onSideBarItemClicked('home')} >
@@ -275,16 +275,6 @@ class SidebarLayout extends React.Component {
                         </div>
                     </Content>
                 </Layout>
-
-                { window.matchMedia('screen and (max-width: 500px)').matches && <Footer style={{backgroundColor: 'white'}}>
-
-                    <Tabs>
-                        <TabPane tab='Dashboard'>
-
-                        </TabPane>
-                    </Tabs>
-
-                </Footer>}
 
             </Layout>
 
