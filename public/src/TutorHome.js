@@ -61,7 +61,6 @@ class TutorHome extends React.Component {
 
         }
 
-        this.showAnnouncements = this.showAnnouncements.bind(this)
     }
 
     retrieveZoomLinks() {
@@ -82,10 +81,6 @@ class TutorHome extends React.Component {
             })
             if (window.Bugsnag) Bugsnag.notify(error)
         })
-    }
-
-    showAnnouncements(){
-        this.displayModal('announcements')
     }
 
     displayModal(id) {
@@ -109,7 +104,6 @@ class TutorHome extends React.Component {
             modals: modalsCopy
         }
 
-        if (id == 'announcements') stateObject['announcements'] = undefined
         if (id == 'zoom') stateObject['zoomLinks'] = undefined
 
         this.setState(stateObject)
@@ -185,7 +179,7 @@ class TutorHome extends React.Component {
                     Fill this out each week... so the student's teacher and parent are up-to-date.
                 </RequiredItem>
 
-                <RequiredItem id='weekly-announcements' onClick={this.showAnnouncements} icon={<SoundOutlined/>} title='Weekly Announcements'>
+                <RequiredItem id='weekly-announcements' onClick={() => this.displayModal('announcements')} icon={<SoundOutlined/>} title='Weekly Announcements'>
                 </RequiredItem>
                 <RequiredItem link='https://www.stepuptutoring.org/tutor-events' newTab icon={<CalendarOutlined/>} title='Events & Gamification' onClick={() => {
                     firebase.analytics().logEvent('check_events')
