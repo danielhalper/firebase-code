@@ -417,6 +417,7 @@ async function getWeeklyAnnouncementsData() {
     const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
 
     return base('Announcements').select({
+        sort: [ {field: 'Date', direction: 'desc'} ],
         filterByFormula: `{Status} = 'Ready (visible on tutor portal)'`,
     }).firstPage()
 }
