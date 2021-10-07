@@ -608,6 +608,20 @@ div.info-bar {
     padding-left: 10px;
     color: #888;
 }
+.meeting-id {
+    background: rgb(230, 230, 230);
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 300px;
+    height:40px;
+    font-size: 16px;
+    padding: 8px;
+    padding-left: 10px;
+    text-align: left;
+    color: #888;
+}
 .copy-link {
     background: none;
     height:40px;
