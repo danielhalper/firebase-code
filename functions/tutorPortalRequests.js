@@ -168,7 +168,7 @@ exports.getMessagesForStudent = async (data, context) => {
 
     //Make sure it exists
     if (!proxyNumber) throw new functions.https.HttpsError('invalid-argument', 'You have not been assigned to this student')
-
+    
     //Get the student's record
     const studentRecord = await admin.firestore().collection('people').doc(studentId).get()
 
@@ -186,15 +186,15 @@ exports.getMessagesForStudent = async (data, context) => {
 
     //Get tutor's messages
     const tutorMessages = await twilioClient.messages.list({
-        from: proxyNumber,
-        to: studentNumber,
+        from: tutorNumber,
+        to: proxyNumber,
         limit: 100
     })
 
     //Get student's messages
     const studentMessages = await twilioClient.messages.list({
-        from: studentNumber,
-        to: proxyNumber,
+        from: proxyNumber,
+        to: tutorNumber,
         limit: 100
     })
 

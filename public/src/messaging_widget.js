@@ -161,9 +161,11 @@ class MessagingWidget extends React.Component {
                     //Now update the number of messages
                     this.currentMessageLength = result.data.messages.length
 
-                    this.setState({ messages: result.data.messages.map(message => {
-                        return {...message, type: (message.to == studentObj.phone) ? 'to' : 'from'}
-                    }), isLoadingMessages: false})
+                    const newMessages = result.data.messages.map(message => {
+                        return {...message, type: (message.from == this.props.tutor.phone) ? 'to' : 'from'}
+                    })
+
+                    this.setState({ messages: newMessages, isLoadingMessages: false})
 
                     //Get the new most recent sent time
                     let newMostRecentDateSent
