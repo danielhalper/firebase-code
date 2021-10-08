@@ -147,6 +147,11 @@ exports.getTutor = async (data, context) => {
     //Update the id
     userObj['id'] = userData.id
 
+    const weekleyAnnouncmentsData = await getWeeklyAnnouncementsData()
+    userObj['weeklyAnnouncements'] = weekleyAnnouncmentsData.map(item => {
+        return item['_rawJson']['fields']
+    })
+
     //Now, return the data
     return userObj
 
@@ -403,9 +408,7 @@ exports.getZoomLinks = functions.https.onCall(async (data, context) => {
 
 })
 
-exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) => {
-
-    const user = await verifyUser(context)
+async function getWeeklyAnnouncementsData() {
 
     //Get the airtable API key
     const airtableAPIKey = functions.config().airtable.key
@@ -413,10 +416,19 @@ exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) =>
     //Set up the airtable base
     const base = new airtable({ apiKey: airtableAPIKey}).base('appUYUSHT05HdV86G')
 
-    //Get the relevant record from the Tutors table
-    const result = await base('Announcements').select({
+    return base('Announcements').select({
+        sort: [ {field: 'Date', direction: 'desc'} ],
         filterByFormula: `{Status} = 'Ready (visible on tutor portal)'`,
     }).firstPage()
+}
+
+
+exports.getWeeklyAnnouncements = functions.https.onCall(async (data, context) => {
+
+    const user = await verifyUser(context)
+
+    //Get the relevant record from the Tutors table
+    const result = await getWeeklyAnnouncementsData()
 
     return result.map(item => {
         return item['_rawJson']['fields']

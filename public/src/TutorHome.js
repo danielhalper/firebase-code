@@ -52,7 +52,7 @@ class TutorHome extends React.Component {
                 'weekly-form': false,
                 'announcements': false
             },
-            announcements: undefined
+            announcements: this.props.tutor.weeklyAnnouncements
         }
 
         for (let i = 0;i < this.props.tutor.students.length;i++) {
@@ -61,7 +61,6 @@ class TutorHome extends React.Component {
 
         }
 
-        this.retrieveAnnouncements = this.retrieveAnnouncements.bind(this)
     }
 
     retrieveZoomLinks() {
@@ -82,26 +81,6 @@ class TutorHome extends React.Component {
             })
             if (window.Bugsnag) Bugsnag.notify(error)
         })
-    }
-
-    retrieveAnnouncements(){
-
-        firebase.analytics().logEvent('check_announcements')
-
-        firebase.functions().httpsCallable('getWeeklyAnnouncements')().then(result => {
-            this.setState( { announcements: result.data } )
-            
-        }).catch( error => {
-            message.error('Something went wrong. Please try again.')
-            firebase.analytics().logEvent('error', {
-                type: 'tutorPortal',
-                message: `Couldn't fetch announcements`,
-                rawError: error.message
-            })
-            if (window.Bugsnag) Bugsnag.notify(error)
-        })
-        
-        this.displayModal('announcements')
     }
 
     displayModal(id) {
@@ -125,7 +104,6 @@ class TutorHome extends React.Component {
             modals: modalsCopy
         }
 
-        if (id == 'announcements') stateObject['announcements'] = undefined
         if (id == 'zoom') stateObject['zoomLinks'] = undefined
 
         this.setState(stateObject)
@@ -201,7 +179,7 @@ class TutorHome extends React.Component {
                     Fill this out each week... so the student's teacher and parent are up-to-date.
                 </RequiredItem>
 
-                <RequiredItem id='weekly-announcements' onClick={this.retrieveAnnouncements} icon={<SoundOutlined/>} title='Weekly Announcements'>
+                <RequiredItem id='weekly-announcements' onClick={() => this.displayModal('announcements')} icon={<SoundOutlined/>} title='Weekly Announcements'>
                 </RequiredItem>
                 <RequiredItem link='https://www.stepuptutoring.org/tutor-events' newTab icon={<CalendarOutlined/>} title='Events & Gamification' onClick={() => {
                     firebase.analytics().logEvent('check_events')
