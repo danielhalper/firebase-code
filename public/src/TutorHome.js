@@ -223,20 +223,21 @@ class TutorHome extends React.Component {
                         <a href={ this.state.zoomLinks['start_url'] } target='_blank' className="modal-submit" style={{marginBottom:10}}>Start Meeting</a>
                         <div style={{ position: 'relative', width: '70%', height: 40 }}>
                             <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
-                                Meeting Link:
+                                Meeting Link: { this.state.zoomLinks['join_url'] }
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
                                 <div style={{flex: 1}}></div>
-                                <button className="copy-link" onClick={()=>this.copyLink(this.state.zoomLinks['join_url'], 1)}>{ this.state.zoomLinks['join_url'] }</button>
+                                <button className="copy-link" onClick={()=>this.copyLink(this.state.zoomLinks['join_url'], 1)}>Copy</button>
                             </div>
                         </div>
+                        <div style={{marginBottom: 10}}></div>
                         <div style={{ position: 'relative', width: '70%', height: 40, marginBottom: 30 }}>
                             <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
-                                Meeting ID:
+                                Meeting ID: {this.props.tutor['zoomLinks'][this.state.student['id']]}
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
                                 <div style={{flex: 1}}></div>
-                                <button className="copy-link" onClick={()=>this.copyLink(this.props.tutor['zoomLinks'][this.state.student['id']], 0)}>{this.props.tutor['zoomLinks'][this.state.student['id']]}</button>
+                                <button className="copy-link" onClick={()=>this.copyLink(this.props.tutor['zoomLinks'][this.state.student['id']], 0)}>Copy</button>
                             </div>
                         </div>
                     </div> }
