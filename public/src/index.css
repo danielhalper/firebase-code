@@ -606,11 +606,12 @@ div.info-bar {
     font-size: 16px;
     padding: 8px;
     padding-left: 10px;
+    text-align: left;
     color: #888;
 }
 .copy-link {
     background: none;
-    height:40px;
+    height:35px;
     border:none;
     transition: 0.5s;
     border-radius: 0px 5px 5px 0px;
@@ -619,6 +620,8 @@ div.info-bar {
     padding-left: 10px;
     font-size: 16px;
     color: #888;
+    overflow: hidden;
+    text-align: right;
 }
 
 .copy-link-gradient {

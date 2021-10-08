@@ -23,7 +23,7 @@ class Modal extends React.Component {
 
                         <button className="modal-exit" onClick={this.props.onClose}><CloseOutlined></CloseOutlined></button>
                     </div>
-                    
+
                     <div className="modal-content" style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
                         {this.props.children}
                     </div>
@@ -43,7 +43,6 @@ class TutorHome extends React.Component {
         super(props)
 
         this.students = {}
-
         this.state = {
             student: this.props.tutor.students[0],
             zoomLinks: undefined,
@@ -70,7 +69,7 @@ class TutorHome extends React.Component {
             this.setState({
                 zoomLinks: currentStudentZoomLinks
             })
-            
+
         }).catch(error => {
 
             message.error('Something went wrong. Please try again.')
@@ -109,7 +108,7 @@ class TutorHome extends React.Component {
         this.setState(stateObject)
     }
 
-    copyLink(link){
+    copyLink(link, flag){
         var el = document.createElement('textarea');
         el.value = link;
         el.setAttribute('readonly', '');
@@ -119,11 +118,11 @@ class TutorHome extends React.Component {
         document.execCommand('copy');
         document.body.removeChild(el);
 
-        message.success('Link Copied!')
+        if (flag == 1) {message.success('Link Copied!');}
+        else {message.success('Meeting ID Copied!');}
     }
 
     render() {
-
         let infoBarItems = [
             {
                 label:"Total Sessions",
@@ -153,7 +152,7 @@ class TutorHome extends React.Component {
                 this.setState( { student:this.students[activeKey], zoomLinks: undefined } )
             }}/>
             </div>
-            { this.state.student && 
+            { this.state.student &&
             <div style={{display:"flex", flexDirection:"row", flex:1, marginBottom:10}}>
                 <div style={{flex:1}}></div>
                 <InformationBar info={infoBarItems}/>
@@ -190,25 +189,37 @@ class TutorHome extends React.Component {
             <div className="modal-container">
                 <Modal title="Start Zoom Meeting" display = {this.state.modals.zoom} options={{submit:false}} onClose = {() => this.onModalClose('zoom')}>
                     { !this.state.zoomLinks && <LoadingScreen /> }
-                    
+
                     { this.state.zoomLinks && <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                        <div style={{width: '70%'}}>
-                            Use the button below to start a video call with your student! They can use the same link to join each time, and if they're having trouble finding it you can copy it below and send it to them!
+                        <div style={{width: '70%', margin: '0px 0px 20px 0px' }}>
+                            This is your dedicated zoom link with student
+                            {' ' + this.state.student['firstname'] + ' ' + this.state.student['lastname']}.
+                            It is important that all your sessions with your student take place on this
+                            link or we will not be able to accurately track your session attendance.
+                            Be sure to copy it below and send it to them via messages!
                         </div>
-                        <a href={ this.state.zoomLinks['start_url'] } target='_blank' className="modal-submit" style={{marginBottom:20, marginTop:20}}>Start Meeting</a>
-                        
+                        <a href={ this.state.zoomLinks['start_url'] } target='_blank' className="modal-submit" style={{marginBottom:10}}>Start Meeting</a>
                         <div style={{ position: 'relative', width: '70%', height: 40 }}>
                             <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
-                                { this.state.zoomLinks['join_url'] }
+                                Meeting Link: { this.state.zoomLinks['join_url'] }
                             </div>
-
                             <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
                                 <div style={{flex: 1}}></div>
-                                <button className="copy-link" onClick={()=>this.copyLink(this.state.zoomLinks['join_url'])}>Copy</button>
+                                <button className="copy-link" onClick={()=>this.copyLink(this.state.zoomLinks['join_url'], 1)}>Copy</button>
+                            </div>
+                        </div>
+                        <div style={{marginBottom: 10}}></div>
+                        <div style={{ position: 'relative', width: '70%', height: 40, marginBottom: 30 }}>
+                            <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
+                                Meeting ID: {this.props.tutor['zoomLinks'][this.state.student['id']]}
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
+                                <div style={{flex: 1}}></div>
+                                <button className="copy-link" onClick={()=>this.copyLink(this.props.tutor['zoomLinks'][this.state.student['id']], 0)}>Copy</button>
                             </div>
                         </div>
                     </div> }
-                    
+
                 </Modal>
 
                 <Modal title='Weekly Form' display={this.state.modals['weekly-form']} options={{ submit: false }} onClose={() => this.onModalClose('weekly-form')}>
