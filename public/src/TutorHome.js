@@ -236,7 +236,7 @@ class TutorHome extends React.Component {
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
                                 <div style={{flex: 1}}></div>
-                                <button className="copy-link" onClick={()=>this.copyLink(this.state.zoomLinks['join_url'], 0)}>{this.props.tutor['zoomLinks'][this.state.student['id']]}</button>
+                                <button className="copy-link" onClick={()=>this.copyLink(this.props.tutor['zoomLinks'][this.state.student['id']], 0)}>{this.props.tutor['zoomLinks'][this.state.student['id']]}</button>
                             </div>
                         </div>
                     </div> }
