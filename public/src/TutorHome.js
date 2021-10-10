@@ -6,6 +6,8 @@ const { Title } = Typography
 class Modal extends React.Component {
     constructor(props) {
         super(props)
+        /*console.log("he")
+        console.log(props)*/
     }
     render() {
         if(this.props.display){
@@ -41,7 +43,8 @@ class Modal extends React.Component {
 class TutorHome extends React.Component {
     constructor(props) {
         super(props)
-
+        /*console.log("anothr")
+        console.log(props)*/
         this.students = {}
         this.state = {
             student: this.props.tutor.students[0],
@@ -63,26 +66,16 @@ class TutorHome extends React.Component {
     }
 
     retrieveZoomLinks() {
-        firebase.functions().httpsCallable('getZoomLinks')().then((result) => {
-
-            const currentStudentZoomLinks = result.data[ this.state.student['id'] ]
+        currentStudentZoomLinks = this.props.getZoom(this.state.student['id'])
+        if (currentStudentZoomLinks) {
             this.setState({
                 zoomLinks: currentStudentZoomLinks
             })
-
-        }).catch(error => {
-
-            message.error('Something went wrong. Please try again.')
-            firebase.analytics().logEvent('error', {
-                type: 'tutorPortal',
-                message: `Couldn't fetch zoom links`,
-                rawError: error.message
-            })
-            if (window.Bugsnag) Bugsnag.notify(error)
-        })
+        }
     }
 
     displayModal(id) {
+        console.log("displaymodal")
         let modalsCopy = this.state.modals
 
         modalsCopy[id] = true
@@ -90,7 +83,6 @@ class TutorHome extends React.Component {
         this.setState({
             modals: modalsCopy
         })
-
         this.retrieveZoomLinks()
     }
 
@@ -163,7 +155,9 @@ class TutorHome extends React.Component {
                     Communicate with your student's guardian through our online messaging application.
                 </RequiredItem>
                 <RequiredItem id='start-zoom' onClick={() => {
-                    firebase.analytics().logEvent('started_zoom_call')
+                    /*firebase.analytics().logEvent('started_zoom_call')
+                    this.displayModal('zoom')*/
+                    this.props.log_event('started_zoom_call')
                     this.displayModal('zoom')
                 }} icon={<VideoCameraOutlined/>} title='Start Zoom Meeting'>
                     Meet with your student face-to-face over Zoom.
@@ -181,7 +175,8 @@ class TutorHome extends React.Component {
                 <RequiredItem id='weekly-announcements' onClick={() => this.displayModal('announcements')} icon={<SoundOutlined/>} title='Weekly Announcements'>
                 </RequiredItem>
                 <RequiredItem link='https://www.stepuptutoring.org/tutor-events' newTab icon={<CalendarOutlined/>} title='Events & Gamification' onClick={() => {
-                    firebase.analytics().logEvent('check_events')
+                    /*firebase.analytics().logEvent('check_events')*/
+                    this.props.log_event('check_events')
                 }}>
                     You should check this page at least once a week to update your student!
                 </RequiredItem>

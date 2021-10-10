@@ -81,7 +81,7 @@ class TutorApp extends React.Component {
                             button: true
                         },
                         {
-                            keyId: 'home',
+                            keyId: 'events-sidebar',
                             title: 'Events and Gamification',
                             icon: <CalendarOutlined/>,
                             active: false,
@@ -140,8 +140,45 @@ class TutorApp extends React.Component {
                     ]
                 }
             ],
-            loading: true
+            loading: true,
+            current_page: 'home'
         }
+
+        this.retrieveZoomLinks = this.retrieveZoomLinks.bind(this);
+        this.update_cp = this.update_cp.bind(this);
+        this.on_log_event = this.on_log_event.bind(this);
+    }
+
+    retrieveZoomLinks(stu_id) {
+        firebase.functions().httpsCallable('getZoomLinks')().then((result) => {
+
+            const currentStudentZoomLinks = result.data[stu_id] /* this.state.student['id'] */
+            /*this.setState({
+                zoomLinks: currentStudentZoomLinks
+            })*/
+            return currentStudentZoomLinks
+
+        }).catch(error => {
+
+            message.error('Something went wrong. Please try again.')
+            firebase.analytics().logEvent('error', {
+                type: 'tutorPortal',
+                message: `Couldn't fetch zoom links`,
+                rawError: error.message
+            })
+            if (window.Bugsnag) Bugsnag.notify(error)
+        })
+    }
+
+    update_cp(p) {
+        this.setState({current_page: p})
+        console.log(p)
+        console.log("in update")
+        console.log(this.state)
+    }
+
+    on_log_event(w) {
+        firebase.analytics().logEvent(w)
     }
 
     loadUser() {
@@ -175,8 +212,16 @@ class TutorApp extends React.Component {
     }
 
     render() {
-
-        return <SidebarLayout pages={this.state.pages} sidebarItems={this.state.sidebarItems} currentTab='home' userData={this.state.user} loading={this.state.loading}/>
+        /*console.log(this.state.current_page)*/
+        return (
+            <SidebarLayout pages={this.state.pages}
+                           sidebarItems={this.state.sidebarItems}
+                           getZoom={this.retrieveZoomLinks}/*{this.retrieveZoomLinks}*/
+                           currentTab={this.state.current_page}
+                           userData={this.state.user}
+                           up_cp={this.update_cp}
+                           log_event={this.on_log_event}
+                           loading={this.state.loading}/>)
 
     }
 
