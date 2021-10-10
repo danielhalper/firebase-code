@@ -18,7 +18,7 @@ class SidebarItem extends React.Component {
             }
 
             if (this.props.button) {
-                /*this.props.update_cp('home')*/
+                this.props.update_cp('home')
                 console.log(this.props)
                 if (this.props.currentTab == 'messaging') {
                     this.props.update_cp('home')
