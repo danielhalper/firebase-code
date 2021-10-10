@@ -3,24 +3,6 @@ const { CalendarOutlined } = icons;
 
 class LiveTraining extends React.Component {
 
-  loadDeferredIframe() {
-    const userLocalEmail = getEmailFromLocalStorage();
-    const userLocalFirstName = getFirstNameFromLocalStorage();
-    const userLocalLastName = getLastNameFromLocalStorage();
-    const iframe = document.getElementById("deferred-iframe");
-    if (iframe) {
-      iframe.src = `https://calendly.com/stepup-tut/training?name=${userLocalFirstName}%20${userLocalLastName}&email=${userLocalEmail}`;
-      iframe.title = "Schedule Live Training";
-      iframe.width = "100%";
-      iframe.height = "800";
-      iframe.frameBorder = "0";
-    }
-  };
-
-  componentDidMount() {
-    this.loadDeferredIframe();
-  };
-
   render() {
     const tutorDetails = this.props.tutorDetails;
 
@@ -31,7 +13,7 @@ class LiveTraining extends React.Component {
         <p>Live training is a Zoom session, lead by members of the Step up team.
           After this session, you’ll have a good understanding of the onboarding process, how matches are processed and what tutoring looks like.</p>
         <div id="live-training-calendly">
-          <iframe id="deferred-iframe" src="about:blank" /><script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" ></script>
+          <iframe id="deferred-iframe" title="Schedule Live Training" width="100%" height="800" frameBorder="0" src={`https://calendly.com/stepup-tut/training?name=${tutorDetails.firstname}%20${tutorDetails.lastname}&email=${tutorDetails.email}`} />
         </div>
       </div>
     )
@@ -45,8 +27,8 @@ class LiveTraining extends React.Component {
             <p className="appointment-confirmation-title">Live Training Session</p>
             <p><strong>{tutorDetails.liveTrainingDate}</strong></p>
             <div className="live-training-button-container">
-              <Link href={`https://calendly.com/reschedulings/${tutorDetails.calendlyInviteeID}`} target="_blank" className="cancel-and-reschedule-links">Reschedule</Link>
               <Link href={`https://calendly.com/cancellations/${tutorDetails.calendlyInviteeID}`} target="_blank" className="cancel-and-reschedule-links">Cancel</Link>
+              <Link href={`https://calendly.com/reschedulings/${tutorDetails.calendlyInviteeID}`} target="_blank" className="cancel-and-reschedule-links">Reschedule</Link>
             </div>
           </div>
         </div>
