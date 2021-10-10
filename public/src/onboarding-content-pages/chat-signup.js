@@ -3,25 +3,6 @@ const { CalendarOutlined, CheckOutlined, CheckCircleFilled } = icons;
 
 class ChatSignup extends React.Component {
 
-  loadDeferredIframe() {
-    const userLocalEmail = getEmailFromLocalStorage();
-    const userLocalFirstName = getFirstNameFromLocalStorage();
-    const userLocalLastName = getLastNameFromLocalStorage();
-    const iframe = document.getElementById("my-deferred-iframe");
-    if (iframe) {
-      iframe.src = `https://app.acuityscheduling.com/schedule.php?owner=21394641&appointmentType=18777910&firstName=${userLocalFirstName}&lastName=${userLocalLastName}&email=${userLocalEmail}`;
-      iframe.title = "Schedule Appointment";
-      iframe.width = "90%";
-      iframe.height = "1600";
-      iframe.frameBorder = "0";
-    }
-  };
-
-
-  componentDidMount() {
-    this.loadDeferredIframe();
-  };
-
   render() {
     let tutorDetails = this.props.tutorDetails;
     let interviewDate = '';
@@ -38,7 +19,7 @@ class ChatSignup extends React.Component {
 
           <p className="section-p">If you need assistance, please reach out to our Onboarding Manager at <strong><Link href='mailto:charmaine@stepuptutoring.org'>charmaine@stepuptutoring.org.</Link></strong></p>
           <div className="center-embed-iframe">
-            <iframe id="my-deferred-iframe" src="about:blank" /><script src="https://embed.acuityscheduling.com/js/embed.js" type="text/javascript"></script>
+            <iframe id="my-deferred-iframe" title="Schedule Appointment" width="90%" height="600" frameBorder="0" src={`https://app.acuityscheduling.com/schedule.php?owner=21394641&appointmentType=18777910&firstName=${this.props.tutorDetails.firstname}&lastName=${this.props.tutorDetails.lastname}&email=${this.props.tutorDetails.email}`} />
           </div>
         </div>
         )
