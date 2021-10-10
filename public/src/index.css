@@ -681,6 +681,27 @@ div.info-bar {
     justify-content: center;
 }
 
+.onboarding-mobile-nav {
+    display: none;
+    visibility: hidden;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 8pt;
+}
+
+.onboarding-mobile-nav > svg {
+    width: 29pt;
+    height: 18pt;
+    color: rgb(35, 141, 149);
+}
+
+.onboarding-mobile-nav > img {
+    height: 39px;
+    width: 102px;
+}
+
 @media only screen and (max-width: 768px) {
     /* --- Dashboard Page ---- */
     .content-container {
@@ -693,10 +714,45 @@ div.info-bar {
 
     .main-content {
         margin: 0;
+        /* Accounting for the mobile-nav */
+        margin-top: 60px;
     }
 
     .dashboard-required-items {
         flex-direction: column;
+    }
+
+    .onboarding-mobile-nav {
+        position: absolute;
+        display: flex;
+        visibility: visible;
+        top: 0;
+        left: 0;
+        z-index: 100;
+    }
+
+    /* moving the hamburger menu provided by ant to the top right */
+    .dashboard-sidebar {
+        /* reset the position value to is default value */
+        position: absolute;
+        z-index: 50;
+    }
+
+    /* set the parent (the dashboard component) as the relative position */
+    .desktop-dashboard {
+        position: relative;
+        flex-direction: row-reverse !important;
+    }
+
+    /* hide the current sidebar logo */
+    .sidebar-header {
+        display: none;
+        visibility: hidden;
+    }
+
+    /* adjust the top margin to avoid overlap with the mobile-nav */
+    .sidebar-options {
+        margin-top: 40px;
     }
 
     /* --- Support Page ---- */
@@ -712,5 +768,11 @@ div.info-bar {
     .support-item-inner-div {
         /* allows for text to overflow (this is disabled by default in ant)*/
         white-space: normal;
+    }
+
+    .support-header {
+        /* account for the mobile-nav */
+        margin-top: 60px;
+        border-radius: 0;
     }
 }

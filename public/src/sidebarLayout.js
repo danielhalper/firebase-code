@@ -113,6 +113,7 @@ class SidebarLayout extends React.Component {
         this.state.error = this.props.error
 
         this.onSideBarItemClicked = this.onSideBarItemClicked.bind(this)
+        this.handleCollapsedStateChange = this.handleCollapsedStateChange.bind(this)
 
     }
 
@@ -137,7 +138,7 @@ class SidebarLayout extends React.Component {
             }
         }
 
-        this.setState({ currentTab: key, sidebarItems: sidebarItems })
+        this.setState({ currentTab: key, sidebarItems: sidebarItems, collapsed: true })
 
     }
 
@@ -185,7 +186,9 @@ class SidebarLayout extends React.Component {
         return {}
     }
 
-
+    handleCollapsedStateChange(collapsed) {
+        this.setState(prev => ({ ...prev, collapsed }))
+    }
 
     render() {
 
@@ -194,16 +197,13 @@ class SidebarLayout extends React.Component {
         if (this.getCurrentSidebarItem().disabled) CurrentPage = this.state.pages[ this.findFirstOpenPage() ] || Empty
 
         return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
-
-            <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' collapsedWidth="0" width='240' zeroWidthTriggerStyle={{ top: 0 }}>
+            <Sider theme='light' className='dashboard-sidebar' breakpoint='sm' collapsedWidth="0" width='240' trigger={null} onCollapse={this.handleCollapsedStateChange} collapsed={this.state.collapsed}>
                 <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-
                     <div className='sidebar-header hoverable' onClick={() => this.onSideBarItemClicked('home')} >
                         <img width={180} src='https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng'/>
                     </div>
 
                     <div className='sidebar-options'>
-
                         { this.state.sidebarItems.map(item => {
 
                             return <div>
@@ -257,8 +257,22 @@ class SidebarLayout extends React.Component {
             </Sider>
             <Layout>
 
-                <Layout style={{backgroundColor: 'white', height: '100%'}}>
+                <Layout style={{backgroundColor: 'white', height: '100%'}} hasSider={true}>
                     <Content className={this.state.currentTab === 'support' ? 'support-content-container' : 'content-container'}>
+                        <nav className="onboarding-mobile-nav">
+                            <img width={180} onClick={() => this.onSideBarItemClicked('home')} src='https://images.squarespace-cdn.com/content/5ed9fce13f6c795edcfd9773/1599342501255-0DY89Z19CDDZ9P6B7G6R/Untitled+design+%285%29.png?format=1500w&content-type=image%2Fpng'/>
+                            {
+                                this.state.collapsed ? (
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={() => this.setState(prev => ({ ...prev, collapsed: !prev.collapsed }))}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                ) : (
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={() => this.setState(prev => ({ ...prev, collapsed: !prev.collapsed }))}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                )
+                            }
+                        </nav>
                         <div className={this.state.currentTab === 'support' ? 'support-main-content' : 'main-content'}>
 
                             {/* Will render this view when page is loading */}
