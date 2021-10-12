@@ -13,6 +13,7 @@ class OnboardingApp extends React.Component {
       currentStep: 0,
       loading: true,
       error: false,
+      offline: false,
       progress: {
         hasScheduledChat: false,
         hasCompletedWaiver: false,
@@ -255,7 +256,9 @@ class OnboardingApp extends React.Component {
                 rawError: error.message
             })
             if (window.Bugsnag) Bugsnag.notify(error)
-
+            if (!window.navigator.onLine) {
+              this.setState({ offline: true })
+            }
             this.setState({ error: true, loading: false })
           })
 
@@ -374,6 +377,7 @@ componentDidMount() {
         progress={this.state.progress}
         setUserProgress={this.state.setUserProgress}
         disableSideItems={this.state.disableSideItems}
+        offline={this.state.offline}
       />
     )
   }
