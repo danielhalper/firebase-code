@@ -1,6 +1,6 @@
 //Importing Ant components
 const { Typography, Steps, Badge, Card, Row, Col, Button, Skeleton } = antd;
-const { SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CheckOutlined } = icons;
+const { SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CheckOutlined, ReloadOutlined } = icons;
 const { Title, Link } = Typography;
 const { Step } = Steps;
 
@@ -238,8 +238,9 @@ class Home extends React.Component {
 
         //If user went offline (or computer to sleep) and page stayed open
         if (this.props.error && this.props.offline) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%'}}>
-            <Title>🔄 Please Refresh Page 🔄</Title>
-            <p>Our app took a little nap while you were away.</p>
+            <Title>Oops!</Title>
+            <p>Looks like our app took a little nap while you were away.</p>
+            <Button onClick={() => window.location.reload()}> <ReloadOutlined /> Refresh Page</Button>
         </div>
 
         if (this.props.currentStep == 4) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
