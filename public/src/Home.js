@@ -1,6 +1,6 @@
 //Importing Ant components
 const { Typography, Steps, Badge, Card, Row, Col, Button, Skeleton } = antd;
-const { SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CheckOutlined } = icons;
+const { SolutionOutlined, BookOutlined, CalendarFilled, SecurityScanOutlined, RocketOutlined, CheckOutlined, ReloadOutlined } = icons;
 const { Title, Link } = Typography;
 const { Step } = Steps;
 
@@ -231,9 +231,16 @@ class Home extends React.Component {
         if (this.props.loading) return <div><Skeleton active/></div>
 
         //If there was an error (i.e. the record didn't exist) display "Applicant Record Not Found"
-        if (this.props.error) return <div>
+        if (this.props.error && !this.props.offline) return <div>
             <Title>Applicant Record Not Found </Title>
             <p>We can't find your record in the database - if this doesn't seem right, please contact <Link href='mailto:laura@stepuptutoring.org'>laura@stepuptutoring.org</Link>.</p>
+        </div>
+
+        //If user went offline (or computer to sleep) and page stayed open
+        if (this.props.error && this.props.offline) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+            <Title>Oops!</Title>
+            <p>Looks like our app took a little nap while you were away.</p>
+            <Button onClick={() => window.location.reload()}> <ReloadOutlined /> Refresh Page</Button>
         </div>
 
         if (this.props.currentStep == 4) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
