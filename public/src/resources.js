@@ -69,6 +69,43 @@ class LoadingScreen extends React.Component {
     }
 }
 
+class Modal extends React.Component {
+    constructor(props) {
+        super(props)
+        /*console.log("he")
+        console.log(props)*/
+    }
+    render() {
+        if(this.props.display){
+            return <div className = "overlay">
+                <div className = "modal">
+
+                    <div className="modal-header" style={{display:"flex", flexDirection:"row", marginBottom:10}}>
+                        <div style={{width:40}}></div>
+
+                        <div style={{flex:1}}></div>
+
+                        <h1 className = "modal-title">{this.props.title}</h1>
+
+                        <div style={{flex:1}}></div>
+
+                        <button className="modal-exit" onClick={this.props.onClose}><CloseOutlined></CloseOutlined></button>
+                    </div>
+
+                    <div className="modal-content" style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+                        {this.props.children}
+                    </div>
+                    <div className="modal-footer" style={{display:"flex", flexDirection:"row"}}>
+                        {this.props.options.submit && <button className="modal-submit">{this.props.options.submit||"Submit"}</button>}
+                    </div>
+
+                </div>
+            </div>
+        }
+        return <div></div>
+    }
+}
+
 class AnnouncementView extends React.Component {
     constructor(props){
         super(props)

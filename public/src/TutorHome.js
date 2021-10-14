@@ -2,44 +2,6 @@ const { CloseOutlined, CommentOutlined, VideoCameraOutlined, UnorderedListOutlin
 const { Timeline, Typography, message } = antd
 const { Title } = Typography
 
-
-class Modal extends React.Component {
-    constructor(props) {
-        super(props)
-        /*console.log("he")
-        console.log(props)*/
-    }
-    render() {
-        if(this.props.display){
-            return <div className = "overlay">
-                <div className = "modal">
-
-                    <div className="modal-header" style={{display:"flex", flexDirection:"row", marginBottom:10}}>
-                        <div style={{width:40}}></div>
-
-                        <div style={{flex:1}}></div>
-
-                        <h1 className = "modal-title">{this.props.title}</h1>
-
-                        <div style={{flex:1}}></div>
-
-                        <button className="modal-exit" onClick={this.props.onClose}><CloseOutlined></CloseOutlined></button>
-                    </div>
-
-                    <div className="modal-content" style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
-                        {this.props.children}
-                    </div>
-                    <div className="modal-footer" style={{display:"flex", flexDirection:"row"}}>
-                        {this.props.options.submit && <button className="modal-submit">{this.props.options.submit||"Submit"}</button>}
-                    </div>
-
-                </div>
-            </div>
-        }
-        return <div></div>
-    }
-}
-
 class TutorHome extends React.Component {
     constructor(props) {
         super(props)
@@ -66,12 +28,19 @@ class TutorHome extends React.Component {
     }
 
     retrieveZoomLinks() {
-        currentStudentZoomLinks = this.props.getZoom(this.state.student['id'])
+        /*currentStudentZoomLinks = this.props.getZoom(this.state.student['id'])
         if (currentStudentZoomLinks) {
             this.setState({
-                zoomLinks: currentStudentZoomLinks
+                zoomLinks: currentStudentZoomLinks,
+                modals: this.props.modals
             })
-        }
+        }*/
+        console.log("****************8")
+        console.log(this.props)
+        this.props.getZoom(this.state.student['id'])
+        /*this.setState({
+            modals: this.props.modals
+        })*/
     }
 
     displayModal(id) {
@@ -100,21 +69,10 @@ class TutorHome extends React.Component {
         this.setState(stateObject)
     }
 
-    copyLink(link, flag){
-        var el = document.createElement('textarea');
-        el.value = link;
-        el.setAttribute('readonly', '');
-        el.style = {position: 'absolute', left: '-9999px'};
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-
-        if (flag == 1) {message.success('Link Copied!');}
-        else {message.success('Meeting ID Copied!');}
-    }
-
     render() {
+        console.log("in tutor home")
+        console.log(this.props)
+        console.log(this.props.modals.zoom)
         let infoBarItems = [
             {
                 label:"Total Sessions",
@@ -182,40 +140,6 @@ class TutorHome extends React.Component {
                 </RequiredItem>
             </div>
             <div className="modal-container">
-                <Modal title="Start Zoom Meeting" display = {this.state.modals.zoom} options={{submit:false}} onClose = {() => this.onModalClose('zoom')}>
-                    { !this.state.zoomLinks && <LoadingScreen /> }
-
-                    { this.state.zoomLinks && <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
-                        <div style={{width: '70%', margin: '0px 0px 20px 0px' }}>
-                            This is your dedicated zoom link with student
-                            {' ' + this.state.student['firstname'] + ' ' + this.state.student['lastname']}.
-                            It is important that all your sessions with your student take place on this
-                            link or we will not be able to accurately track your session attendance.
-                            Be sure to copy it below and send it to them via messages!
-                        </div>
-                        <a href={ this.state.zoomLinks['start_url'] } target='_blank' className="modal-submit" style={{marginBottom:10}}>Start Meeting</a>
-                        <div style={{ position: 'relative', width: '70%', height: 40 }}>
-                            <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
-                                Meeting Link: { this.state.zoomLinks['join_url'] }
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
-                                <div style={{flex: 1}}></div>
-                                <button className="copy-link" onClick={()=>this.copyLink(this.state.zoomLinks['join_url'], 1)}>Copy</button>
-                            </div>
-                        </div>
-                        <div style={{marginBottom: 10}}></div>
-                        <div style={{ position: 'relative', width: '70%', height: 40, marginBottom: 30 }}>
-                            <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
-                                Meeting ID: {this.props.tutor['zoomLinks'][this.state.student['id']]}
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
-                                <div style={{flex: 1}}></div>
-                                <button className="copy-link" onClick={()=>this.copyLink(this.props.tutor['zoomLinks'][this.state.student['id']], 0)}>Copy</button>
-                            </div>
-                        </div>
-                    </div> }
-
-                </Modal>
 
                 <Modal title='Weekly Form' display={this.state.modals['weekly-form']} options={{ submit: false }} onClose={() => this.onModalClose('weekly-form')}>
                     <iframe class="airtable-embed" src="https://airtable.com/embed/shrNNQzXOJOP7WtEm?backgroundColor=yellow" frameBorder="0" onmousewheel="" width="100%" height="533" style={{ background: 'transparent', border: '0px' }}></iframe>

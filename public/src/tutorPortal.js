@@ -23,6 +23,13 @@ class TutorApp extends React.Component {
                 'messaging': TutorMessaging,
                 'support': SupportPage
             },
+            modals: {
+                'zoom': {
+                    'open': false,
+                    'loading': true,
+                    'links': undefined
+                }
+            },
             sidebarItems: [
                 {
                     keyId: 'home',
@@ -47,8 +54,9 @@ class TutorApp extends React.Component {
                             active: false,
                             disabled: false,
                             onClick: () => {
-                                const el = document.getElementById('start-zoom')
-                                el.click()
+                                this.retrieveZoomLinks('recM4eCC4BAzx983j')
+                                /*const el = document.getElementById('start-zoom')
+                                el.click()*/
                             },
                             button: true
                         },
@@ -150,13 +158,29 @@ class TutorApp extends React.Component {
     }
 
     retrieveZoomLinks(stu_id) {
+        let modalsCopy = this.state.modals
+        console.log("in retrieve")
+        console.log(modalsCopy)
+        modalsCopy.zoom = {
+            'open': true,
+            'loading': true,
+            'links': undefined
+        }
+        this.setState({current_page: 'home', modals: modalsCopy})
         firebase.functions().httpsCallable('getZoomLinks')().then((result) => {
 
             const currentStudentZoomLinks = result.data[stu_id] /* this.state.student['id'] */
             /*this.setState({
                 zoomLinks: currentStudentZoomLinks
             })*/
-            return currentStudentZoomLinks
+            let modalsCopy = this.state.modals
+            modalsCopy.zoom = {
+                'open': true,
+                'loading': false,
+                'links': currentStudentZoomLinks
+            }
+            this.setState({modals: modalsCopy})
+            /*this.state.zoom_links = currentStudentZoomLinks*/
 
         }).catch(error => {
 
@@ -179,6 +203,20 @@ class TutorApp extends React.Component {
 
     on_log_event(w) {
         firebase.analytics().logEvent(w)
+    }
+
+    copyLink(link, flag){
+        var el = document.createElement('textarea');
+        el.value = link;
+        el.setAttribute('readonly', '');
+        el.style = {position: 'absolute', left: '-9999px'};
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+
+        if (flag == 1) {message.success('Link Copied!');}
+        else {message.success('Meeting ID Copied!');}
     }
 
     loadUser() {
@@ -213,7 +251,7 @@ class TutorApp extends React.Component {
 
     render() {
         /*console.log(this.state.current_page)*/
-        return (
+        return (<div>
             <SidebarLayout pages={this.state.pages}
                            sidebarItems={this.state.sidebarItems}
                            getZoom={this.retrieveZoomLinks}/*{this.retrieveZoomLinks}*/
@@ -221,7 +259,43 @@ class TutorApp extends React.Component {
                            userData={this.state.user}
                            up_cp={this.update_cp}
                            log_event={this.on_log_event}
-                           loading={this.state.loading}/>)
+                           loading={this.state.loading}
+                           modals={this.state.modals}/>
+
+           <Modal title="Start Zoom Meeting" display = {this.state.modals.zoom.open} options={{submit:false}} onClose = {() => this.onModalClose('zoom')}>
+               { this.state.modals.zoom.loading && <LoadingScreen /> }
+
+               { !this.state.modals.zoom.loading && <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                   <div style={{width: '70%', margin: '0px 0px 20px 0px' }}>
+                       This is your dedicated zoom link with student
+                       {' ' + this.state.student['firstname'] + ' ' + this.state.student['lastname']}.
+                       It is important that all your sessions with your student take place on this
+                       link or we will not be able to accurately track your session attendance.
+                       Be sure to copy it below and send it to them via messages!
+                   </div>
+                   <a href={ this.state.modals.zoom.links['start_url'] } target='_blank' className="modal-submit" style={{marginBottom:10}}>Start Meeting</a>
+                   <div style={{ position: 'relative', width: '70%', height: 40 }}>
+                       <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
+                           Meeting Link: { this.state.modals.zoom.links['join_url'] }
+                       </div>
+                       <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
+                           <div style={{flex: 1}}></div>
+                           <button className="copy-link" onClick={()=>this.copyLink(this.state.modals.zoom.links['join_url'], 1)}>Copy</button>
+                       </div>
+                   </div>
+                   <div style={{marginBottom: 10}}></div>
+                   <div style={{ position: 'relative', width: '70%', height: 40, marginBottom: 30 }}>
+                       <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
+                           Meeting ID: {this.props.tutor['zoomLinks'][this.state.student['id']]}
+                       </div>
+                       <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
+                           <div style={{flex: 1}}></div>
+                           <button className="copy-link" onClick={()=>this.copyLink(this.props.tutor['zoomLinks'][this.state.student['id']], 0)}>Copy</button>
+                       </div>
+                   </div>
+               </div> }
+
+           </Modal></div>)
 
     }
 

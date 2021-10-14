@@ -18,13 +18,12 @@ class SidebarItem extends React.Component {
             }
 
             if (this.props.button) {
-                this.props.update_cp('home')
-                console.log(this.props)
+                /*this.props.update_cp('home')*/
                 if (this.props.currentTab == 'messaging') {
-                    this.props.update_cp('home')
+                    /*this.props.update_cp('home')
                     let url = window.location.href.split('#').at(0)
                     console.log(url)
-                    window.open(url, '_top')
+                    window.open(url, '_top')*/
                 }
                 this.props.onClick()
                 return
@@ -43,6 +42,7 @@ class SidebarItem extends React.Component {
     }
 
     render() {
+        console.log(this.props)
         return ( <div id={this.props.keyId} onFocus={this.handleOnClick} onClick={this.handleOnClick}
         className={`${this.props.active ? 'active ':''}${this.props.disabled ? 'disabled ':''}
         ${this.props.isStep ? 'step ':''}${this.props.isSubItem ? 'subitem ':''}${this.props.isMainItem ? 'main-item ':''}
@@ -192,6 +192,28 @@ class SidebarLayout extends React.Component {
 
 
     render() {
+        this.state.currentTab = this.props.currentTab
+            console.log(this.props)
+        const sidebarItems = this.state.sidebarItems
+
+            // highlights side navigation item that is the current tab
+            for (let i = 0; i < sidebarItems.length; i++) {
+                if (sidebarItems[i]['keyId'] == this.props.currentTab) {
+                    sidebarItems[i]['active'] = true
+                    if (sidebarItems[i].subItems) {
+                        sidebarItems[i].subItems.map(item => item.active = false)}
+                } else sidebarItems[i]['active'] = false
+
+                if (sidebarItems[0].subItems && sidebarItems[0]['active'] === false) {
+                    for (let x = 0; x < sidebarItems[0].subItems.length; x++) {
+                        if (sidebarItems[0].subItems[x]['keyId'] == this.props.currentTab) {
+                            sidebarItems[0].subItems[x]['active'] = true
+                            sidebarItems[0]['active'] = false
+                        } else sidebarItems[0].subItems[x]['active'] = false
+                    }
+                }
+            }
+
         let CurrentPage = this.state.pages[this.state.currentTab] || Empty
         /*console.log(CurrentPage)*/
         if (this.getCurrentSidebarItem().disabled) CurrentPage = this.state.pages[ this.findFirstOpenPage() ] || Empty
@@ -269,8 +291,9 @@ class SidebarLayout extends React.Component {
 
                             {/* Will render this view for Tutor Portal */}
                             {!this.props.loading && !this.props.progress && <CurrentPage tutor={this.props.userData} sidebarItems={this.props.sidebarItems}
-                                                                            getZoom={() => {c = this.state.getZoom; return c}}
-                                                                            log_event={this.props.log_event}/>}
+                                                                            getZoom={this.state.getZoom}
+                                                                            log_event={this.props.log_event}
+                                                                            modals={this.props.modals}/>}
 
                             {/* Will render this view for Onboarding Portal */}
                             {!this.props.loading && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
