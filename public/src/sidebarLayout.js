@@ -42,7 +42,6 @@ class SidebarItem extends React.Component {
     }
 
     render() {
-        console.log(this.props)
         return ( <div id={this.props.keyId} onFocus={this.handleOnClick} onClick={this.handleOnClick}
         className={`${this.props.active ? 'active ':''}${this.props.disabled ? 'disabled ':''}
         ${this.props.isStep ? 'step ':''}${this.props.isSubItem ? 'subitem ':''}${this.props.isMainItem ? 'main-item ':''}
@@ -193,7 +192,6 @@ class SidebarLayout extends React.Component {
 
     render() {
         this.state.currentTab = this.props.currentTab
-            console.log(this.props)
         const sidebarItems = this.state.sidebarItems
 
             // highlights side navigation item that is the current tab
@@ -293,7 +291,10 @@ class SidebarLayout extends React.Component {
                             {!this.props.loading && !this.props.progress && <CurrentPage tutor={this.props.userData} sidebarItems={this.props.sidebarItems}
                                                                             getZoom={this.state.getZoom}
                                                                             log_event={this.props.log_event}
-                                                                            modals={this.props.modals}/>}
+                                                                            modals={this.props.modals}
+                                                                            currentStudent={this.props.currentStudent}
+                                                                            onCurrentStudentChanged={this.props.onCurrentStudentChanged}
+                                                                            openModal={this.props.openModal}/>}
 
                             {/* Will render this view for Onboarding Portal */}
                             {!this.props.loading && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}
