@@ -89,7 +89,7 @@ class FirstSteps extends React.Component {
             {/* Show when interview has been scheduled but not yet passed */}
             {progress.hasScheduledChat && <div>
 
-                <div style={{ marginBottom: 50 }}><Title level={3} color='primary'>We can't wait to see you on <strong>{new Date(interviewDate).toLocaleString()}</strong></Title>
+                <div style={{ marginBottom: 50 }}><Title level={3} color='primary'>We can't wait to see you on <strong>{new Date(interviewDate).toLocaleString([], { weekday: 'long', hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'numeric', day: 'numeric'  })}</strong></Title>
                 <p>Once you've had your interview, you'll move on to the next steps!</p></div>
                 {/* <strong><Title level={4}>Your interview date*: </Title></strong> */}
 
@@ -261,8 +261,8 @@ class Home extends React.Component {
         //Otherwise, show the regular dashboard
         return <div>
             <Title>Your Onboarding Dashboard</Title>
-            {!this.props.progress.hasScheduledChat ? <div><p>{this.props.tutorDetails.firstname} we're so glad you're here! We appreciate you applying to become a tutor and adding some good to the world.</p>
-            <p>There are 5 main tasks an applicant needs to complete to be matched with a student. Complete them as soon as you can and don't hesitate to reach out if any questions or concerns arise.</p></div> : <p>{this.props.tutorDetails.firstname}, there are just a few things we'll need you to complete before proceeding.</p>}
+            {!this.props.progress.hasScheduledChat ? <div><p>{this.props.tutorDetails.firstname} we're so glad you're here!</p>
+            <p>Complete the items as soon as you can and don't hesitate to reach out if you have any questions!</p></div> : <p>{this.props.tutorDetails.firstname}, there are just a few things we'll need you to complete before proceeding.</p>}
             <div className='steps-container'>
                 <Steps current={this.props.currentStep}  className='steps' responsive={true}>
                     <Step title='First Steps'/>
