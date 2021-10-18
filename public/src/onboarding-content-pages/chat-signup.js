@@ -30,6 +30,7 @@ class ChatSignup extends React.Component {
               <div className="content-completed-container">
                 <div className="appointment-confirmation-icon"><CalendarOutlined /></div>
                 <p>{tutorDetails.firstname}, we have you confirmed for your appointment!</p>
+		<p>All the information you need for this meeting should be arriving in your inbox shortly.</p>
                 <p className="appointment-confirmation-title">20 Minute Zoom Interview</p>
                 <p><strong>{new Date(interviewDate).toLocaleString()}</strong> </p>
                 <div>
