@@ -212,7 +212,8 @@ class MessagingWidget extends React.Component {
     }
 
     getStudentOptions() {
-
+        console.log('Messaging Widget:')
+        console.log(this.props.tutor)
         return this.props.tutor.students.map(student => {
 
             //Create an option

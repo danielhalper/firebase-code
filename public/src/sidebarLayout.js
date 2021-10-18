@@ -8,30 +8,36 @@ const { Sider, Content, Footer } = Layout
 class SidebarItem extends React.Component {
     constructor(props) {
         super(props)
-
         this.handleOnClick = this.handleOnClick.bind(this)
     }
 
     handleOnClick() {
         if (this.props.link) {
-            window.open(this.props.link, '_blank')
-            return
-        }
-
-        if (this.props.button) {
-            this.props.onClick()
-            return
-        }
-
-        if (!this.props.disabled) {
-
-            if (!this.props.active) {
-                // window.location.hash = '#' + this.props.keyId
+                window.open(this.props.link, '_blank')
+                return
             }
 
-            this.props.onClick(this.props.keyId)
+            if (this.props.button) {
+                /*this.props.update_cp('home')*/
+                if (this.props.currentTab == 'messaging') {
+                    /*this.props.update_cp('home')
+                    let url = window.location.href.split('#').at(0)
+                    console.log(url)
+                    window.open(url, '_top')*/
+                }
+                this.props.onClick()
+                return
+            }
 
-        }
+            if (!this.props.disabled) {
+
+                if (!this.props.active) {
+                    // window.location.hash = '#' + this.props.keyId
+                }
+
+                this.props.onClick(this.props.keyId)
+
+            }
 
     }
 
@@ -102,18 +108,15 @@ class SidebarLayout extends React.Component {
 
     constructor(props) {
         super(props)
-
         this.state = {
             tutor: {}
         }
-
         this.state.sidebarItems = this.props.sidebarItems
         this.state.pages = this.props.pages
         this.state.currentTab = this.props.currentTab
         this.state.error = this.props.error
-
+        this.state.getZoom = this.props.getZoom
         this.onSideBarItemClicked = this.onSideBarItemClicked.bind(this)
-
     }
 
     onSideBarItemClicked(key) {
@@ -136,8 +139,8 @@ class SidebarLayout extends React.Component {
                 }
             }
         }
-
         this.setState({ currentTab: key, sidebarItems: sidebarItems })
+        this.props.up_cp(key)
 
     }
 
@@ -188,9 +191,29 @@ class SidebarLayout extends React.Component {
 
 
     render() {
+        this.state.currentTab = this.props.currentTab
+        const sidebarItems = this.state.sidebarItems
+
+            // highlights side navigation item that is the current tab
+            for (let i = 0; i < sidebarItems.length; i++) {
+                if (sidebarItems[i]['keyId'] == this.props.currentTab) {
+                    sidebarItems[i]['active'] = true
+                    if (sidebarItems[i].subItems) {
+                        sidebarItems[i].subItems.map(item => item.active = false)}
+                } else sidebarItems[i]['active'] = false
+
+                if (sidebarItems[0].subItems && sidebarItems[0]['active'] === false) {
+                    for (let x = 0; x < sidebarItems[0].subItems.length; x++) {
+                        if (sidebarItems[0].subItems[x]['keyId'] == this.props.currentTab) {
+                            sidebarItems[0].subItems[x]['active'] = true
+                            sidebarItems[0]['active'] = false
+                        } else sidebarItems[0].subItems[x]['active'] = false
+                    }
+                }
+            }
 
         let CurrentPage = this.state.pages[this.state.currentTab] || Empty
-
+        /*console.log(CurrentPage)*/
         if (this.getCurrentSidebarItem().disabled) CurrentPage = this.state.pages[ this.findFirstOpenPage() ] || Empty
 
         return <Layout style={{ height: '100%' }} className='desktop-dashboard'>
@@ -208,7 +231,7 @@ class SidebarLayout extends React.Component {
 
                             return <div>
 
-                            <SidebarItem isMainItem keyId={item.keyId} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked}>{item.title}</SidebarItem>
+                            <SidebarItem isMainItem keyId={item.keyId} currentTab={this.props.currentTab} icon={item.icon} active={item.active} disabled={item.disabled} onClick={this.onSideBarItemClicked} update_cp={this.props.up_cp}>{item.title}</SidebarItem>
 
                                 {/* Will render this on sidebar when user info loading */}
                                 {this.props.loading && <LoadingOutlined style={{ display: 'flex', justifyContent: 'center', margin: '20% 0'}} />}
@@ -224,7 +247,7 @@ class SidebarLayout extends React.Component {
                                 {/* Sidebar For Tutor Portal */}
                                 {!this.props.loading && !item.isSteps && !item.isSupport && <div>
                                     {item.subItems && item.subItems.map(subItem => {
-                                        return <SidebarItem isSubItem keyId={subItem.keyId} link={subItem.link} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={subItem.onClick || this.onSideBarItemClicked} button={subItem.button}>{subItem.title}</SidebarItem>
+                                        return <SidebarItem isSubItem currentTab={this.props.currentTab} keyId={subItem.keyId} link={subItem.link} icon={subItem.icon} active={subItem.active} disabled={subItem.disabled} onClick={subItem.onClick || this.onSideBarItemClicked} button={subItem.button} update_cp={this.props.up_cp}>{subItem.title}</SidebarItem>
                                 })}
                                 </div>}
 
@@ -265,7 +288,13 @@ class SidebarLayout extends React.Component {
                             {this.props.loading && <LoadingScreen/>}
 
                             {/* Will render this view for Tutor Portal */}
-                            {!this.props.loading && !this.props.progress && <CurrentPage tutor={this.props.userData} sidebarItems={this.props.sidebarItems} />}
+                            {!this.props.loading && !this.props.progress && <CurrentPage tutor={this.props.userData} sidebarItems={this.props.sidebarItems}
+                                                                            getZoom={this.state.getZoom}
+                                                                            log_event={this.props.log_event}
+                                                                            modals={this.props.modals}
+                                                                            currentStudent={this.props.currentStudent}
+                                                                            onCurrentStudentChanged={this.props.onCurrentStudentChanged}
+                                                                            openModal={this.props.openModal}/>}
 
                             {/* Will render this view for Onboarding Portal */}
                             {!this.props.loading && this.props.progress && <CurrentPage tutor={this.state.tutor} tutorDetails={this.props.userData}

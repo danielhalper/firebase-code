@@ -23,6 +23,19 @@ class TutorApp extends React.Component {
                 'messaging': TutorMessaging,
                 'support': SupportPage
             },
+            modals: {
+                'zoom': {
+                    'open': false,
+                    'loading': true,
+                    'links': undefined
+                },
+                'announcements': {
+                    'open': false
+                },
+                'weeklyForm': {
+                    'open': false
+                }
+            },
             sidebarItems: [
                 {
                     keyId: 'home',
@@ -47,8 +60,8 @@ class TutorApp extends React.Component {
                             active: false,
                             disabled: false,
                             onClick: () => {
-                                const el = document.getElementById('start-zoom')
-                                el.click()
+                                this.retrieveZoomLinks(this.state.student.id)
+                                
                             },
                             button: true
                         },
@@ -66,7 +79,10 @@ class TutorApp extends React.Component {
                             icon: <FormOutlined/>,
                             active: false,
                             disabled: false,
-                            link: 'https://airtable.com/shrNNQzXOJOP7WtEm'
+                            button: true,
+                            onClick: () => {
+                                this.openModal('weeklyForm')
+                            }
                         },
                         {
                             keyId: 'weekly-announcements-sidebar',
@@ -75,13 +91,12 @@ class TutorApp extends React.Component {
                             active: false,
                             disabled: false,
                             onClick: () => {
-                                const el = document.getElementById('weekly-announcements')
-                                el.click()
+                                this.openModal('announcements')
                             },
                             button: true
                         },
                         {
-                            keyId: 'home',
+                            keyId: 'events-sidebar',
                             title: 'Events and Gamification',
                             icon: <CalendarOutlined/>,
                             active: false,
@@ -140,8 +155,74 @@ class TutorApp extends React.Component {
                     ]
                 }
             ],
-            loading: true
+            loading: true,
+            current_page: 'home',
+            student: {}
         }
+
+        this.retrieveZoomLinks = this.retrieveZoomLinks.bind(this);
+        this.update_cp = this.update_cp.bind(this);
+        this.on_log_event = this.on_log_event.bind(this);
+        this.onCurrentStudentChanged = this.onCurrentStudentChanged.bind(this)
+        this.openModal = this.openModal.bind(this)
+    }
+
+    retrieveZoomLinks(stu_id) {
+        console.log('Retrieving zoom links for ' + stu_id)
+        let modalsCopy = this.state.modals
+        modalsCopy.zoom = {
+            'open': true,
+            'loading': true,
+            'links': undefined
+        }
+        this.setState({current_page: 'home', modals: modalsCopy})
+        firebase.functions().httpsCallable('getZoomLinks')().then((result) => {
+
+            const currentStudentZoomLinks = result.data[stu_id] /* this.state.student['id'] */
+            /*this.setState({
+                zoomLinks: currentStudentZoomLinks
+            })*/
+            let modalsCopy = this.state.modals
+            modalsCopy.zoom = {
+                'open': true,
+                'loading': false,
+                'links': currentStudentZoomLinks
+            }
+            this.setState({modals: modalsCopy})
+            /*this.state.zoom_links = currentStudentZoomLinks*/
+
+        }).catch(error => {
+
+            message.error('Something went wrong. Please try again.')
+            firebase.analytics().logEvent('error', {
+                type: 'tutorPortal',
+                message: `Couldn't fetch zoom links`,
+                rawError: error.message
+            })
+            if (window.Bugsnag) Bugsnag.notify(error)
+        })
+    }
+
+    update_cp(p) {
+        this.setState({current_page: p})
+    }
+
+    on_log_event(w) {
+        firebase.analytics().logEvent(w)
+    }
+
+    copyLink(link, flag){
+        var el = document.createElement('textarea');
+        el.value = link;
+        el.setAttribute('readonly', '');
+        el.style = {position: 'absolute', left: '-9999px'};
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+
+        if (flag == 1) {message.success('Link Copied!');}
+        else {message.success('Meeting ID Copied!');}
     }
 
     loadUser() {
@@ -152,6 +233,7 @@ class TutorApp extends React.Component {
 
             this.setState({
                 user: user,
+                student: user.students[0],
                 loading: false
             })
 
@@ -174,9 +256,98 @@ class TutorApp extends React.Component {
 
     }
 
-    render() {
+    onCurrentStudentChanged(student) {
+        console.log('student changed')
+        this.setState({
+            student: student
+        })
+    }
 
-        return <SidebarLayout pages={this.state.pages} sidebarItems={this.state.sidebarItems} currentTab='home' userData={this.state.user} loading={this.state.loading}/>
+    onModalClose(modalName) {
+
+        let modalsCopy = this.state.modals
+        modalsCopy[modalName]['open'] = false
+
+        this.setState({
+            modals: modalsCopy
+        })
+    }
+
+    openModal(modalName) {
+        if (modalName == 'zoom') this.retrieveZoomLinks(this.state.student.id)
+        else {
+            let modalsCopy = this.state.modals
+            modalsCopy[modalName]['open'] = true
+
+            this.setState({
+                current_page: 'home',
+                modals: modalsCopy
+            })
+        }
+    }
+
+    render() {
+        /*console.log(this.state.current_page)*/
+
+        return (<div>
+            <SidebarLayout pages={this.state.pages}
+                           sidebarItems={this.state.sidebarItems}
+                           getZoom={this.retrieveZoomLinks}/*{this.retrieveZoomLinks}*/
+                           currentTab={this.state.current_page}
+                           userData={this.state.user}
+                           up_cp={this.update_cp}
+                           log_event={this.on_log_event}
+                           loading={this.state.loading}
+                           modals={this.state.modals}
+                           currentStudent={this.state.student}
+                           onCurrentStudentChanged={this.onCurrentStudentChanged}
+                           openModal={this.openModal}/>
+            <div className="modal-container">
+
+                <Modal title='Weekly Form' display={this.state.modals['weeklyForm'].open} options={{ submit: false }} onClose={() => this.onModalClose('weeklyForm')}>
+                    <iframe class="airtable-embed" src="https://airtable.com/embed/shrNNQzXOJOP7WtEm?backgroundColor=yellow" frameBorder="0" onmousewheel="" width="100%" height="533" style={{ background: 'transparent', border: '0px' }}></iframe>
+                </Modal>
+                <Modal title="Weekly Announcements" display = {this.state.modals.announcements.open} options={{submit:false}} onClose = {() => this.onModalClose('announcements')}>
+                    { !this.state.user.weeklyAnnouncements && <LoadingScreen /> }
+                    { this.state.user.weeklyAnnouncements && <AnnouncementView data={this.state.user.weeklyAnnouncements} /> }
+                </Modal>
+                
+                <Modal title="Start Zoom Meeting" display = {this.state.modals.zoom.open} options={{submit:false}} onClose = {() => this.onModalClose('zoom')}>
+                    { this.state.modals.zoom.loading && <LoadingScreen /> }
+
+                    { !this.state.modals.zoom.loading && <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                        <div style={{width: '70%', margin: '0px 0px 20px 0px' }}>
+                            This is your dedicated zoom link with student
+                            {' ' + this.state.student['firstname'] + ' ' + this.state.student['lastname']}.
+                            It is important that all your sessions with your student take place on this
+                            link or we will not be able to accurately track your session attendance.
+                            Be sure to copy it below and send it to them via messages!
+                        </div>
+                        <a href={ this.state.modals.zoom.links['start_url'] } target='_blank' className="modal-submit" style={{marginBottom:10}}>Start Meeting</a>
+                        <div style={{ position: 'relative', width: '70%', height: 40 }}>
+                            <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
+                                Meeting Link: { this.state.modals.zoom.links['join_url'] }
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
+                                <div style={{flex: 1}}></div>
+                                <button className="copy-link" onClick={()=>this.copyLink(this.state.modals.zoom.links['join_url'], 1)}>Copy</button>
+                            </div>
+                        </div>
+                        <div style={{marginBottom: 10}}></div>
+                        <div style={{ position: 'relative', width: '70%', height: 40, marginBottom: 30 }}>
+                            <div className="zoom-invite-link" style={{position: 'absolute', width: '100%'}}>
+                                Meeting ID: {this.state.user['zoomLinks'][this.state.student['id']]}
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'row', position: 'absolute', width: '100%'  }} className='copy-link-gradient'>
+                                <div style={{flex: 1}}></div>
+                                <button className="copy-link" onClick={()=>this.copyLink(this.state.user['zoomLinks'][this.state.student['id']], 0)}>Copy</button>
+                            </div>
+                        </div>
+                    </div> }
+
+                </Modal>
+            </div>
+        </div>)
 
     }
 
