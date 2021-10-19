@@ -5,19 +5,13 @@ class LiveTraining extends React.Component {
 
   render() {
     const tutorDetails = this.props.tutorDetails;
+    let iframeExists = false;
 
-    if (!tutorDetails.liveTrainingDate) {
-    return (
-      <div>
-        <h1 className="section-header-h1">Live Training</h1>
-        <p>Live training is a Zoom session, lead by members of the Step up team.
-          After this session, you’ll have a good understanding of the onboarding process, how matches are processed and what tutoring looks like.</p>
-        <div id="live-training-calendly">
-          <iframe id="deferred-iframe" title="Schedule Live Training" width="100%" height="800" frameBorder="0" src={`https://calendly.com/stepup-tut/training?name=${tutorDetails.firstname}%20${tutorDetails.lastname}&email=${tutorDetails.email}`} />
-        </div>
-      </div>
-    )
-    } else if (tutorDetails.liveTrainingDate && !tutorDetails.liveTrainingCompleted){
+    if (document.getElementById('deferred-iframe')) {
+      iframeExists = true;
+    }
+
+    if (tutorDetails.liveTrainingDate && !tutorDetails.liveTrainingCompleted && !iframeExists){
       return (
         <div>
           <h1 className="section-header-h1">Live Training</h1>
@@ -33,16 +27,27 @@ class LiveTraining extends React.Component {
           </div>
         </div>
       )
-    } else {
+    } else if (tutorDetails.liveTrainingCompleted) {
       return (
         <div>
-          <h1 className="section-header-h1">Live Training {tutorDetails.liveTrainingCompleted ? <span className="header-completed-done-check">< CheckOutlined /></span> : null}</h1>
+          <h1 className="section-header-h1">Live Training <span className="header-completed-done-check">< CheckOutlined /></span> </h1>
           <div className="content-completed-container">
             <img className="svg-completed-img" src="./training.svg" alt="calendar booked image"></img>
             <p>You completed the live training {tutorDetails.firstname}!</p>
             <p>Now we know how awesome you are and can't wait for your future student to find out as well.</p>
           </div>
           </div>
+      )
+    } else {
+      return (
+        <div>
+          <h1 className="section-header-h1">Live Training</h1>
+          <p>Live training is a Zoom session, led by members of the Step up team.
+            After this session, you’ll have a good understanding of the onboarding process, how matches are processed and what tutoring looks like.</p>
+          <div id="live-training-calendly">
+            <iframe id="deferred-iframe" title="Schedule Live Training" width="100%" height="800" frameBorder="0" src={`https://calendly.com/stepup-tut/training?name=${tutorDetails.firstname}%20${tutorDetails.lastname}&email=${tutorDetails.email}`} />
+          </div>
+        </div>
       )
     }
   }

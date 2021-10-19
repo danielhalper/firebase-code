@@ -1,5 +1,5 @@
 const { Row, Col, Button } = antd;
-const { QuestionOutlined, SnippetsOutlined, ScheduleOutlined, MailOutlined, CalendarOutlined } = icons;
+const { QuestionOutlined, SnippetsOutlined, ScheduleOutlined, MailOutlined, CalendarOutlined, BugOutlined } = icons;
 const { Link } = Typography
 
 function OPEN_HEYMARKET() {

@@ -96,8 +96,8 @@ class OnboardingApp extends React.Component {
               icon: <QuestionOutlined/>
             },
             {
-              keyId: 'tutor-resources',
-              title: 'Tutor Resources',
+              keyId: 'training-resources',
+              title: 'Training Resources',
               active: false,
               disabled: false,
               link: 'https://docs.google.com/document/d/18wWsqnV59P6a47u4i0IeXQIt2POdjAiPHol3r4i-054/edit#heading=h.6esndmj9ohuf',
@@ -124,7 +124,8 @@ class OnboardingApp extends React.Component {
               title: 'Report a bug',
               active: false,
               disabled: false,
-              link: 'https://docs.google.com/forms/d/1hZL5lcDXqp77ixit2ZWwqafj3Ew4K7RpgoHqH37kzAE/viewform'
+              link: 'https://docs.google.com/forms/d/1hZL5lcDXqp77ixit2ZWwqafj3Ew4K7RpgoHqH37kzAE/viewform',
+              icon: <BugOutlined/>
             }
           ]
         }
