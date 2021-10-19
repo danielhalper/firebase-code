@@ -64,3 +64,6 @@ This will redirect you to a sign in page. **DO NOT** click "Start our Applicatio
 #### Tutor Portal
 
 To view the tutor portal in your browser, go to [http://localhost:5000/tutor_portal.html](http://localhost:5000/tutor_portal.html). It will show a sign in screen saying no accounts have been created - click "Add an account", and enter your Step Up email (@stepuptutoring.org) in the "email" section. This will sign you in to the tutor portal.
+
+![image](https://user-images.githubusercontent.com/84842136/137839102-4954a185-1bf8-485e-85e0-c8fec4d93e4f.png)
+
