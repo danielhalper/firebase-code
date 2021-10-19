@@ -89,8 +89,8 @@ class FirstSteps extends React.Component {
             {/* Show when interview has been scheduled but not yet passed */}
             {progress.hasScheduledChat && <div>
 
-                <div style={{ marginBottom: 50 }}><Title level={3} color='primary'>We can't wait to see you on <strong>{new Date(interviewDate).toLocaleString([], { weekday: 'long', hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'numeric', day: 'numeric'  })}</strong></Title>
-                <p>Once you've had your interview, you'll move on to the next steps!</p></div>
+                <div style={{ marginBottom: 50 }}><Title level={3} color='primary'>We can't wait to see you on <strong><u>{new Date(interviewDate).toLocaleString([], { weekday: 'long', hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'numeric', day: 'numeric'  })}</u></strong></Title>
+                <p>Once you've had your interview, you may complete the disabled steps.</p></div>
                 {/* <strong><Title level={4}>Your interview date*: </Title></strong> */}
 
                 <div>
@@ -146,14 +146,14 @@ class SecondSteps extends React.Component {
 
 
             {liveTrainingDate && !tutorDetails.liveTrainingCompleted ?
-            <div><Title level={3} color='primary'>Your Live Training Date: <u>{liveTrainingDate}</u></Title>
-            <p>We cannot wait to see your awesome face!</p>
-            </div>
+            <div><Title level={3} color='primary'>Your Live Training Date: <u>{liveTrainingDate}</u></Title> </div>
             : null}
 
-            <Title level={3}>Thanks for chatting with us!</Title>
 
-            <p>You’re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match!</p>
+            {progress.hasCompletedWaiver && progress.hasCompletedAllWorkbook && progress.hasCompletedLiveScan && progress.hasCompletedLiveTraining ?
+                <div> <Title level={3}>You completed all items!</Title> <p>Our team is hard at work to set you up with a student as soon as possible.</p> </div> :
+                <div> <Title level={3}>Thanks for chatting with us!</Title> <p>You’re almost there! Just make sure to complete these items as soon as you are able so you can move on to your student match.</p> </div>}
+
             <div className='dashboard-required-items'>
                 {<RequiredOBItem requirementCompleted={progress.hasCompletedWaiver} linkTo={this.props.onSideBarItemClicked} pageKey={'waiver'} icon={<SolutionOutlined/>} title='Tutor Waiver'>
                     The tutor waiver is the formal, legal agreement between you (volunteer tutor) and Step Up Tutoring.
@@ -202,9 +202,9 @@ class FinalSteps extends React.Component {
 
             <Title level={3}>You're Ready to be Matched!</Title>
 
-            <p>While you're waiting for us to match you with a student, try going to your new tutor portal:</p>
+            <p>While you're waiting for us to match you with a student, check out our Training Resources.</p>
 
-            <Button type='primary' size='large' href='./tutor_portal.html' target='_blank'>Sign In to Tutor Portal</Button>
+            <Button type='primary' size='large' href='https://docs.google.com/document/d/18wWsqnV59P6a47u4i0IeXQIt2POdjAiPHol3r4i-054/edit#' target='_blank'>Training Resources</Button>
 
         </div>;
     }
@@ -254,7 +254,7 @@ class Home extends React.Component {
         if (this.props.currentStep == 5) return <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
 
             <Title level={1} style={{ color: '#327D83'}}>Thank you for your interest!</Title>
-            <p>If you would like to be a tutor or need to continue onboarding, please contact us <strong><a href="https://www.stepuptutoring.org/contact" target='_blank'>here</a></strong>.</p>
+            <p>If you think there's been an error, please <strong><a href="https://www.stepuptutoring.org/contact" target='_blank'>contact us</a></strong>.</p>
 
         </div>
 
@@ -262,7 +262,7 @@ class Home extends React.Component {
         return <div>
             <Title>Your Onboarding Dashboard</Title>
             {!this.props.progress.hasScheduledChat ? <div><p>{this.props.tutorDetails.firstname} we're so glad you're here!</p>
-            <p>Complete the items as soon as you can and don't hesitate to reach out if you have any questions!</p></div> : <p>{this.props.tutorDetails.firstname}, there are just a few things we'll need you to complete before proceeding.</p>}
+            <p>Complete the items as soon as you can and don't hesitate to reach out if you have any questions!</p></div> : null}
             <div className='steps-container'>
                 <Steps current={this.props.currentStep}  className='steps' responsive={true}>
                     <Step title='First Steps'/>
