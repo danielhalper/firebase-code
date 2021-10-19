@@ -91,7 +91,6 @@ class FirstSteps extends React.Component {
 
                 <div style={{ marginBottom: 50 }}><Title level={3} color='primary'>We can't wait to see you on <strong><u>{new Date(interviewDate).toLocaleString([], { weekday: 'long', hour: '2-digit', minute: '2-digit', year: 'numeric', month: 'numeric', day: 'numeric'  })}</u></strong></Title>
                 <p>Once you've had your interview, you may complete the disabled steps.</p></div>
-                {/* <strong><Title level={4}>Your interview date*: </Title></strong> */}
 
                 <div>
 
