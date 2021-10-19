@@ -124,7 +124,8 @@ class OnboardingApp extends React.Component {
               title: 'Report a bug',
               active: false,
               disabled: false,
-              link: 'https://docs.google.com/forms/d/1hZL5lcDXqp77ixit2ZWwqafj3Ew4K7RpgoHqH37kzAE/viewform'
+              link: 'https://docs.google.com/forms/d/1hZL5lcDXqp77ixit2ZWwqafj3Ew4K7RpgoHqH37kzAE/viewform',
+              icon: <BugOutlined/>
             }
           ]
         }
