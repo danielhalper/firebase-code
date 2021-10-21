@@ -410,6 +410,15 @@ li.step div.ant-timeline-item-tail, li.step div.ant-timeline-item-head, li.step 
     align-items: center;
 }
 
+#outside-ca-bg-check {
+    text-decoration: underline;
+    color: #0603d4;
+}
+
+#outside-ca-bg-check:hover {
+    color: #074a4f
+}
+
 h3.bg-check-step-title:after {
     content: '';
     border-top: 2px solid;
@@ -420,6 +429,22 @@ h3.bg-check-step-title:after {
 
 .bg-check-p {
     margin-left: 3%;
+}
+
+.bg-check-link-list {
+    margin-left: 25px;
+}
+
+.bg-check-link {
+    text-decoration: underline;
+}
+
+.bg-check-link:hover {
+    color: #074a4f;
+}
+
+#bg-check-notice {
+    color: #0603d4;
 }
 
 #bg-check-note {
